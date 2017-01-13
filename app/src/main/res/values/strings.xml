@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">L Tweaks</string>
+    <string name="app_summary">Little tweaks for myself, if you like it, then use it</string>
+
+    <!--Common-->
+    <string name="uninstall_message">Detected \"%s\" is installed, it has become part of \"L Tweaks\", better to uninstall it.</string>
+    <string name="uninstall_confirm">Uninstall</string>
+
+    <!-- Google -->
+    <string name="pref_header_google">Google</string>
+    <string name="pref_category_google_plus">Google+</string>
+    <string name="pref_google_plus_remove_bottom_bar">Remove bottom bar</string>
+    <string name="pref_google_plus_remove_bottom_bar_summary">Put them into drawer menu</string>
+    <string name="pref_category_google_photos">Google Photos</string>
+    <string name="pref_google_photos_remove_bottom_bar">Remove bottom bar</string>
+    <string name="pref_google_photos_remove_bottom_bar_summary">Put them into drawer menu</string>
+    <string name="pref_category_google_play">Google Play</string>
+    <string name="pref_google_play_view_in_coolapk">Add menu \"View in Coolapk\"</string>
+    <string name="pref_google_play_view_in_coolapk_summary">Jump to Coolapk, just like Coolapk jump to Google Play</string>
+    <string name="pref_category_google_messenger">Google Messenger</string>
+    <string name="pref_google_messenger_disable_direct_share">Disable direct share</string>
+    <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
+
+    <!--Shopping-->
+    <string name="pref_header_shopping">Shopping</string>
+    <string name="pref_category_jd">JD</string>
+    <string name="pref_jd_open_link_in_app">Open link in app</string>
+    <string name="pref_jd_open_link_in_app_summary">eg. http://item.jd.com/123.html</string>
+    <string name="pref_jd_history">Price history in share menu</string>
+    <string name="pref_jd_history_summary">Use JD share button to share product, then you will see \"JD Price History\"</string>
+    <string name="pref_category_smzdm">SMZDM</string>
+    <string name="pref_smzdm_open_link_in_jd_app">Open link in JD app</string>
+    <string name="pref_smzdm_open_link_in_jd_app_summary">Of course only for JD link</string>
+
+    <!-- JD -->
+    <string name="jd_app">JD App</string>
+    <string name="jd_history">JD Price History</string>
+    <string name="jd_history_not_supported">Not supported.</string>
+    <string name="jd_history_can_not_get_prices">Can\'t get history prices.</string>
+    <string name="jd_history_highest">Highest</string>
+    <string name="jd_history_lowest">Lowest</string>
+
+    <!--Entertainment-->
+    <string name="pref_header_entertainment">Entertainment</string>
+    <string name="pref_category_douban_movie">Douban Movie</string>
+    <string name="pref_douban_movie_skip_splash">Skip splash screen</string>
+    <string name="pref_category_bilibili">Bilibili</string>
+    <string name="pref_bilibili_subscriptions_goto_top">Scroll to top when clicking tab</string>
+    <string name="pref_bilibili_subscriptions_goto_top_summary">Only for \"Subscriptions\" tab</string>
+
+    <!--System-->
+    <string name="pref_header_system">System / Tools</string>
+    <string name="pref_category_text_aide">Text Aide</string>
+    <string name="pref_text_aide_open_youdao">Use Youdao dict</string>
+</resources>

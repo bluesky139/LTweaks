@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">L 工具箱</string>
+    <string name="app_summary">一些个人使用的小东西合集，如果你喜欢，那就用去吧</string>
+
+    <string name="uninstall_message">检测到已安装 \"%s\", 它已经成为了 \"L Tweaks\" 的一部分, 最好删除它.</string>
+    <string name="uninstall_confirm">卸载</string>
+
+    <!-- Google -->
+    <string name="pref_header_google">Google</string>
+    <string name="pref_category_google_plus">Google+</string>
+    <string name="pref_google_plus_remove_bottom_bar">去底栏</string>
+    <string name="pref_google_plus_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_category_google_photos">Google 相册</string>
+    <string name="pref_google_photos_remove_bottom_bar">去底栏</string>
+    <string name="pref_google_photos_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_category_google_play">Google Play</string>
+    <string name="pref_google_play_view_in_coolapk">添加菜单\"去酷安查看\"</string>
+    <string name="pref_google_play_view_in_coolapk_summary">酷安有个\"去 Play 查看\"，这个恰好相反</string>
+    <string name="pref_category_google_messenger">Google Messenger</string>
+    <string name="pref_google_messenger_disable_direct_share">禁用 direct share</string>
+    <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
+
+    <!--Shopping-->
+    <string name="pref_header_shopping">购物</string>
+    <string name="pref_category_jd">京东</string>
+    <string name="pref_jd_open_link_in_app">京东的链接直接由京东客户端打开</string>
+    <string name="pref_jd_open_link_in_app_summary">比如 http://item.jd.com/123.html</string>
+    <string name="pref_jd_history">查询历史价格</string>
+    <string name="pref_jd_history_summary">在商品页面使用分享功能，选择\"京东历史价格\"</string>
+    <string name="pref_category_smzdm">什么值得买</string>
+    <string name="pref_smzdm_open_link_in_jd_app">在京东客户端打开链接</string>
+    <string name="pref_smzdm_open_link_in_jd_app_summary">当然只针对京东链接</string>
+
+    <!-- JD -->
+    <string name="jd_app">京东</string>
+    <string name="jd_history">京东历史价格</string>
+    <string name="jd_history_not_supported">不支持.</string>
+    <string name="jd_history_can_not_get_prices">无法获取历史价格.</string>
+    <string name="jd_history_highest">最高</string>
+    <string name="jd_history_lowest">最低</string>
+
+    <!--Entertainment-->
+    <string name="pref_header_entertainment">娱乐</string>
+    <string name="pref_category_douban_movie">豆瓣电影</string>
+    <string name="pref_douban_movie_skip_splash">跳过启动屏</string>
+    <string name="pref_category_bilibili">Bilibili</string>
+    <string name="pref_bilibili_subscriptions_goto_top">点击标签页滚回顶部</string>
+    <string name="pref_bilibili_subscriptions_goto_top_summary">只在\"关注\"页面有效</string>
+
+    <!--System-->
+    <string name="pref_header_system">系统 / 工具</string>
+    <string name="pref_category_text_aide">Text Aide</string>
+    <string name="pref_text_aide_open_youdao">使用有道词典</string>
+</resources>

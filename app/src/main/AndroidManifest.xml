@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="li.lingfeng.ltweaks">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+		<meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="@string/app_summary" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="30" />
+			
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.JDActivity" android:excludeFromRecents="true"
+            android:label="@string/jd_app"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="item.jd.com" android:pathPattern="/.*\\.html" android:scheme="http"/>
+                <data android:host="item.jd.com" android:pathPattern="/.*\\.html" android:scheme="https"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="re.jd.com" android:pathPattern="/cps/item/.*\\.html" android:scheme="http"/>
+                <data android:host="re.jd.com" android:pathPattern="/cps/item/.*\\.html" android:scheme="https"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="item.m.jd.com" android:pathPattern="/product/.*\\.html" android:scheme="http"/>
+                <data android:host="item.m.jd.com" android:pathPattern="/product/.*\\.html" android:scheme="https"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.JDHistoryActivity" android:excludeFromRecents="true"
+            android:label="@string/jd_history"
+            android:screenOrientation="portrait"
+            android:theme="@style/JDHistoryTheme"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
