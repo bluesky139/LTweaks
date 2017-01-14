@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">L 工具箱</string>
-    <string name="app_summary">一些个人使用的小东西合集，如果你喜欢，那就用去吧</string>
+    <string name="app_summary">一些个人使用的小东西合集，主要针对应用，如果你喜欢，那就用去吧</string>
+    <string name="app_about">关于</string>
+    <string name="app_about_summary">
+\"L 工具箱\" 是个人使用的一些小东西合集，主要对应用，大部分功能都需要 Xposed 的支持.\n
+\n
+Open source on github: \n
+<a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
+    </string>
+    <string name="app_ok">OK</string>
 
     <string name="uninstall_message">检测到已安装 \"%s\", 它已经成为了 \"L Tweaks\" 的一部分, 最好删除它.</string>
     <string name="uninstall_confirm">卸载</string>

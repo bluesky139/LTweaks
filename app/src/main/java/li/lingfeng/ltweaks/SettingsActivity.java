@@ -16,9 +16,14 @@ import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -86,5 +91,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_about) {
+            showAbout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showAbout() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.app_about_summary)
+                .setPositiveButton(R.string.app_ok, null)
+                .show();
+        ((TextView) dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
