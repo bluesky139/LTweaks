@@ -47,6 +47,12 @@ Open source on github: \n
     <string name="jd_history_highest">最高</string>
     <string name="jd_history_lowest">最低</string>
 
+    <!--Communication-->
+    <string name="pref_header_communication">通信</string>
+    <string name="pref_category_wechat">微信</string>
+    <string name="pref_wechat_system_share_in_inner_browser">在内置浏览器中添加\"系统分享\"菜单</string>
+    <string name="pref_wechat_system_share_in_inner_browser_summary">同时也会复制到剪贴板</string>
+
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
     <string name="pref_category_douban_movie">豆瓣电影</string>

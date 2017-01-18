@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_category_wechat">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_wechat_system_share_in_inner_browser"
+            android:title="@string/pref_wechat_system_share_in_inner_browser"
+            android:summary="@string/pref_wechat_system_share_in_inner_browser_summary" />
+    </PreferenceCategory>
+</PreferenceScreen>

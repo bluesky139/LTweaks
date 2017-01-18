@@ -13,6 +13,11 @@
         android:title="@string/pref_header_shopping" />
 
     <header
+        android:fragment="li.lingfeng.ltweaks.fragments.CommunicationPrefFragment"
+        android:icon="@drawable/ic_communication"
+        android:title="@string/pref_header_communication" />
+
+    <header
         android:fragment="li.lingfeng.ltweaks.fragments.EntertainmentPrefFragment"
         android:icon="@drawable/ic_entertainment"
         android:title="@string/pref_header_entertainment" />

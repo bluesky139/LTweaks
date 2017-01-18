@@ -47,6 +47,12 @@ Open source on github: \n
     <string name="jd_history_can_not_get_prices">Can\'t get history prices.</string>
     <string name="jd_history_highest">Highest</string>
     <string name="jd_history_lowest">Lowest</string>
+    
+    <!--Communication-->
+    <string name="pref_header_communication">Communication</string>
+    <string name="pref_category_wechat">WeChat</string>
+    <string name="pref_wechat_system_share_in_inner_browser">Add \"System Share\" in inner browser</string>
+    <string name="pref_wechat_system_share_in_inner_browser_summary">Also will be copied to clipboard</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>
