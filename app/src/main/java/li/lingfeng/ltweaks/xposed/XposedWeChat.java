@@ -43,6 +43,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
     private MenuItem mMenuItemCopy;
     private int mIconCopy;
     private int mPosCopy = -1;
+    private boolean mShareClicked = false;
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -128,6 +129,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mWebViewUI = (Activity) param.thisObject;
+                mShareClicked = false;
                 Logger.d("In WebViewUI.");
             }
         });
@@ -137,6 +139,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 mWebViewUI = null;
                 mMenuItemCopy = null;
+                mShareClicked = false;
                 Logger.d("Not in WebViewUI.");
             }
         });
@@ -167,6 +170,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
                     Logger.i("Got menu item of copy, pos " + mPosCopy);
                     String lang = mWebViewUI.getResources().getConfiguration().locale.getLanguage();
                     mMethodAddMenuItem.invoke(param.thisObject, 999, lang.equals("zh") ? "分享..." : "Share...", mIconCopy);
+                    mShareClicked = false;
                 }
             }
         });
@@ -179,6 +183,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
                 }
                 if ((int) param.args[2] == mPosCopy + 1) {
                     param.args[2] = mPosCopy;
+                    mShareClicked = true;
                     Logger.i("Share is clicked.");
                 }
             }
@@ -187,7 +192,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
         findAndHookMethod(ClipboardManager.class, "setText", CharSequence.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (mWebViewUI == null) {
+                if (mWebViewUI == null || !mShareClicked) {
                     return;
                 }
                 String url = param.args[0].toString();
@@ -197,6 +202,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, url);
                 mWebViewUI.startActivity(intent);
+                mShareClicked = false;
             }
         });
     }
