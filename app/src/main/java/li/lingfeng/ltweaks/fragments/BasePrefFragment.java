@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.fragments;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -27,7 +28,9 @@ public class BasePrefFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
+        }
         setHasOptionsMenu(true);
     }
 
