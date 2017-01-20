@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- The values below are used for pref keys, should never be changed. -->
     <!--Google-->
+    <string name="key_google_remove_bottom_bar">key_google_remove_bottom_bar</string>
     <string name="key_google_plus_remove_bottom_bar">key_google_plus_remove_bottom_bar</string>
     <string name="key_google_photos_remove_bottom_bar">key_google_photos_remove_bottom_bar</string>
     <string name="key_google_play_view_in_coolapk">key_google_play_view_in_coolapk</string>

@@ -15,6 +15,9 @@ Open source on github: \n
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
+    <string name="pref_category_google">Google</string>
+    <string name="pref_google_remove_bottom_bar">去底栏</string>
+    <string name="pref_google_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_google_plus">Google+</string>
     <string name="pref_google_plus_remove_bottom_bar">去底栏</string>
     <string name="pref_google_plus_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
