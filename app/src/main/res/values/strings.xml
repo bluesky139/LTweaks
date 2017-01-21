@@ -25,6 +25,9 @@ Open source on github: \n
     <string name="pref_category_google_photos">Google Photos</string>
     <string name="pref_google_photos_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_photos_remove_bottom_bar_summary">Put them into drawer menu</string>
+    <string name="pref_category_google_newsstand">Google Newsstand</string>
+    <string name="pref_google_newsstand_remove_bottom_bar">Remove bottom bar</string>
+    <string name="pref_google_newsstand_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_google_play">Google Play</string>
     <string name="pref_google_play_view_in_coolapk">Add menu \"View in Coolapk\"</string>
     <string name="pref_google_play_view_in_coolapk_summary">Jump to Coolapk, just like Coolapk jump to Google Play</string>

@@ -24,6 +24,9 @@ Open source on github: \n
     <string name="pref_category_google_photos">Google 相册</string>
     <string name="pref_google_photos_remove_bottom_bar">去底栏</string>
     <string name="pref_google_photos_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_category_google_newsstand">Google 报亭</string>
+    <string name="pref_google_newsstand_remove_bottom_bar">去底栏</string>
+    <string name="pref_google_newsstand_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_google_play">Google Play</string>
     <string name="pref_google_play_view_in_coolapk">添加菜单\"去酷安查看\"</string>
     <string name="pref_google_play_view_in_coolapk_summary">酷安有个\"去 Play 查看\"，这个恰好相反</string>
