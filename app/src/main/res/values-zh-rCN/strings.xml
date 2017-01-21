@@ -5,6 +5,8 @@
     <string name="app_about_summary">
 \"L 工具箱\" 是个人使用的一些小东西合集，主要对应用，大部分功能都需要 Xposed 的支持.\n
 \n
+在修改设置后，你需要重启应用或系统来使其生效.\n
+\n
 Open source on github: \n
 <a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
     </string>
