@@ -16,6 +16,8 @@
 
     <!--Communication-->
     <string name="key_wechat_system_share_in_inner_browser">key_wechat_system_share_in_inner_browser</string>
+    <string name="key_wechat_use_incoming_ringtone">key_wechat_use_incoming_ringtone</string>
+    <string name="key_wechat_set_incoming_ringtone">key_wechat_set_incoming_ringtone</string>
 
     <!--Entertainment-->
     <string name="key_douban_movie_skip_splash">key_douban_movie_skip_splash</string>

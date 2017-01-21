@@ -6,5 +6,16 @@
             android:key="@string/key_wechat_system_share_in_inner_browser"
             android:title="@string/pref_wechat_system_share_in_inner_browser"
             android:summary="@string/pref_wechat_system_share_in_inner_browser_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_wechat_use_incoming_ringtone"
+            android:title="@string/pref_wechat_use_incoming_ringtone"
+            android:summary="@string/pref_wechat_use_incoming_ringtone_summary" />
+        <RingtonePreference
+            android:key="@string/key_wechat_set_incoming_ringtone"
+            android:title="@string/pref_wechat_set_incoming_ringtone"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:ringtoneType="ringtone" />
     </PreferenceCategory>
 </PreferenceScreen>

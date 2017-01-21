@@ -1,7 +1,6 @@
 package li.lingfeng.ltweaks.prefs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 
 import de.robv.android.xposed.XSharedPreferences;
@@ -24,15 +23,16 @@ public class Prefs {
         return instance_;
     }
 
-    private static XSharedPreferences createXSharedPreferences() {
+    private static SharedPreferences createXSharedPreferences() {
         XSharedPreferences pref = new XSharedPreferences("li.lingfeng.ltweaks");
-        //pref.makeWorldReadable();
         pref.reload();
-        return pref;
+        return new SharedPreferences(pref);
     }
 
     private static SharedPreferences createSharedPreferences() {
-        return MyApplication.instance().getSharedPreferences(MyApplication.instance().getPackageName() + "_preferences",
+        android.content.SharedPreferences pref = MyApplication.instance().getSharedPreferences(
+                MyApplication.instance().getPackageName() + "_preferences",
                 Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? Context.MODE_WORLD_READABLE : 0);
+        return new SharedPreferences(pref);
     }
 }

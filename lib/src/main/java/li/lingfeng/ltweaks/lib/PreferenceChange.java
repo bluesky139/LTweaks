@@ -13,4 +13,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PreferenceChange {
     int[] prefs();
+    boolean refreshAtStart() default false;
 }

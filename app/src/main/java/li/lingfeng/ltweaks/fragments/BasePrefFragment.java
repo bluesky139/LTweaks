@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.support.annotation.StringRes;
 import android.view.MenuItem;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +57,16 @@ public class BasePrefFragment extends PreferenceFragment implements Preference.O
                     mPrefChangeListeners.put(getString(pref), changeMethods);
                 }
                 listenPreferenceChange(pref);
+
+                if (preferenceChange.refreshAtStart()) {
+                    try {
+                        method.setAccessible(true);
+                        method.invoke(this, findPreference(pref), null);
+                    } catch (Exception e) {
+                        Logger.e("Can't invoke preference change method " + method + " at start, " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -79,7 +90,7 @@ public class BasePrefFragment extends PreferenceFragment implements Preference.O
                     method.setAccessible(true);
                     method.invoke(this, preference, newValue);
                 } catch (Exception e) {
-                    Logger.e("Can't invoke preference change method " + method);
+                    Logger.e("Can't invoke preference change method " + method + ", " + e.getMessage());
                     e.printStackTrace();
                 }
             }
