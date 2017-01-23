@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.shopping;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,14 +17,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2016/12/19.
  */
 @XposedLoad(packages = "com.smzdm.client.android", prefs = R.string.key_smzdm_open_link_in_jd_app)
-public class XposedSmzdm implements IXposedHookLoadPackage {
+public class XposedSmzdm extends XposedBase {
 
     private Activity mInnerBrowser;
     private Activity mKeplerActivity;
@@ -39,8 +38,8 @@ public class XposedSmzdm implements IXposedHookLoadPackage {
     };
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.smzdm.client.android.extend.InnerBrowser.InnerBrowserActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.smzdm.client.android.extend.InnerBrowser.InnerBrowserActivity", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
@@ -49,7 +48,7 @@ public class XposedSmzdm implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("com.kepler.jd.sdk.WebViewActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+        findAndHookMethod("com.kepler.jd.sdk.WebViewActivity", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
@@ -58,7 +57,7 @@ public class XposedSmzdm implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("com.smzdm.client.android.extend.InnerBrowser.SMZDMWebViewBuilder$SMZDMWebViewClient", lpparam.classLoader, "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
+        findAndHookMethod("com.smzdm.client.android.extend.InnerBrowser.SMZDMWebViewBuilder$SMZDMWebViewClient", "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.d("SMZDMWebViewBuilder$SMZDMWebViewClient url " + param.args[1]);
@@ -69,7 +68,7 @@ public class XposedSmzdm implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("com.kepler.jd.sdk.JdView$JDBaseWebViewClient", lpparam.classLoader, "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
+        findAndHookMethod("com.kepler.jd.sdk.JdView$JDBaseWebViewClient", "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.d("JdView$JDBaseWebViewClient url " + param.args[1]);
@@ -80,7 +79,7 @@ public class XposedSmzdm implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("android.app.Activity", lpparam.classLoader, "onDestroy", new XC_MethodHook() {
+        findAndHookMethod("android.app.Activity", "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);

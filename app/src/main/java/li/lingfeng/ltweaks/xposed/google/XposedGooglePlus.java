@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.app.Application;
@@ -25,21 +25,18 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/4.
  */
 @XposedLoad(packages = "com.google.android.apps.plus", prefs = R.string.key_google_plus_remove_bottom_bar)
-public class XposedGooglePlus implements IXposedHookLoadPackage {
+public class XposedGooglePlus extends XposedBase {
 
     Activity activity;
     View rootView;
@@ -58,8 +55,8 @@ public class XposedGooglePlus implements IXposedHookLoadPackage {
     boolean done = false;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.google.android.apps.plus.Gplus_Application", lpparam.classLoader, "onCreate", new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.google.android.apps.plus.Gplus_Application", "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);

@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,14 +22,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/5.
  */
 @XposedLoad(packages = "com.android.vending", prefs = R.string.key_google_play_view_in_coolapk)
-public class XposedGooglePlay implements IXposedHookLoadPackage {
+public class XposedGooglePlay extends XposedBase {
 
     private MenuItem item;
 
@@ -39,8 +38,8 @@ public class XposedGooglePlay implements IXposedHookLoadPackage {
     private Object mLastKnownDoc;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.google.android.finsky.activities.MainActivity", lpparam.classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.google.android.finsky.activities.MainActivity", "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
@@ -50,7 +49,7 @@ public class XposedGooglePlay implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("com.google.android.finsky.activities.MainActivity", lpparam.classLoader, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
+        findAndHookMethod("com.google.android.finsky.activities.MainActivity", "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);

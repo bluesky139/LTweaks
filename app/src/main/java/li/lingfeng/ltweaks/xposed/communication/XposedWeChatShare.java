@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.communication;
 
 import android.app.Activity;
 import android.content.ClipboardManager;
@@ -22,15 +22,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.utils.Logger;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/15.
  */
 @XposedLoad(packages = "com.tencent.mm", prefs = R.string.key_wechat_system_share_in_inner_browser)
-public class XposedWeChat implements IXposedHookLoadPackage {
+public class XposedWeChatShare extends XposedBase {
 
     private Class<?> mClsWebViewUI;
 
@@ -46,7 +44,7 @@ public class XposedWeChat implements IXposedHookLoadPackage {
     private boolean mShareClicked = false;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage() throws Throwable {
         mClsWebViewUI = XposedHelpers.findClass("com.tencent.mm.plugin.webview.ui.tools.WebViewUI", lpparam.classLoader);
         Field[] fieldsWebViewUI = mClsWebViewUI.getDeclaredFields();
         for (Field fieldWebViewUI : fieldsWebViewUI) {

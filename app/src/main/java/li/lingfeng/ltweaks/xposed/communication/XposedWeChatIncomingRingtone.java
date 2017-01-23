@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.communication;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -12,16 +12,15 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/21.
  */
 @XposedLoad(packages = "com.tencent.mm", prefs = R.string.key_wechat_use_incoming_ringtone)
-public class XposedWeChatIncomingRingtone implements IXposedHookLoadPackage {
+public class XposedWeChatIncomingRingtone extends XposedBase {
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
+    public void handleLoadPackage() throws Throwable {
         findAndHookMethod(MediaPlayer.class, "setDataSource", Context.class, Uri.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

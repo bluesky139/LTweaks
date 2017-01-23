@@ -81,11 +81,12 @@ public class XposedProcessor extends AbstractProcessor {
         mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor typeElement " + typeElement.toString());
         writer.write("    @Override\n");
         writer.write("    protected void addModules() {\n");
-        for (Element element : env.getElementsAnnotatedWith(typeElement)) {
+        for (Element element_ : env.getElementsAnnotatedWith(typeElement)) {
+            TypeElement element = (TypeElement) element_;
             XposedLoad load = element.getAnnotation(XposedLoad.class);
             for (String packageName : load.packages()) {
                 mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + packageName + " -> " + element.getSimpleName());
-                writer.write("        addModule(\"" + packageName + "\", " + element.getSimpleName() + ".class);\n");
+                writer.write("        addModule(\"" + packageName + "\", " + element.getQualifiedName() + ".class);\n");
             }
         }
         writer.write("    }\n");
@@ -94,12 +95,13 @@ public class XposedProcessor extends AbstractProcessor {
         Map<Integer, String> keys = getKeyMap();
         writer.write("    @Override\n");
         writer.write("    protected void addModulePrefs() {\n");
-        for (Element element : env.getElementsAnnotatedWith(typeElement)) {
+        for (Element element_ : env.getElementsAnnotatedWith(typeElement)) {
+            TypeElement element = (TypeElement) element_;
             XposedLoad load = element.getAnnotation(XposedLoad.class);
             for (int prefId : load.prefs()) {
                 String key = keys.get(prefId);
                 mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + key + " -> " + element.getSimpleName());
-                writer.write("        addModulePref(" + element.getSimpleName() + ".class, \"" + key + "\");\n");
+                writer.write("        addModulePref(" + element.getQualifiedName() + ".class, \"" + key + "\");\n");
             }
         }
         writer.write("    }\n");

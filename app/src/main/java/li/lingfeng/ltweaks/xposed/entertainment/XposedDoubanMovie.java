@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.entertainment;
 
 import java.lang.reflect.Field;
 
@@ -7,17 +7,16 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/7.
  */
 @XposedLoad(packages = "com.douban.movie", prefs = R.string.key_douban_movie_skip_splash)
-public class XposedDoubanMovie implements IXposedHookLoadPackage {
+public class XposedDoubanMovie extends XposedBase {
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.douban.movie.MovieApplication", lpparam.classLoader, "onCreate", new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.douban.movie.MovieApplication", "onCreate", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Field sSplashShowed = param.thisObject.getClass().getDeclaredField("sSplashShowed");

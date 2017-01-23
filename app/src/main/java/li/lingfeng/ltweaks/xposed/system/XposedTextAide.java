@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,18 +10,17 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/4.
  */
 @XposedLoad(packages = "com.arjerine.textxposed", prefs = R.string.key_text_aide_open_youdao)
-public class XposedTextAide implements IXposedHookLoadPackage {
+public class XposedTextAide extends XposedBase {
 
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.arjerine.textxposed.define.DispPopup", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.arjerine.textxposed.define.DispPopup", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);

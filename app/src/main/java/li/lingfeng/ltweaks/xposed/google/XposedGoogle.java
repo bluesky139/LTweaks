@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.graphics.PorterDuff;
@@ -21,14 +21,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.utils.Logger;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/19.
  */
 @XposedLoad(packages = "com.google.android.googlequicksearchbox", prefs = R.string.key_google_remove_bottom_bar)
-public class XposedGoogle implements IXposedHookLoadPackage {
+public class XposedGoogle extends XposedBase {
 
     private Activity mActivity;
     private View mNowTabs;
@@ -39,8 +38,8 @@ public class XposedGoogle implements IXposedHookLoadPackage {
     private Method mMethodCloseDrawers;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.google.android.apps.gsa.searchnow.SearchNowActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.google.android.apps.gsa.searchnow.SearchNowActivity", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.d("SearchNowActivity onCreate.");
@@ -67,7 +66,7 @@ public class XposedGoogle implements IXposedHookLoadPackage {
 
                             mNowTabs = view;
                             Logger.i("Got mNowTabs " + mNowTabs);
-                            handleWithNowTabs(lpparam);
+                            handleWithNowTabs();
                         } catch (Exception e) {
                             Logger.e("Can't handle with mNowTabs, " + e.getMessage());
                             e.printStackTrace();
@@ -77,7 +76,7 @@ public class XposedGoogle implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("com.google.android.apps.gsa.searchnow.SearchNowActivity", lpparam.classLoader, "onDestroy", new XC_MethodHook() {
+        findAndHookMethod("com.google.android.apps.gsa.searchnow.SearchNowActivity", "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.d("SearchNowActivity onDestroy.");
@@ -92,11 +91,7 @@ public class XposedGoogle implements IXposedHookLoadPackage {
         });
     }
 
-    private int getResId(String name, String type) {
-        return mActivity.getResources().getIdentifier(name, type, "com.google.android.googlequicksearchbox");
-    }
-
-    private void handleWithNowTabs(XC_LoadPackage.LoadPackageParam lpparam) throws Exception {
+    private void handleWithNowTabs() throws Exception {
         final int idStreamTab    = getResId("now_stream_tab", "id");
         final int idDrawerMenu   = getResId("drawer_layout", "id");
         final int idDrawerEntry  = getResId("drawer_entry", "layout");

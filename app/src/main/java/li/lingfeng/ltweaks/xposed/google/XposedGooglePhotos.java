@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.app.Application;
@@ -20,21 +20,17 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/4.
  */
 @XposedLoad(packages = "com.google.android.apps.photos", prefs = R.string.key_google_photos_remove_bottom_bar)
-public class XposedGooglePhotos implements IXposedHookLoadPackage {
+public class XposedGooglePhotos extends XposedBase {
 
     Activity activity;
     View rootView;
@@ -58,8 +54,8 @@ public class XposedGooglePhotos implements IXposedHookLoadPackage {
     boolean doneWithPageTransformer = false;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.google.android.apps.photos.app.PhotosApplication", lpparam.classLoader, "onCreate", new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.google.android.apps.photos.app.PhotosApplication", "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);

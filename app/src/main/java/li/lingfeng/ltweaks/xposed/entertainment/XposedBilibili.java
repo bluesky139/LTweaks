@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.entertainment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,15 +16,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
-import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/7.
  */
 @XposedLoad(packages = "tv.danmaku.bili", prefs = R.string.key_bilibili_subscriptions_goto_top)
-public class XposedBilibili implements IXposedHookLoadPackage {
+public class XposedBilibili extends XposedBase {
 
     private View mRecyclerView;
     private Method mMethodSmoothScrollToPosition;
@@ -32,7 +30,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
     private XC_MethodHook.Unhook mHookedTabClick;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage() throws Throwable {
         /*findAndHookMethod("tv.danmaku.bili.ui.main.HomeFragment$1", lpparam.classLoader, "onPageSelected", int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -56,7 +54,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         }
 
-        findAndHookMethod("tv.danmaku.bili.ui.main.attention.AttentionDynamicFragment", lpparam.classLoader, methodName, clsRecyclerView, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod("tv.danmaku.bili.ui.main.attention.AttentionDynamicFragment", methodName, clsRecyclerView, Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mRecyclerView = (View) param.args[0];
@@ -64,7 +62,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("tv.danmaku.bili.ui.main.attention.AttentionDynamicFragment", lpparam.classLoader, "onDestroy", new XC_MethodHook() {
+        findAndHookMethod("tv.danmaku.bili.ui.main.attention.AttentionDynamicFragment", "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 mRecyclerView = null;
@@ -72,7 +70,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("android.app.Activity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+        findAndHookMethod("android.app.Activity", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (param.thisObject.getClass().getName().equals("tv.danmaku.bili.MainActivity")) {
@@ -82,7 +80,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("android.app.Activity", lpparam.classLoader, "onResume", new XC_MethodHook() {
+        findAndHookMethod("android.app.Activity", "onResume", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (param.thisObject.getClass().getName().equals("tv.danmaku.bili.MainActivity")) {
@@ -92,7 +90,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("android.app.Activity", lpparam.classLoader, "onPause", new XC_MethodHook() {
+        findAndHookMethod("android.app.Activity", "onPause", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (param.thisObject.getClass().getName().equals("tv.danmaku.bili.MainActivity")) {
@@ -102,7 +100,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookMethod("android.app.Activity", lpparam.classLoader, "onDestroy", new XC_MethodHook() {
+        findAndHookMethod("android.app.Activity", "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (param.thisObject.getClass().getName().equals("tv.danmaku.bili.MainActivity")) {
@@ -114,7 +112,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
             }
         });
 
-        findAndHookConstructor("tv.danmaku.bili.widget.PagerSlidingTabStrip", lpparam.classLoader, Context.class, AttributeSet.class, int.class, new XC_MethodHook() {
+        findAndHookConstructor("tv.danmaku.bili.widget.PagerSlidingTabStrip", Context.class, AttributeSet.class, int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (!mInMainActivity || mHookedTabClick != null) {
@@ -128,7 +126,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
                         field.setAccessible(true);
                         tabClickListener = (View.OnClickListener) field.get(param.thisObject);
                         Logger.i("Got tab click listener from PagerSlidingTabStrip.");
-                        hookTabClick(lpparam, param.thisObject, tabClickListener);
+                        hookTabClick(param.thisObject, tabClickListener);
                         break;
                     }
                 }
@@ -136,7 +134,7 @@ public class XposedBilibili implements IXposedHookLoadPackage {
         });
     }
 
-    private void hookTabClick(XC_LoadPackage.LoadPackageParam lpparam, final Object thisTabStrip, final View.OnClickListener tabClickListener) {
+    private void hookTabClick(final Object thisTabStrip, final View.OnClickListener tabClickListener) {
         mHookedTabClick = findAndHookMethod(tabClickListener.getClass(), "onClick", View.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

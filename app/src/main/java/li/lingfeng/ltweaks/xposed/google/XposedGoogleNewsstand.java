@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed;
+package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.graphics.PorterDuff;
@@ -22,14 +22,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.utils.Logger;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/21.
  */
 @XposedLoad(packages = "com.google.android.apps.magazines", prefs = R.string.key_google_newsstand_remove_bottom_bar)
-public class XposedGoogleNewsstand implements IXposedHookLoadPackage {
+public class XposedGoogleNewsstand extends XposedBase {
 
     private Activity mActivity;
     private View mTabBarLayout;
@@ -44,8 +43,8 @@ public class XposedGoogleNewsstand implements IXposedHookLoadPackage {
     private Method mMethodCloseDrawers;
 
     @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        findAndHookMethod("com.google.apps.dots.android.newsstand.home.HomeActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+    public void handleLoadPackage() throws Throwable {
+        findAndHookMethod("com.google.apps.dots.android.newsstand.home.HomeActivity", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.d("HomeActivity onCreate.");
@@ -72,7 +71,7 @@ public class XposedGoogleNewsstand implements IXposedHookLoadPackage {
 
                             mTabBarLayout = view;
                             Logger.i("Got mTabBarLayout " + mTabBarLayout);
-                            handleWithTabBarLayout(lpparam);
+                            handleWithTabBarLayout();
                         } catch (Exception e) {
                             Logger.e("Can't handle with mTabBarLayout, " + e.getMessage());
                             e.printStackTrace();
@@ -103,11 +102,7 @@ public class XposedGoogleNewsstand implements IXposedHookLoadPackage {
         });
     }
 
-    private int getResId(String name, String type) {
-        return mActivity.getResources().getIdentifier(name, type, "com.google.android.apps.magazines");
-    }
-
-    private void handleWithTabBarLayout(XC_LoadPackage.LoadPackageParam lpparam) throws Exception {
+    private void handleWithTabBarLayout() throws Exception {
         final int idTabForYou    = getResId("tab_for_you", "id");
         final int idTabFollowing = getResId("tab_following", "id");
         final int idTabExplore   = getResId("tab_explore", "id");
