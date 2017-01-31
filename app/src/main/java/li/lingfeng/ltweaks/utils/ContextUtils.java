@@ -31,6 +31,14 @@ public class ContextUtils {
         return context.getResources().getIdentifier(name, type, context.getPackageName());
     }
 
+    public static int getIdId(String name) {
+        return getIdId(name, MyApplication.instance());
+    }
+
+    public static int getIdId(String name, Context context) {
+        return getResId(name, "id", context);
+    }
+
     public static int getStringId(String name) {
         return getStringId(name, MyApplication.instance());
     }

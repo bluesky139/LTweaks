@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.Arrays;
 import de.robv.android.xposed.XC_MethodHook;
 
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
@@ -60,17 +62,15 @@ public class XposedGooglePlus extends XposedBase {
         findAndHookMethod("com.google.android.apps.plus.Gplus_Application", "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
-
                 Application app = (Application) param.thisObject;
                 app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
                     @Override
-                    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                        if (!activity.getClass().getName().equals("com.google.android.apps.plus.phone.HomeActivity"))
+                    public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
+                        if (!activity.getClass().getName().equals("com.google.android.apps.plus.phone.BinderHomeActivity"))
                             return;
                         XposedGooglePlus.this.activity = activity;
 
-                        tabBarSpacerId = activity.getResources().getIdentifier("bottom_navigation_spacer", "id", "com.google.android.apps.plus");
+                        tabBarSpacerId = ContextUtils.getIdId("bottom_navigation_spacer");
                         if (tabBarSpacerId == 0)
                             return;
 
@@ -78,7 +78,7 @@ public class XposedGooglePlus extends XposedBase {
                         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
-                                //Log.w(TAG, "layout changed.");
+                                //Logger.w("layout changed.");
                                 traverseViewChilds(rootView, 0);
                                 if (tabBar != null && tabBar.getVisibility() == View.VISIBLE) {
                                     ViewGroup.LayoutParams tabBarParams = tabBar.getLayoutParams();
@@ -127,7 +127,7 @@ public class XposedGooglePlus extends XposedBase {
 
                     @Override
                     public void onActivityDestroyed(Activity activity) {
-                        if (!activity.getClass().getName().equals("com.google.android.apps.plus.phone.HomeActivity"))
+                        if (!activity.getClass().getName().equals("com.google.android.apps.plus.phone.BinderHomeActivity"))
                             return;
                         XposedGooglePlus.this.activity = null;
                         rootView = null;
@@ -162,7 +162,7 @@ public class XposedGooglePlus extends XposedBase {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); ++i) {
                 view = viewGroup.getChildAt(i);
-                //Log.d(TAG, "child view" + depth + " " + view + " id " + view.getId());
+                //Logger.d("child view" + depth + " " + view + " id " + view.getId());
                 if (tabBar == null) {
                     if (getResNameById(view.getId()).equals("bottom_navigation_container")) {
                         Logger.i("got bottom_navigation_container.");
