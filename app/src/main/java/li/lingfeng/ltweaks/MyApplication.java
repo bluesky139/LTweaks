@@ -8,8 +8,8 @@ import android.app.Application;
 
 public class MyApplication extends Application {
 
-    private static MyApplication instance_;
-    public static MyApplication instance() {
+    private static Application instance_;
+    public static Application instance() {
         return instance_;
     }
 
@@ -17,5 +17,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance_ = this;
+    }
+
+    public static void setInstanceFromXposed(Application application) {
+        instance_ = application;
     }
 }

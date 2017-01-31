@@ -11,6 +11,7 @@ Open source on github: \n
 <a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
     </string>
     <string name="app_ok">OK</string>
+    <string name="app_shortcut_is_created">Shortcut is created.</string>
 
     <!--Common-->
     <string name="uninstall_message">Detected \"%s\" is installed, it has become part of \"L Tweaks\", better to uninstall it.</string>
@@ -77,4 +78,7 @@ Open source on github: \n
     <string name="pref_header_system">System / Tools</string>
     <string name="pref_category_text_aide">Text Aide</string>
     <string name="pref_text_aide_open_youdao">Use Youdao dict</string>
+    <string name="pref_category_youdao">Youdao Dict</string>
+    <string name="pref_youdao_quick_query_shortcut">Create shortcut for quick query</string>
+    <string name="pref_youdao_quick_query_shortcut_summary">Activity for word query, nothing more</string>
 </resources>

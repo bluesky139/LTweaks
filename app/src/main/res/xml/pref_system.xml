@@ -6,4 +6,13 @@
             android:key="@string/key_text_aide_open_youdao"
             android:title="@string/pref_text_aide_open_youdao" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_youdao">
+        <Preference
+            android:defaultValue="false"
+            android:key="@string/key_youdao_quick_query_shortcut"
+            android:title="@string/pref_youdao_quick_query_shortcut"
+            android:summary="@string/pref_youdao_quick_query_shortcut_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

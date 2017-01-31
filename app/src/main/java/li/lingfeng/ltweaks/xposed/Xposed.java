@@ -85,6 +85,7 @@ public abstract class Xposed implements IXposedHookLoadPackage {
                     mLoaded.add(module);
                 }
             } catch (Throwable throwable) {
+                Logger.e("Can't handleLoadPackage, " + throwable.getMessage());
                 throwable.printStackTrace();
             }
         }
