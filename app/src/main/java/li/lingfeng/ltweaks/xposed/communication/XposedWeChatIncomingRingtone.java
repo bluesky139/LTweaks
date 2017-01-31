@@ -10,6 +10,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
@@ -17,7 +18,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2017/1/21.
  */
-@XposedLoad(packages = "com.tencent.mm", prefs = R.string.key_wechat_use_incoming_ringtone)
+@XposedLoad(packages = PackageNames.WE_CHAT, prefs = R.string.key_wechat_use_incoming_ringtone)
 public class XposedWeChatIncomingRingtone extends XposedBase {
     @Override
     public void handleLoadPackage() throws Throwable {

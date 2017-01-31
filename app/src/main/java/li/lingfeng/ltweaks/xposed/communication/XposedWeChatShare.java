@@ -21,13 +21,14 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/15.
  */
-@XposedLoad(packages = "com.tencent.mm", prefs = R.string.key_wechat_system_share_in_inner_browser)
+@XposedLoad(packages = PackageNames.WE_CHAT, prefs = R.string.key_wechat_system_share_in_inner_browser)
 public class XposedWeChatShare extends XposedBase {
 
     private Class<?> mClsWebViewUI;

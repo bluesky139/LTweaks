@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import de.robv.android.xposed.XC_MethodHook;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
@@ -29,7 +30,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2017/1/4.
  */
-@XposedLoad(packages = "com.google.android.apps.photos", prefs = R.string.key_google_photos_remove_bottom_bar)
+@XposedLoad(packages = PackageNames.GOOGLE_PHOTOS, prefs = R.string.key_google_photos_remove_bottom_bar)
 public class XposedGooglePhotos extends XposedBase {
 
     Activity activity;

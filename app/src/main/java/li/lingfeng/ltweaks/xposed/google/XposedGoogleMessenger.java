@@ -8,12 +8,13 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/1/7.
  */
-@XposedLoad(packages = "com.google.android.apps.messaging", prefs = R.string.key_google_messenger_disable_direct_share)
+@XposedLoad(packages = PackageNames.GOOGLE_MESSENGER, prefs = R.string.key_google_messenger_disable_direct_share)
 public class XposedGoogleMessenger extends XposedBase {
     @Override
     public void handleLoadPackage() throws Throwable {

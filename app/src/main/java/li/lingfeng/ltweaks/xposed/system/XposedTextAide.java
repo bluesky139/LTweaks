@@ -7,6 +7,7 @@ import android.os.Bundle;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
@@ -15,7 +16,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2017/1/4.
  */
-@XposedLoad(packages = "com.arjerine.textxposed", prefs = R.string.key_text_aide_open_youdao)
+@XposedLoad(packages = PackageNames.TEXT_AIDE, prefs = R.string.key_text_aide_open_youdao)
 public class XposedTextAide extends XposedBase {
 
     @Override

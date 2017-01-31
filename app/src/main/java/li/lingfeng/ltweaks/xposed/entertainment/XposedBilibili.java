@@ -13,6 +13,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
@@ -21,7 +22,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2017/1/7.
  */
-@XposedLoad(packages = "tv.danmaku.bili", prefs = R.string.key_bilibili_subscriptions_goto_top)
+@XposedLoad(packages = PackageNames.BILIBILI, prefs = R.string.key_bilibili_subscriptions_goto_top)
 public class XposedBilibili extends XposedBase {
 
     private View mRecyclerView;

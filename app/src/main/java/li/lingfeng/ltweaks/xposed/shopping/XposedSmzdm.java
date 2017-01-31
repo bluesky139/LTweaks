@@ -14,6 +14,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
@@ -22,7 +23,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2016/12/19.
  */
-@XposedLoad(packages = "com.smzdm.client.android", prefs = R.string.key_smzdm_open_link_in_jd_app)
+@XposedLoad(packages = PackageNames.SMZDM, prefs = R.string.key_smzdm_open_link_in_jd_app)
 public class XposedSmzdm extends XposedBase {
 
     private Activity mInnerBrowser;
