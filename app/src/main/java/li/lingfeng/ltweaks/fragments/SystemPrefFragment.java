@@ -1,11 +1,13 @@
 package li.lingfeng.ltweaks.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PermissionUtils;
 import li.lingfeng.ltweaks.utils.UninstallUtils;
 
 /**
@@ -57,7 +60,20 @@ public class SystemPrefFragment extends BasePrefFragment {
     }
 
     @PreferenceChange(prefs = R.string.key_system_share_qrcode_scan)
-    private void systemShareQrcodeScan(Preference preference, boolean enabled) {
-        ComponentUtils.enableComponent(QrCodeActivity.class, enabled);
+    private void systemShareQrcodeScan(final SwitchPreference preference, boolean enabled) {
+        if (enabled) {
+            PermissionUtils.requestPermissions(getActivity(), new PermissionUtils.ResultCallback() {
+                @Override
+                public void onResult(boolean ok) {
+                    if (ok) {
+                        ComponentUtils.enableComponent(QrCodeActivity.class, true);
+                    } else {
+                        preference.setChecked(false);
+                    }
+                }
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            ComponentUtils.enableComponent(QrCodeActivity.class, false);
+        }
     }
 }

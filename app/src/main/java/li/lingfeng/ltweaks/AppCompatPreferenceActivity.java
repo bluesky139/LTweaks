@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import li.lingfeng.ltweaks.utils.PermissionUtils;
+
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
@@ -118,5 +120,10 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
