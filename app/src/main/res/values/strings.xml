@@ -16,6 +16,7 @@ Open source on github: \n
     <!--Common-->
     <string name="uninstall_message">Detected \"%s\" is installed, it has become part of \"L Tweaks\", better to uninstall it.</string>
     <string name="uninstall_confirm">Uninstall</string>
+    <string name="not_supported">Not supported.</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
@@ -52,7 +53,6 @@ Open source on github: \n
     <!-- JD -->
     <string name="jd_app">JD App</string>
     <string name="jd_history">JD Price History</string>
-    <string name="jd_history_not_supported">Not supported.</string>
     <string name="jd_history_can_not_get_prices">Can\'t get history prices.</string>
     <string name="jd_history_highest">Highest</string>
     <string name="jd_history_lowest">Lowest</string>
@@ -81,4 +81,11 @@ Open source on github: \n
     <string name="pref_category_youdao">Youdao Dict</string>
     <string name="pref_youdao_quick_query_shortcut">Create shortcut for quick query</string>
     <string name="pref_youdao_quick_query_shortcut_summary">Activity for word query, nothing more</string>
+    <string name="pref_category_system_share">System Share</string>
+    <string name="pref_system_share_qrcode_scan">Add menu \"Scan QR Code\"</string>
+    <string name="pref_system_share_qrcode_scan_summary">You can share QR image from browser, local file or screenshot</string>
+
+    <!--Share-->
+    <string name="share_qrcode_scan">Scan QR Code in image</string>
+    <string name="share_qrcode_cant_decode">Can\'t decode image.</string>
 </resources>

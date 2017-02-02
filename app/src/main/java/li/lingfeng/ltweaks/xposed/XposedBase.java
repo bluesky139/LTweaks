@@ -7,7 +7,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.MyApplication;
-import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 
 /**
  * Created by smallville on 2017/1/23.
@@ -16,17 +16,17 @@ import li.lingfeng.ltweaks.utils.Logger;
 public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected XC_LoadPackage.LoadPackageParam lpparam;
-    protected Application mApplication;
 
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         this.lpparam = lpparam;
-        findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                mApplication = (Application) param.thisObject;
-                MyApplication.setInstanceFromXposed(mApplication);
-            }
-        });
+        if (!lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)) {
+            findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    MyApplication.setInstanceFromXposed((Application) param.thisObject);
+                }
+            });
+        }
         handleLoadPackage();
     }
 
@@ -46,9 +46,5 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected XC_MethodHook.Unhook findAndHookConstructor(Class<?> clazz, Object... parameterTypesAndCallback) {
         return XposedHelpers.findAndHookConstructor(clazz, parameterTypesAndCallback);
-    }
-
-    protected int getResId(String name, String type) {
-        return mApplication.getResources().getIdentifier(name, type, lpparam.packageName);
     }
 }

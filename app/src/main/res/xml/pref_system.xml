@@ -10,9 +10,17 @@
     <PreferenceCategory
         android:title="@string/pref_category_youdao">
         <Preference
-            android:defaultValue="false"
             android:key="@string/key_youdao_quick_query_shortcut"
             android:title="@string/pref_youdao_quick_query_shortcut"
             android:summary="@string/pref_youdao_quick_query_shortcut_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_system_share">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_system_share_qrcode_scan"
+            android:title="@string/pref_system_share_qrcode_scan"
+            android:summary="@string/pref_system_share_qrcode_scan_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

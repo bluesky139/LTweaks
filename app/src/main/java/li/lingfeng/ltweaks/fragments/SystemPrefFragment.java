@@ -10,9 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.activities.QrCodeActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.UninstallUtils;
@@ -52,5 +54,10 @@ public class SystemPrefFragment extends BasePrefFragment {
         getActivity().sendBroadcast(intent);
 
         Toast.makeText(getActivity(), R.string.app_shortcut_is_created, Toast.LENGTH_SHORT).show();
+    }
+
+    @PreferenceChange(prefs = R.string.key_system_share_qrcode_scan)
+    private void systemShareQrcodeScan(Preference preference, boolean enabled) {
+        ComponentUtils.enableComponent(QrCodeActivity.class, enabled);
     }
 }

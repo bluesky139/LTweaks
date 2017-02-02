@@ -9,6 +9,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.JDActivity;
 import li.lingfeng.ltweaks.activities.JDHistoryActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
+import li.lingfeng.ltweaks.utils.ComponentUtils;
 
 /**
  * Created by smallville on 2016/12/25.
@@ -24,17 +25,11 @@ public class ShoppingPrefFragment extends BasePrefFragment {
 
     @PreferenceChange(prefs = R.string.key_jd_open_link_in_app)
     private void enableJdOpenLinkInApp(Preference preference, boolean enabled) {
-        ComponentName componentName = new ComponentName(getActivity(), JDActivity.class);
-        getActivity().getPackageManager().setComponentEnabledSetting(componentName,
-                enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP);
+        ComponentUtils.enableComponent(JDActivity.class, enabled);
     }
 
     @PreferenceChange(prefs = R.string.key_jd_history)
     private void enableJdHistory(Preference preference, boolean enabled) {
-        ComponentName componentName = new ComponentName(getActivity(), JDHistoryActivity.class);
-        getActivity().getPackageManager().setComponentEnabledSetting(componentName,
-                enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP);
+        ComponentUtils.enableComponent(JDHistoryActivity.class, enabled);
     }
 }

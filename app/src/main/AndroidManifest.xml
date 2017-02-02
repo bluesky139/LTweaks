@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -61,12 +62,23 @@
         <activity android:name=".activities.JDHistoryActivity" android:excludeFromRecents="true"
             android:label="@string/jd_history"
             android:screenOrientation="portrait"
-            android:theme="@style/JDHistoryTheme"
+            android:theme="@style/DialogActivityTheme"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.QrCodeActivity" android:excludeFromRecents="true"
+            android:label="@string/share_qrcode_scan"
+            android:theme="@style/DialogActivityTheme"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
     </application>

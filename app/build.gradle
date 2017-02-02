@@ -37,4 +37,5 @@ dependencies {
     provided files('lib/XposedBridgeApi-54.jar')
     compile project(':lib')
     provided project(':compiler')
+    compile 'com.google.zxing:core:3.3.0'
 }

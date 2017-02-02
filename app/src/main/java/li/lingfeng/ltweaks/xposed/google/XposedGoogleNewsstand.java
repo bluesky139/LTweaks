@@ -25,6 +25,8 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
+import static li.lingfeng.ltweaks.utils.ContextUtils.getResId;
+
 /**
  * Created by smallville on 2017/1/21.
  */

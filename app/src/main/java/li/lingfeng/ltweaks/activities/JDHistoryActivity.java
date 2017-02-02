@@ -56,7 +56,7 @@ public class JDHistoryActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!getIntent().getAction().equals(Intent.ACTION_SEND) || !getIntent().getType().equals("text/plain")) {
-            Toast.makeText(this, R.string.jd_history_not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -66,7 +66,7 @@ public class JDHistoryActivity extends AppCompatActivity implements
         Pattern pattern = Pattern.compile(".*https?://(item\\.)?m\\.jd\\.com/product/(\\d+)\\.html.*");
         Matcher matcher = pattern.matcher(text);
         if (!matcher.find()) {
-            Toast.makeText(this, R.string.jd_history_not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

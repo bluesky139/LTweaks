@@ -11,10 +11,12 @@ Open source on github: \n
 <a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
     </string>
     <string name="app_ok">OK</string>
+    <string name="app_shortcut_is_created">快捷方式已创建.</string>
 
+    <!--Common-->
     <string name="uninstall_message">检测到已安装 \"%s\", 它已经成为了 \"L Tweaks\" 的一部分, 最好删除它.</string>
     <string name="uninstall_confirm">卸载</string>
-    <string name="app_shortcut_is_created">快捷方式已创建.</string>
+    <string name="not_supported">不支持.</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
@@ -51,7 +53,6 @@ Open source on github: \n
     <!-- JD -->
     <string name="jd_app">京东</string>
     <string name="jd_history">京东历史价格</string>
-    <string name="jd_history_not_supported">不支持.</string>
     <string name="jd_history_can_not_get_prices">无法获取历史价格.</string>
     <string name="jd_history_highest">最高</string>
     <string name="jd_history_lowest">最低</string>
@@ -80,4 +81,11 @@ Open source on github: \n
     <string name="pref_category_youdao">有道词典</string>
     <string name="pref_youdao_quick_query_shortcut">为快速查询创建快捷方式</string>
     <string name="pref_youdao_quick_query_shortcut_summary">进入纯粹的单词查询界面，没有多余的功能</string>
+    <string name="pref_category_system_share">系统分享</string>
+    <string name="pref_system_share_qrcode_scan">添加菜单\"扫描二维码\"</string>
+    <string name="pref_system_share_qrcode_scan_summary">你可以通过浏览器、本地文件、截屏等分享图片</string>
+
+    <!--Share-->
+    <string name="share_qrcode_scan">Scan QR Code in image</string>
+    <string name="share_qrcode_cant_decode">Can\'t decode image.</string>
 </resources>
