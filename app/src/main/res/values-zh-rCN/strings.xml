@@ -17,6 +17,10 @@ Open source on github: \n
     <string name="uninstall_message">检测到已安装 \"%s\", 它已经成为了 \"L Tweaks\" 的一部分, 最好删除它.</string>
     <string name="uninstall_confirm">卸载</string>
     <string name="not_supported">不支持.</string>
+    <string name="cant_read_file">无法读取文件.</string>
+    <string name="request_failed">请求失败.</string>
+    <string name="upload_failed">上传失败.</string>
+    <string name="error">发生错误.</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
@@ -84,8 +88,11 @@ Open source on github: \n
     <string name="pref_category_system_share">系统分享</string>
     <string name="pref_system_share_qrcode_scan">添加菜单\"扫描二维码\"</string>
     <string name="pref_system_share_qrcode_scan_summary">你可以通过浏览器、本地文件、截屏等分享图片</string>
+    <string name="pref_system_share_image_search">添加菜单\"以图搜图\"</string>
+    <string name="pref_system_share_image_search_summary">你可以通过其它应用、本地文件等分享图片</string>
 
     <!--Share-->
-    <string name="share_qrcode_scan">Scan QR Code in image</string>
-    <string name="share_qrcode_cant_decode">Can\'t decode image.</string>
+    <string name="share_qrcode_scan">识别图中二维码</string>
+    <string name="share_qrcode_cant_decode">无法识别.</string>
+    <string name="share_image_search">以图搜图</string>
 </resources>

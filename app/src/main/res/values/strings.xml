@@ -17,6 +17,10 @@ Open source on github: \n
     <string name="uninstall_message">Detected \"%s\" is installed, it has become part of \"L Tweaks\", better to uninstall it.</string>
     <string name="uninstall_confirm">Uninstall</string>
     <string name="not_supported">Not supported.</string>
+    <string name="cant_read_file">Can\'t read file.</string>
+    <string name="request_failed">Request failed.</string>
+    <string name="upload_failed">Upload failed.</string>
+    <string name="error">Error.</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
@@ -84,8 +88,11 @@ Open source on github: \n
     <string name="pref_category_system_share">System Share</string>
     <string name="pref_system_share_qrcode_scan">Add menu \"Scan QR Code\"</string>
     <string name="pref_system_share_qrcode_scan_summary">You can share QR image from browser, local file or screenshot</string>
+    <string name="pref_system_share_image_search">Add menu \"Search by image\"</string>
+    <string name="pref_system_share_image_search_summary">You can share image from other app or local file</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
     <string name="share_qrcode_cant_decode">Can\'t decode image.</string>
+    <string name="share_image_search">Search by image</string>
 </resources>

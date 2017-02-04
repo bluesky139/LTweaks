@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.activities.ImageSearchActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
@@ -74,6 +75,24 @@ public class SystemPrefFragment extends BasePrefFragment {
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
             ComponentUtils.enableComponent(QrCodeActivity.class, false);
+        }
+    }
+
+    @PreferenceChange(prefs = R.string.key_system_share_image_search)
+    private void systemShareImageSearch(final SwitchPreference preference, boolean enabled) {
+        if (enabled) {
+            PermissionUtils.requestPermissions(getActivity(), new PermissionUtils.ResultCallback() {
+                @Override
+                public void onResult(boolean ok) {
+                    if (ok) {
+                        ComponentUtils.enableComponent(ImageSearchActivity.class, true);
+                    } else {
+                        preference.setChecked(false);
+                    }
+                }
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            ComponentUtils.enableComponent(ImageSearchActivity.class, false);
         }
     }
 }
