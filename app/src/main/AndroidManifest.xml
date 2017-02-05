@@ -61,6 +61,7 @@
 
         <activity android:name=".activities.JDHistoryActivity" android:excludeFromRecents="true"
             android:label="@string/jd_history"
+            android:icon="@mipmap/ic_price_history"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityTheme"
             android:enabled="false">
@@ -73,6 +74,7 @@
 
         <activity android:name=".activities.QrCodeActivity" android:excludeFromRecents="true"
             android:label="@string/share_qrcode_scan"
+            android:icon="@mipmap/ic_qrcode_scan"
             android:theme="@style/DialogActivityTheme"
             android:enabled="false">
             <intent-filter>
@@ -84,6 +86,7 @@
 
         <activity android:name=".activities.ImageSearchActivity" android:excludeFromRecents="true"
             android:label="@string/share_image_search"
+            android:icon="@mipmap/ic_image_search"
             android:theme="@style/DialogActivityTheme"
             android:enabled="false">
             <intent-filter>
