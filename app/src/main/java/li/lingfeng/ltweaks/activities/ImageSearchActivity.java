@@ -2,6 +2,7 @@ package li.lingfeng.ltweaks.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +29,6 @@ import okhttp3.Response;
 public class ImageSearchActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-    private OkHttpClient mHttpClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,31 +47,36 @@ public class ImageSearchActivity extends AppCompatActivity {
             return;
         }
 
-        searchByImage(uri);
+        Logger.i("Uploading image file " + uri.toString());
+        new SearchByImage().execute(uri);
     }
 
-    private OkHttpClient getHttpClient() {
-        if (mHttpClient == null) {
-            mHttpClient = new OkHttpClient.Builder()
-                    .build();
+    private class SearchByImage extends AsyncTask<Uri, Void, byte[]> {
+
+        @Override
+        protected byte[] doInBackground(Uri... params) {
+            Uri uri = params[0];
+            return IOUtils.uri2bytes(uri);
         }
-        return mHttpClient;
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            uploadBytes(bytes);
+        }
     }
 
-    private void searchByImage(Uri uri) {
-        byte[] bytes = IOUtils.uri2bytes(uri);
+    private void uploadBytes(byte[] bytes) {
         if (bytes == null) {
             Toast.makeText(this, R.string.cant_read_file, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        Logger.i("Uploading image file " + uri.toString());
         Request request = new Request.Builder()
                 .url("http://104.224.152.49:8000/tmp_image/")
                 .post(RequestBody.create(MEDIA_TYPE_PNG, bytes))
                 .build();
-        getHttpClient().newCall(request).enqueue(new Callback() {
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 failedUpload("Request failed, " + e.getMessage());
@@ -93,7 +98,7 @@ public class ImageSearchActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(ImageSearchActivity.this, R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageSearchActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

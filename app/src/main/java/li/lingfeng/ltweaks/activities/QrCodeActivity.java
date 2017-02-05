@@ -2,6 +2,7 @@ package li.lingfeng.ltweaks.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -54,12 +55,19 @@ public class QrCodeActivity extends AppCompatActivity {
         mQrcodeText = (TextView) findViewById(R.id.qrcode_text);
         mQrcodeText.setTextIsSelectable(true);
         mQrcodeText.setMovementMethod(LinkMovementMethod.getInstance());
-        new ZXingUtils.DecodeTask(mDecodeCallback).execute(uri);
+
+        new DecodeTask().execute(uri);
     }
 
-    private ZXingUtils.DecodeCallback mDecodeCallback = new ZXingUtils.DecodeCallback() {
+    private class DecodeTask extends AsyncTask<Uri, Void, Result> {
+
         @Override
-        public void onDecoded(Result result) {
+        protected Result doInBackground(Uri... params) {
+            return ZXingUtils.decodeQrCode(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Result result) {
             if (result == null) {
                 Toast.makeText(QrCodeActivity.this, R.string.share_qrcode_cant_decode, Toast.LENGTH_SHORT).show();
                 QrCodeActivity.this.finish();
@@ -78,5 +86,5 @@ public class QrCodeActivity extends AppCompatActivity {
                 mQrcodeText.setText(content);
             }
         }
-    };
+    }
 }

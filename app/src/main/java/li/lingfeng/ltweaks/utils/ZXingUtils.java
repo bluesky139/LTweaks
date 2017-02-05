@@ -28,7 +28,7 @@ import li.lingfeng.ltweaks.MyApplication;
 public class ZXingUtils {
 
     private static WeakReference<MultiFormatReader> multiFormatReaderRef;
-    private static Result decodeQrCode(Uri uri) {
+    public static Result decodeQrCode(Uri uri) {
         MultiFormatReader multiFormatReader = multiFormatReaderRef != null ? multiFormatReaderRef.get() : null;
         if (multiFormatReader == null) {
             multiFormatReader = new MultiFormatReader();
@@ -60,28 +60,5 @@ public class ZXingUtils {
             } catch (Exception e) {}
         }
         return result;
-    }
-
-    public interface DecodeCallback {
-        void onDecoded(Result result);
-    }
-
-    public static class DecodeTask extends AsyncTask<Uri, Void, Result> {
-
-        private DecodeCallback mCallback;
-
-        public DecodeTask(DecodeCallback callback) {
-            mCallback = callback;
-        }
-
-        @Override
-        protected Result doInBackground(Uri... params) {
-            return decodeQrCode(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Result result) {
-            mCallback.onDecoded(result);
-        }
     }
 }
