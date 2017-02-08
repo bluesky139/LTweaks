@@ -6,6 +6,8 @@ package li.lingfeng.ltweaks.prefs;
 
 public class PackageNames {
 
+    public static final String L_TWEAKS = "li.lingfeng.ltweaks";
+
     // Google
     public static final String GOOGLE = "com.google.android.googlequicksearchbox";
     public static final String GOOGLE_PLUS = "com.google.android.apps.plus";
@@ -23,6 +25,7 @@ public class PackageNames {
     // Entertainment
     public static final String DOUBAN_MOVIE = "com.douban.movie";
     public static final String BILIBILI = "tv.danmaku.bili";
+    public static final String COOLAPK = "com.coolapk.market";
 
     // System
     public static final String TEXT_AIDE = "com.arjerine.textxposed";

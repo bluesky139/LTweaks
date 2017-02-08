@@ -2,6 +2,7 @@ package li.lingfeng.ltweaks.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 
 import li.lingfeng.ltweaks.MyApplication;
@@ -69,5 +70,21 @@ public class ContextUtils {
 
     public static Drawable getDrawable(String name, Context context) {
         return context.getResources().getDrawable(getDrawableId(name, context));
+    }
+
+    public static int getLayoutId(String name) {
+        return getLayoutId(name, MyApplication.instance());
+    }
+
+    public static int getLayoutId(String name, Context context) {
+        return getResId(name, "layout", context);
+    }
+
+    public static XmlResourceParser getLayout(String name) {
+        return getLayout(name, MyApplication.instance());
+    }
+
+    public static XmlResourceParser getLayout(String name, Context context) {
+        return context.getResources().getLayout(getLayoutId(name, context));
     }
 }

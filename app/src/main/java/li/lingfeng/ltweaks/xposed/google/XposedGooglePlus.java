@@ -41,112 +41,76 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.GOOGLE_PLUS, prefs = R.string.key_google_plus_remove_bottom_bar)
 public class XposedGooglePlus extends XposedBase {
 
-    Activity activity;
-    View rootView;
+    private static final String sActivityName = "com.google.android.apps.plus.phone.BinderHomeActivity";
 
-    View tabBar;
-    int tabBarSpacerId = 0;
-    TextView[] tabButtons = new TextView[4];
-    View tabBarCounter;
+    private Activity activity;
+    private View rootView;
 
-    LinearLayout drawerFragment;
-    ListView navList;
-    ListView barList;
-    BarListAdapter barListAdapter;
-    ImageView counter;
+    private View tabBar;
+    private int tabBarSpacerId = 0;
+    private TextView[] tabButtons = new TextView[4];
+    private View tabBarCounter;
 
-    boolean done = false;
+    private LinearLayout drawerFragment;
+    private ListView navList;
+    private ListView barList;
+    private BarListAdapter barListAdapter;
+    private ImageView counter;
+
+    private boolean done = false;
 
     @Override
     public void handleLoadPackage() throws Throwable {
-        findAndHookMethod("com.google.android.apps.plus.Gplus_Application", "onCreate", new XC_MethodHook() {
+        findAndHookActivity(sActivityName, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Application app = (Application) param.thisObject;
-                app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+                activity = (Activity) param.thisObject;
+                tabBarSpacerId = ContextUtils.getIdId("bottom_navigation_spacer");
+                if (tabBarSpacerId == 0)
+                    return;
+
+                rootView = activity.findViewById(android.R.id.content);
+                rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
-                    public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
-                        if (!activity.getClass().getName().equals("com.google.android.apps.plus.phone.BinderHomeActivity"))
-                            return;
-                        XposedGooglePlus.this.activity = activity;
-
-                        tabBarSpacerId = ContextUtils.getIdId("bottom_navigation_spacer");
-                        if (tabBarSpacerId == 0)
-                            return;
-
-                        rootView = activity.findViewById(android.R.id.content);
-                        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                //Logger.w("layout changed.");
-                                traverseViewChilds(rootView, 0);
-                                if (tabBar != null && tabBar.getVisibility() == View.VISIBLE) {
-                                    ViewGroup.LayoutParams tabBarParams = tabBar.getLayoutParams();
-                                    tabBarParams.height = 0;
-                                    tabBar.setLayoutParams(tabBarParams);
-                                    tabBar.setVisibility(View.INVISIBLE);
-                                }
-                                //if (tabBarCounter != null)
-                                //    tabBarCounter.setVisibility(View.VISIBLE);
-                                if (counter != null && counter.getVisibility() != tabBarCounter.getVisibility())
-                                    counter.setVisibility(tabBarCounter.getVisibility());
-                                if (!done && isReady())
-                                    createBarList();
-                            }
-                        });
-
-                        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        //    XposedGooglePlus.this.activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                        //}
-                    }
-
-                    @Override
-                    public void onActivityStarted(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivityResumed(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivityPaused(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivityStopped(Activity activity) {
-
-                    }
-
-                    @Override
-                    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-                    }
-
-                    @Override
-                    public void onActivityDestroyed(Activity activity) {
-                        if (!activity.getClass().getName().equals("com.google.android.apps.plus.phone.BinderHomeActivity"))
-                            return;
-                        XposedGooglePlus.this.activity = null;
-                        rootView = null;
-                        tabBar = null;
-                        tabBarSpacerId = 0;
-                        Arrays.fill(tabButtons, null);
-                        tabBarCounter = null;
-                        drawerFragment = null;
-                        barList = null;
-                        barListAdapter = null;
-                        counter = null;
-                        done = false;
+                    public void onGlobalLayout() {
+                        //Logger.w("layout changed.");
+                        traverseViewChilds(rootView, 0);
+                        if (tabBar != null && tabBar.getVisibility() == View.VISIBLE) {
+                            ViewGroup.LayoutParams tabBarParams = tabBar.getLayoutParams();
+                            tabBarParams.height = 0;
+                            tabBar.setLayoutParams(tabBarParams);
+                            tabBar.setVisibility(View.INVISIBLE);
+                        }
+                        //if (tabBarCounter != null)
+                        //    tabBarCounter.setVisibility(View.VISIBLE);
+                        if (counter != null && counter.getVisibility() != tabBarCounter.getVisibility())
+                            counter.setVisibility(tabBarCounter.getVisibility());
+                        if (!done && isReady())
+                            createBarList();
                     }
                 });
             }
         });
+
+        findAndHookActivity(sActivityName, "onDestroy", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                activity = null;
+                rootView = null;
+                tabBar = null;
+                tabBarSpacerId = 0;
+                Arrays.fill(tabButtons, null);
+                tabBarCounter = null;
+                drawerFragment = null;
+                barList = null;
+                barListAdapter = null;
+                counter = null;
+                done = false;
+            }
+        });
     }
 
-    boolean isReady() {
+    private boolean isReady() {
         if (activity != null && tabBar != null &&  drawerFragment != null && navList != null) {
             for (View button : tabButtons) {
                 if (button == null)
@@ -157,7 +121,7 @@ public class XposedGooglePlus extends XposedBase {
         return false;
     }
 
-    void traverseViewChilds(View view, int depth) {
+    private void traverseViewChilds(View view, int depth) {
         if (view instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); ++i) {
@@ -215,7 +179,7 @@ public class XposedGooglePlus extends XposedBase {
         }
     }
 
-    String getResNameById(int id) {
+    private String getResNameById(int id) {
         if (id < 0x7F000000)
             return "";
         try {
@@ -225,7 +189,7 @@ public class XposedGooglePlus extends XposedBase {
         }
     }
 
-    void createBarList() {
+    private void createBarList() {
         ListAdapter adapter = navList.getAdapter();
         if (adapter != null && adapter.getCount() > 4) {
             int titleId = activity.getResources().getIdentifier("navigation_item_name", "id", "com.google.android.apps.plus");
@@ -256,7 +220,7 @@ public class XposedGooglePlus extends XposedBase {
         done = true;
     }
 
-    class BarListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    private class BarListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
         View[] views = new View[tabButtons.length];
 

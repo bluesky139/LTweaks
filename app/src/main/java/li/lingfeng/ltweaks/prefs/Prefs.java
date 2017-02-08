@@ -15,7 +15,7 @@ public class Prefs {
     public static SharedPreferences instance() {
         if (instance_ == null) {
             if (MyApplication.instance() == null
-                    || !MyApplication.instance().getPackageName().equals("li.lingfeng.ltweaks")) {
+                    || !MyApplication.instance().getPackageName().equals(PackageNames.L_TWEAKS)) {
                 instance_ = createXSharedPreferences();
             } else {
                 instance_ = createSharedPreferences();
@@ -25,7 +25,7 @@ public class Prefs {
     }
 
     private static SharedPreferences createXSharedPreferences() {
-        XSharedPreferences pref = new XSharedPreferences("li.lingfeng.ltweaks");
+        XSharedPreferences pref = new XSharedPreferences(PackageNames.L_TWEAKS);
         pref.reload();
         return new SharedPreferences(pref);
     }

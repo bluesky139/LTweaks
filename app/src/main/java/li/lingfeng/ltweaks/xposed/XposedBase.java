@@ -1,6 +1,10 @@
 package li.lingfeng.ltweaks.xposed;
 
+import android.app.Activity;
 import android.app.Application;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -8,12 +12,16 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.Logger;
 
 /**
  * Created by smallville on 2017/1/23.
  */
 
 public abstract class XposedBase implements IXposedHookLoadPackage {
+
+    private static Method sMethodBeforeHooked;
+    private static Method sMethodAfterHooked;
 
     protected XC_LoadPackage.LoadPackageParam lpparam;
 
@@ -46,5 +54,67 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected XC_MethodHook.Unhook findAndHookConstructor(Class<?> clazz, Object... parameterTypesAndCallback) {
         return XposedHelpers.findAndHookConstructor(clazz, parameterTypesAndCallback);
+    }
+
+    protected XC_MethodHook.Unhook findAndHookActivity(final String className, String methodName, Object... parameterTypesAndCallback) {
+        if(parameterTypesAndCallback.length != 0 && parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof XC_MethodHook) {
+            final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
+            XC_MethodHook middleHook = new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    if (param.thisObject.getClass().getName().equals(className)) {
+                        try {
+                            getMethodBeforeHooked().invoke(hook, param);
+                        } catch (InvocationTargetException e) {
+                            Logger.e("Hook activity error in beforeHookedMethod, " + e.getMessage());
+                            throw new Exception(e.getCause());
+                        }
+                    }
+                }
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    if (param.thisObject.getClass().getName().equals(className)) {
+                        try {
+                            getMethodAfterHooked().invoke(hook, param);
+                        } catch (InvocationTargetException e) {
+                            Logger.e("Hook activity error in afterHookedMethod, " + e.getMessage());
+                            throw new Exception(e.getCause());
+                        }
+                    }
+                }
+            };
+            parameterTypesAndCallback[parameterTypesAndCallback.length - 1] = middleHook;
+            return findAndHookMethod(Activity.class, methodName, parameterTypesAndCallback);
+        } else {
+            throw new IllegalArgumentException("no callback defined");
+        }
+    }
+
+    private Method getMethodBeforeHooked() {
+        if (sMethodBeforeHooked == null) {
+            try {
+                sMethodBeforeHooked = XC_MethodHook.class.getDeclaredMethod("beforeHookedMethod",
+                        XC_MethodHook.MethodHookParam.class);
+                sMethodBeforeHooked.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                Logger.e("Can't get method beforeHookedMethod");
+                e.printStackTrace();
+            }
+        }
+        return sMethodBeforeHooked;
+    }
+
+    private Method getMethodAfterHooked() {
+        if (sMethodAfterHooked == null) {
+            try {
+                sMethodAfterHooked = XC_MethodHook.class.getDeclaredMethod("afterHookedMethod",
+                        XC_MethodHook.MethodHookParam.class);
+                sMethodAfterHooked.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                Logger.e("Can't get method afterHookedMethod");
+                e.printStackTrace();
+            }
+        }
+        return sMethodAfterHooked;
     }
 }
