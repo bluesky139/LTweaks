@@ -1,9 +1,13 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.XmlResourceParser;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.prefs.PackageNames;
@@ -21,6 +25,20 @@ public class ContextUtils {
             Logger.e("Can't create context for package " + packageName + ", " + e.getMessage());
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static String getResNameById(int id) {
+        return getResNameById(id, MyApplication.instance());
+    }
+
+    public static String getResNameById(int id, Context context) {
+        if (id < 0x7F000000)
+            return "";
+        try {
+            return context.getResources().getResourceEntryName(id);
+        } catch (Exception e) {
+            return "";
         }
     }
 
@@ -56,6 +74,14 @@ public class ContextUtils {
         return getResId(name, "drawable", context);
     }
 
+    public static int getMipmapId(String name) {
+        return getMipmapId(name, MyApplication.instance());
+    }
+
+    public static int getMipmapId(String name, Context context) {
+        return getResId(name, "mipmap", context);
+    }
+
     public static String getString(String name) {
         return getString(name, MyApplication.instance());
     }
@@ -72,6 +98,14 @@ public class ContextUtils {
         return context.getResources().getDrawable(getDrawableId(name, context));
     }
 
+    public static Drawable getMipmap(String name) {
+        return getMipmap(name, MyApplication.instance());
+    }
+
+    public static Drawable getMipmap(String name, Context context) {
+        return context.getResources().getDrawable(getMipmapId(name, context));
+    }
+
     public static int getLayoutId(String name) {
         return getLayoutId(name, MyApplication.instance());
     }
@@ -86,5 +120,38 @@ public class ContextUtils {
 
     public static XmlResourceParser getLayout(String name, Context context) {
         return context.getResources().getLayout(getLayoutId(name, context));
+    }
+
+    public static int dp2px(float dpValue){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,
+                MyApplication.instance().getResources().getDisplayMetrics());
+    }
+
+    public static Drawable getAppIcon() {
+        return getAppIcon(MyApplication.instance().getPackageName());
+    }
+
+    public static Drawable getAppIcon(String packageName) {
+        try {
+            return MyApplication.instance().getPackageManager().getApplicationIcon(packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            Logger.e("Can't get icon from app " + packageName);
+            e.printStackTrace();
+            return new ColorDrawable(Color.WHITE);
+        }
+    }
+
+    public static String getAppName() {
+        return getAppName(MyApplication.instance().getPackageName());
+    }
+
+    public static String getAppName(String packageName) {
+        try {
+            ApplicationInfo appInfo = MyApplication.instance().getPackageManager().getApplicationInfo(packageName, 0);
+            return MyApplication.instance().getPackageManager().getApplicationLabel(appInfo).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

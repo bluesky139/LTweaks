@@ -22,6 +22,7 @@
     <!--Entertainment-->
     <string name="key_douban_movie_skip_splash">key_douban_movie_skip_splash</string>
     <string name="key_bilibili_subscriptions_goto_top">key_bilibili_subscriptions_goto_top</string>
+    <string name="key_coolapk_remove_bottom_bar">key_coolapk_remove_bottom_bar</string>
 
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>

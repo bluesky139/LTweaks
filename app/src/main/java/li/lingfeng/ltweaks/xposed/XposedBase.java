@@ -58,6 +58,18 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected XC_MethodHook.Unhook findAndHookActivity(final String className, String methodName, Object... parameterTypesAndCallback) {
         if(parameterTypesAndCallback.length != 0 && parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof XC_MethodHook) {
+            Class<?>[] parameterTypes = new Class<?>[parameterTypesAndCallback.length - 1];
+            System.arraycopy(parameterTypesAndCallback, 0, parameterTypes, 0, parameterTypes.length);
+
+            // If method is override by extended activity, then hook it directly.
+            Class<?> clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
+            try {
+                clsActivity.getDeclaredMethod(methodName, parameterTypes);
+                //Logger.d("Hook " + className + " " + methodName);
+                return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
+            } catch (NoSuchMethodException e) {}
+
+            // If method is not override by extended activity, hook android.app.Activity.
             final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
             XC_MethodHook middleHook = new XC_MethodHook() {
                 @Override
@@ -84,6 +96,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 }
             };
             parameterTypesAndCallback[parameterTypesAndCallback.length - 1] = middleHook;
+            //Logger.d("Hook android.app.Activity " + methodName + " for " + className);
             return findAndHookMethod(Activity.class, methodName, parameterTypesAndCallback);
         } else {
             throw new IllegalArgumentException("no callback defined");
