@@ -124,7 +124,8 @@ public class XposedCoolapk extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.i("onDestroy");
-                mActivity = null;
+                mActivity     = null;
+                mContentView  = null;
                 mTabContainer = null;
                 mDrawerLayout = null;
             }
