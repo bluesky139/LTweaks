@@ -30,6 +30,7 @@ import java.util.List;
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -44,6 +45,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedCoolapk extends XposedBase {
 
     private static final String MAIN_ACTIVITY = "com.coolapk.market.view.main.MainActivity";
+    private static final String MAIN_FRAGMENT = "com.coolapk.market.view.main.MainFragment";
     private List<SharedPreferences> mSharedPrefList = new ArrayList<>();
 
     private Activity mActivity;
@@ -144,6 +146,23 @@ public class XposedCoolapk extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 ContextThemeWrapper themeWrapper = (ContextThemeWrapper) param.thisObject;
                 updateDrawerColor(themeWrapper.getTheme());
+            }
+        });
+
+        findAndHookMethod(ClassNames.TOOLBAR, "setNavigationOnClickListener", View.OnClickListener.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (!param.args[0].getClass().getName().startsWith(MAIN_FRAGMENT))
+                    return;
+                Logger.i("Toolbar setNavigationOnClickListener " + param.args[0]);
+                param.args[0] = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mDrawerLayout != null) {
+                            mDrawerLayout.openDrawer(Gravity.LEFT);
+                        }
+                    }
+                };
             }
         });
     }
