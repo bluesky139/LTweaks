@@ -15,13 +15,4 @@
             android:title="@string/pref_bilibili_subscriptions_goto_top"
             android:summary="@string/pref_bilibili_subscriptions_goto_top_summary" />
     </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/pref_category_coolapk">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_coolapk_remove_bottom_bar"
-            android:title="@string/pref_coolapk_remove_bottom_bar"
-            android:summary="@string/pref_coolapk_remove_bottom_bar_summary" />
-    </PreferenceCategory>
 </PreferenceScreen>

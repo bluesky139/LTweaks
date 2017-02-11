@@ -22,11 +22,11 @@
     <!--Entertainment-->
     <string name="key_douban_movie_skip_splash">key_douban_movie_skip_splash</string>
     <string name="key_bilibili_subscriptions_goto_top">key_bilibili_subscriptions_goto_top</string>
-    <string name="key_coolapk_remove_bottom_bar">key_coolapk_remove_bottom_bar</string>
 
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>
     <string name="key_youdao_quick_query_shortcut">key_youdao_quick_query_shortcut</string>
     <string name="key_system_share_qrcode_scan">key_system_share_qrcode_scan</string>
     <string name="key_system_share_image_search">key_system_share_image_search</string>
+    <string name="key_coolapk_remove_bottom_bar">key_coolapk_remove_bottom_bar</string>
 </resources>

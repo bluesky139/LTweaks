@@ -77,9 +77,6 @@ Open source on github: \n
     <string name="pref_category_bilibili">Bilibili</string>
     <string name="pref_bilibili_subscriptions_goto_top">点击标签页滚回顶部</string>
     <string name="pref_bilibili_subscriptions_goto_top_summary">只在\"关注\"页面有效</string>
-    <string name="pref_category_coolapk">酷市场</string>
-    <string name="pref_coolapk_remove_bottom_bar">去底栏</string>
-    <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
 
     <!--System-->
     <string name="pref_header_system">系统 / 工具</string>
@@ -93,6 +90,9 @@ Open source on github: \n
     <string name="pref_system_share_qrcode_scan_summary">你可以通过浏览器、本地文件、截屏等分享图片</string>
     <string name="pref_system_share_image_search">添加菜单\"以图搜图\"</string>
     <string name="pref_system_share_image_search_summary">你可以通过其它应用、本地文件等分享图片</string>
+    <string name="pref_category_coolapk">酷市场</string>
+    <string name="pref_coolapk_remove_bottom_bar">去底栏</string>
+    <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
