@@ -54,6 +54,7 @@ public class SystemPrefFragment extends BasePrefFragment {
         Intent pending = new Intent();
         pending.setClassName(PackageNames.YOUDAO_DICT, "com.youdao.dict.activity.QuickDictQueryActivity");
         pending.putExtra("isEditable", true);
+        pending.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, pending);
         getActivity().sendBroadcast(intent);
 
