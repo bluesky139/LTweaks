@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.utils;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -114,12 +115,33 @@ public class ContextUtils {
         return getResId(name, "layout", context);
     }
 
+    public static int getAttrId(String name) {
+        return getAttrId(name, MyApplication.instance());
+    }
+
+    public static int getAttrId(String name, Context context) {
+        return getResId(name, "attr", context);
+    }
+
     public static XmlResourceParser getLayout(String name) {
         return getLayout(name, MyApplication.instance());
     }
 
     public static XmlResourceParser getLayout(String name, Context context) {
         return context.getResources().getLayout(getLayoutId(name, context));
+    }
+
+    public static int getColorFromTheme(Resources.Theme theme, String name) {
+        int idColor = getAttrId(name);
+        if (idColor < 0)
+            return 0xFFFFFFFF;
+        return getColorFromTheme(theme, idColor);
+    }
+
+    public static int getColorFromTheme(Resources.Theme theme, int id) {
+        TypedValue value = new TypedValue();
+        theme.resolveAttribute(id, value, true);
+        return value.data;
     }
 
     public static int dp2px(float dpValue){

@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.ColorInt;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -65,9 +66,7 @@ public class SimpleDrawer extends DrawerLayout {
 
     protected void createHeaderView() {
         mHeaderLayout = new LinearLayout(getContext());
-        GradientDrawable bgGradient = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP,
-                new int[] { Color.parseColor("#81C784"), Color.parseColor("#4CAF50"), Color.parseColor("#2E7D32") });
-        mHeaderLayout.setBackgroundDrawable(bgGradient);
+        mHeaderLayout.setBackgroundColor(Color.parseColor("#4CAF50"));
         mHeaderLayout.setGravity(Gravity.BOTTOM);
         mHeaderLayout.setOrientation(LinearLayout.VERTICAL);
         int padding = dp2px(16);
@@ -97,6 +96,18 @@ public class SimpleDrawer extends DrawerLayout {
         mNavList.setHeaderDividersEnabled(false);
         mNavList.setFooterDividersEnabled(false);
         mNavLayout.addView(mNavList, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    }
+
+    public void updateDrawerColor(@ColorInt int color, @ColorInt int listColor, @ColorInt int textColor) {
+        mHeaderLayout.setBackgroundColor(color);
+        mNavList.setBackgroundColor(listColor);
+        mNavListAdapter.setTextColor(textColor);
+    }
+
+    public void updateClickViews(View[] clickViews) {
+        for (int i = 0; i < clickViews.length; ++i) {
+            mNavItems[i].mClickView = clickViews[i];
+        }
     }
 
     public static class NavItem {
@@ -155,6 +166,13 @@ public class SimpleDrawer extends DrawerLayout {
             view = textView;
             mNavItemViews[position] = view;
             return view;
+        }
+
+        public void setTextColor(@ColorInt int color) {
+            for (int i = 0; i < getCount(); ++i) {
+                TextView view = (TextView) getView(i, null, null);
+                view.setTextColor(color);
+            }
         }
 
         @Override

@@ -4,21 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +47,9 @@ public class XposedCoolapk extends XposedBase {
     private List<SharedPreferences> mSharedPrefList = new ArrayList<>();
 
     private Activity mActivity;
+    private ViewGroup mContentView;
     private ViewGroup mTabContainer;
     private SimpleDrawer mDrawerLayout;
-    private boolean mIsDone = false;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -73,18 +78,40 @@ public class XposedCoolapk extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mActivity = (Activity) param.thisObject;
-                final ViewGroup contentView = (ViewGroup) mActivity.findViewById(android.R.id.content);
-                Logger.i("Got contentView " + contentView);
-
-                contentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                final ViewGroup rootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
+                final int idContentView = ContextUtils.getIdId("content_view");
+                final int idTabContainer = ContextUtils.getIdId("bottom_navigation");
+                rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        if (mTabContainer != null && mTabContainer.getVisibility() == View.VISIBLE) {
-                            mTabContainer.setVisibility(View.GONE);
-                            Logger.d("Set mTabContainer gone.");
-                        }
-                        if (!mIsDone) {
-                            handleWithContentView(contentView);
+                        try {
+                            //Logger.d("layout changed.");
+                            if (mContentView == null) {
+                                mContentView = (ViewGroup) mActivity.findViewById(idContentView);
+                                if (mContentView != null) {
+                                    Logger.i("Got contentView");
+                                } else {
+                                    return;
+                                }
+                            }
+
+                            ViewGroup tabContainer = (ViewGroup) mActivity.findViewById(idTabContainer);
+                            if (tabContainer == null) {
+                                return;
+                            }
+
+                            if (mTabContainer != tabContainer) {
+                                Logger.i("Got tabContainer.");
+                                handleWithTabContainer(tabContainer);
+                            }
+
+                            if (mTabContainer != null && mTabContainer.getVisibility() == View.VISIBLE) {
+                                mTabContainer.setVisibility(View.GONE);
+                                Logger.d("Set mTabContainer gone.");
+                            }
+                        } catch (Exception e) {
+                            Logger.e("onGlobalLayout error, " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -94,11 +121,10 @@ public class XposedCoolapk extends XposedBase {
         findAndHookActivity(MAIN_ACTIVITY, "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("onDestroy");
+                Logger.i("onDestroy");
                 mActivity = null;
                 mTabContainer = null;
                 mDrawerLayout = null;
-                mIsDone = false;
             }
         });
 
@@ -112,42 +138,62 @@ public class XposedCoolapk extends XposedBase {
                 }
             }
         });
+
+        findAndHookMethod(ContextThemeWrapper.class, "setTheme", int.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                ContextThemeWrapper themeWrapper = (ContextThemeWrapper) param.thisObject;
+                updateDrawerColor(themeWrapper.getTheme());
+            }
+        });
     }
 
-    private void handleWithContentView(ViewGroup contentView) {
-        mTabContainer = ViewUtils.findViewGroupByName(contentView, "bottom_navigation");
-        if (mTabContainer == null) {
-            return;
-        }
-
+    private void handleWithTabContainer(ViewGroup tabContainer) {
+        mTabContainer = tabContainer;
         List<View> tabViews = ViewUtils.findAllViewByName(mTabContainer, "bottom_navigation_container");
         if (tabViews.size() == 0) {
             Logger.e("Can't get bottom_navigation_container");
-            mIsDone = true;
             return;
         }
 
-        SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[tabViews.size()];
-        int idTabIcon = ContextUtils.getIdId("bottom_navigation_item_icon");
-        int idTabText = ContextUtils.getIdId("bottom_navigation_item_title");
-        for (int i = 0; i < tabViews.size(); ++i) {
-            View tabView = tabViews.get(i);
-            ImageView iconView = (ImageView) tabView.findViewById(idTabIcon);
-            Drawable icon = iconView.getDrawable();
-            TextView textView = (TextView) tabView.findViewById(idTabText);
-            String text = textView.getText().toString();
-            navItems[i] = new SimpleDrawer.NavItem(icon, text, tabView);
-            Logger.i("Got tab " + text);
-        }
+        if (mDrawerLayout == null) {
+            SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[tabViews.size()];
+            int idTabIcon = ContextUtils.getIdId("bottom_navigation_item_icon");
+            int idTabText = ContextUtils.getIdId("bottom_navigation_item_title");
+            for (int i = 0; i < tabViews.size(); ++i) {
+                View tabView = tabViews.get(i);
+                ImageView iconView = (ImageView) tabView.findViewById(idTabIcon);
+                Drawable icon = iconView.getDrawable();
+                TextView textView = (TextView) tabView.findViewById(idTabText);
+                String text = textView.getText().toString();
+                navItems[i] = new SimpleDrawer.NavItem(icon, text, tabView);
+                Logger.i("Got tab " + text);
+            }
 
-        ViewGroup rootView = (ViewGroup) contentView.getParent();
-        rootView.removeView(contentView);
-        mDrawerLayout = new SimpleDrawer(mActivity, contentView, navItems,
-                ContextUtils.getAppIcon(), ContextUtils.getAppName());
-        rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        mTabContainer.setVisibility(View.GONE);
-        Logger.d("drawer is created.");
-        mIsDone = true;
+            ViewGroup rootView = (ViewGroup) mContentView.getParent();
+            rootView.removeView(mContentView);
+            mDrawerLayout = new SimpleDrawer(mActivity, mContentView, navItems,
+                    mActivity.getResources().getDrawable(android.R.drawable.sym_def_app_icon),
+                    "没有底栏的感觉真好~");
+            updateDrawerColor(mActivity.getTheme());
+            rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            mTabContainer.setVisibility(View.GONE);
+            Logger.i("drawer is created.");
+        } else {
+            View[] views = new View[tabViews.size()];
+            mDrawerLayout.updateClickViews(tabViews.toArray(views));
+            Logger.i("drawer click views are updated.");
+        }
+    }
+
+    private void updateDrawerColor(Resources.Theme theme) {
+        if (mDrawerLayout != null) {
+            int color = ContextUtils.getColorFromTheme(theme, "colorPrimary");
+            int listColor = ContextUtils.getColorFromTheme(theme, "mainBackgroundColor");
+            int textColor = ContextUtils.getColorFromTheme(theme, android.R.attr.textColorPrimary);
+            mDrawerLayout.updateDrawerColor(color, listColor, textColor);
+            Logger.i("Drawer color is updated, " + String.format("%08X", color));
+        }
     }
 }
