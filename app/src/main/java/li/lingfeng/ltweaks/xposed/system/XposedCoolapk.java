@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed.entertainment;
+package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
 import android.content.Context;
