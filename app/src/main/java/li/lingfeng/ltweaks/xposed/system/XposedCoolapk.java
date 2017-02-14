@@ -47,7 +47,6 @@ public class XposedCoolapk extends XposedBase {
 
     private static final String MAIN_ACTIVITY = "com.coolapk.market.view.main.MainActivity";
     private static final String MAIN_FRAGMENT = "com.coolapk.market.view.main.MainFragment";
-    private List<SharedPreferences> mSharedPrefList = new ArrayList<>();
 
     private Activity mActivity;
     private ViewGroup mRootView;
@@ -57,24 +56,13 @@ public class XposedCoolapk extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookMethod(ContextWrapper.class, "getSharedPreferences", String.class, int.class, new XC_MethodHook() {
+        findAndHookMethod("android.app.SharedPreferencesImpl", "getBoolean", String.class, boolean.class, new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                SharedPreferences sharedPref = (SharedPreferences) param.getResult();
-                if (mSharedPrefList.contains(sharedPref))
-                    return;
-                mSharedPrefList.add(sharedPref);
-                Logger.i("Got one shared preference " + sharedPref);
-
-                findAndHookMethod(sharedPref.getClass(), "getBoolean", String.class, boolean.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        if (param.args[0].equals("DISABLE_XPOSED")) {
-                            param.setResult(false);
-                            Logger.i("Set DISABLE_XPOSED to false.");
-                        }
-                    }
-                });
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (param.args[0].equals("DISABLE_XPOSED")) {
+                    param.setResult(false);
+                    Logger.i("Set DISABLE_XPOSED to false.");
+                }
             }
         });
 
