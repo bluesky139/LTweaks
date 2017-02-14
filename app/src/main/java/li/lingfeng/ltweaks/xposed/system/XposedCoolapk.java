@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class XposedCoolapk extends XposedBase {
     private List<SharedPreferences> mSharedPrefList = new ArrayList<>();
 
     private Activity mActivity;
+    private ViewGroup mRootView;
     private ViewGroup mContentView;
     private ViewGroup mTabContainer;
     private SimpleDrawer mDrawerLayout;
@@ -80,10 +82,10 @@ public class XposedCoolapk extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mActivity = (Activity) param.thisObject;
-                final ViewGroup rootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
+                mRootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
                 final int idContentView = ContextUtils.getIdId("content_view");
                 final int idTabContainer = ContextUtils.getIdId("bottom_navigation");
-                rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         try {
@@ -125,6 +127,7 @@ public class XposedCoolapk extends XposedBase {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.i("onDestroy");
                 mActivity     = null;
+                mRootView     = null;
                 mContentView  = null;
                 mTabContainer = null;
                 mDrawerLayout = null;
@@ -190,13 +193,17 @@ public class XposedCoolapk extends XposedBase {
                 Logger.i("Got tab " + text);
             }
 
-            ViewGroup rootView = (ViewGroup) mContentView.getParent();
-            rootView.removeView(mContentView);
-            mDrawerLayout = new SimpleDrawer(mActivity, mContentView, navItems,
+            FrameLayout allView = new FrameLayout(mActivity);
+            while (mRootView.getChildCount() > 0) {
+                View view = mRootView.getChildAt(0);
+                mRootView.removeView(view);
+                allView.addView(view);
+            }
+            mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems,
                     mActivity.getResources().getDrawable(android.R.drawable.sym_def_app_icon),
                     "没有底栏的感觉真好~");
             updateDrawerColor(mActivity.getTheme());
-            rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            mRootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
             mTabContainer.setVisibility(View.GONE);
             Logger.i("drawer is created.");
