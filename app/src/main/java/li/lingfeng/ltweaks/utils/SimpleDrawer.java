@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -71,6 +72,12 @@ public class SimpleDrawer extends DrawerLayout {
         mHeaderLayout.setOrientation(LinearLayout.VERTICAL);
         int padding = dp2px(16);
         mHeaderLayout.setPadding(padding, padding, padding, padding);
+        mHeaderLayout.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         mHeaderImage = new ImageView(getContext());
         mHeaderImage.setPadding(0, padding, 0, 0);
