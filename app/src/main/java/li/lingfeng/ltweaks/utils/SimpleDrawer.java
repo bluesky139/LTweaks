@@ -60,7 +60,7 @@ public class SimpleDrawer extends DrawerLayout {
         createHeaderView();
         createListView();
 
-        LayoutParams params = new LayoutParams(dp2px(320), LayoutParams.MATCH_PARENT);
+        LayoutParams params = new LayoutParams(dp2px(280), LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.LEFT;
         addView(mNavLayout, params);
     }
