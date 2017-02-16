@@ -131,6 +131,14 @@ public class ContextUtils {
         return context.getResources().getLayout(getLayoutId(name, context));
     }
 
+    public static int getThemeId(String name) {
+        return getThemeId(name, MyApplication.instance());
+    }
+
+    public static int getThemeId(String name, Context context) {
+        return getResId(name, "style", context);
+    }
+
     public static int getColorFromTheme(Resources.Theme theme, String name) {
         int idColor = getAttrId(name);
         if (idColor < 0)

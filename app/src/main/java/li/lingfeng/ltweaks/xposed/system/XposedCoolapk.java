@@ -1,32 +1,30 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
@@ -47,12 +45,18 @@ public class XposedCoolapk extends XposedBase {
 
     private static final String MAIN_ACTIVITY = "com.coolapk.market.view.main.MainActivity";
     private static final String MAIN_FRAGMENT = "com.coolapk.market.view.main.MainFragment";
+    private static final String APP_MANAGER_ACTIVITY = "com.coolapk.market.view.appmanager.AppManagerActivity";
+    private static final String THEME_ACTIVITY = "com.coolapk.market.view.theme.ThemeListActivity";
+    private static final String SETTINGS_ACTIVITY = "com.coolapk.market.view.settings.SettingsActivity";
+    private static final String CENTER_FRAGMENT = "com.coolapk.market.view.center.CenterFragment";
 
     private Activity mActivity;
     private ViewGroup mRootView;
     private ViewGroup mContentView;
     private ViewGroup mTabContainer;
     private SimpleDrawer mDrawerLayout;
+
+    private Object mCenterFragmentB1; // CenterFragment$b$1 in Coolapk v7.3.2
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -119,6 +123,7 @@ public class XposedCoolapk extends XposedBase {
                 mContentView  = null;
                 mTabContainer = null;
                 mDrawerLayout = null;
+                mCenterFragmentB1 = null;
             }
         });
 
@@ -157,6 +162,38 @@ public class XposedCoolapk extends XposedBase {
                 };
             }
         });
+
+        findAndHookMethod("com.coolapk.market.view.center.CenterFragment", "a", ViewGroup.class, int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                Logger.d("CenterFragment a " + param.args[1]);
+            }
+        });
+
+        // try get theme set methods
+        /*if (mThemeSetMethods == null) {
+            mThemeSetMethods = new ArrayList<>();
+            Class<?> clsAppTheme = findClass(APP_THEME);
+            Method[] methods = clsAppTheme.getDeclaredMethods();
+            for (Method method : methods) {
+                if (Modifier.isStatic(method.getModifiers()) || !Modifier.isPublic(method.getModifiers())
+                        || method.getReturnType() != void.class || method.getParameterTypes().length != 2
+                        || !method.getParameterTypes()[0].getName().equals(ClassNames.APP_COMPAT_ACTIVITY)
+                        || method.getParameterTypes()[1] != String.class) {
+                    continue;
+                }
+                mThemeSetMethods.add(method);
+                Logger.i("Got theme set method " + method);
+            }
+        }
+
+        findAndHookConstructor(APP_THEME, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                mAppTheme = param.thisObject;
+                Logger.i("Got mAppTheme.");
+            }
+        });*/
     }
 
     private void handleWithTabContainer(ViewGroup tabContainer) {
@@ -168,26 +205,84 @@ public class XposedCoolapk extends XposedBase {
         }
 
         if (mDrawerLayout == null) {
-            SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[tabViews.size()];
+            List<SimpleDrawer.NavItem> navItems = new ArrayList<>();
+
+            // 4 bottom buttons
             int idTabIcon = ContextUtils.getIdId("bottom_navigation_item_icon");
             int idTabText = ContextUtils.getIdId("bottom_navigation_item_title");
-            for (int i = 0; i < tabViews.size(); ++i) {
-                View tabView = tabViews.get(i);
+            for (View tabView : tabViews) {
                 ImageView iconView = (ImageView) tabView.findViewById(idTabIcon);
                 Drawable icon = iconView.getDrawable();
                 TextView textView = (TextView) tabView.findViewById(idTabText);
                 String text = textView.getText().toString();
-                navItems[i] = new SimpleDrawer.NavItem(icon, text, tabView);
+                SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(icon, text, tabView);
+                navItems.add(navItem);
                 Logger.i("Got tab " + text);
             }
 
+            // app manager
+            Drawable icon = ContextUtils.getDrawable("ic_arrow_down_bold_circle_outline_white_24dp");
+            String text = ContextUtils.getString("title_app_manager");
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClassName(PackageNames.COOLAPK, APP_MANAGER_ACTIVITY);
+                    mActivity.startActivity(intent);
+                }
+            };
+            SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(icon, text, listener);
+            navItems.add(navItem);
+
+            // theme
+            icon = ContextUtils.getDrawable("ic_color_lens_white_24dp");
+            text = ContextUtils.getString("title_theme");
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClassName(PackageNames.COOLAPK, THEME_ACTIVITY);
+                    mActivity.startActivity(intent);
+                }
+            };
+            navItem = new SimpleDrawer.NavItem(icon, text, listener);
+            navItems.add(navItem);
+
+            // night mode
+            icon = ContextUtils.getDrawable("ic_star_white_24dp");
+            text = ContextUtils.getString("menu_night_mode");
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switchDayNight();
+                }
+            };
+            navItem = new SimpleDrawer.NavItem(icon, text, listener);
+            navItems.add(navItem);
+
+            // settings
+            icon = ContextUtils.getDrawable("ic_settings_white_24dp");
+            text = ContextUtils.getString("title_settings");
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClassName(PackageNames.COOLAPK, SETTINGS_ACTIVITY);
+                    mActivity.startActivity(intent);
+                }
+            };
+            navItem = new SimpleDrawer.NavItem(icon, text, listener);
+            navItems.add(navItem);
+
+            // create drawer
             FrameLayout allView = new FrameLayout(mActivity);
             while (mRootView.getChildCount() > 0) {
                 View view = mRootView.getChildAt(0);
                 mRootView.removeView(view);
                 allView.addView(view);
             }
-            mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems,
+            SimpleDrawer.NavItem[] navItemArray = new SimpleDrawer.NavItem[navItems.size()];
+            mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems.toArray(navItemArray),
                     mActivity.getResources().getDrawable(android.R.drawable.sym_def_app_icon),
                     "没有底栏的感觉真好~");
             updateDrawerColor(mActivity.getTheme());
@@ -196,8 +291,7 @@ public class XposedCoolapk extends XposedBase {
             mTabContainer.setVisibility(View.GONE);
             Logger.i("drawer is created.");
         } else {
-            View[] views = new View[tabViews.size()];
-            mDrawerLayout.updateClickViews(tabViews.toArray(views));
+            mDrawerLayout.updateClickObjs(tabViews.toArray());
             Logger.i("drawer click views are updated.");
         }
     }
@@ -209,6 +303,69 @@ public class XposedCoolapk extends XposedBase {
             int textColor = ContextUtils.getColorFromTheme(theme, android.R.attr.textColorPrimary);
             mDrawerLayout.updateDrawerColor(color, listColor, textColor);
             Logger.i("Drawer color is updated, " + String.format("%08X", color));
+        }
+    }
+
+    private void switchDayNight() {
+        try {
+            if (mCenterFragmentB1 == null) {
+                Class<?> clsCenterFragment = findClass(CENTER_FRAGMENT);
+                Object centerFragment = clsCenterFragment.newInstance();
+                Logger.d("centerFragment is created.");
+
+                Class<?> clsRebindReportingHolder = findClass(ClassNames.REBIND_REPORTING_HOLDER);
+                Class<?>[] classes = clsCenterFragment.getDeclaredClasses();
+                Class<?> clsB  = null;
+                Class<?> clsB1 = null;
+                for (Class<?> cls : classes) {
+                    if (!clsRebindReportingHolder.isAssignableFrom(cls))
+                        continue;
+                    for (int i = 1; i <= 5; ++i) {
+                        try {
+                            Class<?> cls2 = findClass(cls.getName() + "$" + i);
+                            if (!CompoundButton.OnCheckedChangeListener.class.isAssignableFrom(cls2))
+                                continue;
+                            clsB1 = cls2;
+                            clsB  = cls;
+                            break;
+                        } catch (Throwable t) {
+                            break;
+                        }
+                    }
+                    if (clsB != null)
+                        break;
+                }
+                if (clsB == null) {
+                    Logger.e("Can't find clsB and clsB1.");
+                    return;
+                }
+                Logger.d("Got clsB " + clsB + ", clsB1 " + clsB1);
+
+                Constructor<?> constructorB = clsB.getConstructors()[0];
+                constructorB.setAccessible(true);
+                View view = LayoutInflater.from(mActivity).inflate(ContextUtils.getLayoutId("main_me_setting"), null, false);
+                Object b = constructorB.newInstance(centerFragment, view, null);
+                Logger.d("b is created.");
+
+                Constructor<?> constructorB1 = clsB1.getDeclaredConstructor(clsB);
+                constructorB1.setAccessible(true);
+                mCenterFragmentB1 = constructorB1.newInstance(b);
+                Logger.d("b1 is created.");
+            }
+
+            SharedPreferences pref = mActivity.getSharedPreferences("coolapk_preferences_v7", 0);
+            String themeName = pref.getString("theme_name", "green");
+            boolean isNight = !themeName.equals("night");
+
+            Method method = CompoundButton.OnCheckedChangeListener.class.getDeclaredMethod("onCheckedChanged", CompoundButton.class, boolean.class);
+            method.invoke(mCenterFragmentB1, new Switch(mActivity), isNight);
+            Logger.i("Switched day/night, " + isNight);
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                e = new Exception(e.getCause());
+            }
+            Logger.e("Can't switch day/night, " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -40,6 +40,10 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected abstract void handleLoadPackage() throws Throwable;
 
+    protected Class<?> findClass(String name) {
+        return XposedHelpers.findClass(name, lpparam.classLoader);
+    }
+
     protected XC_MethodHook.Unhook findAndHookMethod(Class<?> clazz, String methodName, Object... parameterTypesAndCallback) {
         return XposedHelpers.findAndHookMethod(clazz, methodName, parameterTypesAndCallback);
     }

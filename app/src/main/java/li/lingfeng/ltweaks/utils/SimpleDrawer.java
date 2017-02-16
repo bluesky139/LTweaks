@@ -111,21 +111,21 @@ public class SimpleDrawer extends DrawerLayout {
         mNavListAdapter.setTextColor(textColor);
     }
 
-    public void updateClickViews(View[] clickViews) {
-        for (int i = 0; i < clickViews.length; ++i) {
-            mNavItems[i].mClickView = clickViews[i];
+    public void updateClickObjs(Object[] clickObjs) {
+        for (int i = 0; i < clickObjs.length; ++i) {
+            mNavItems[i].mClickObj = clickObjs[i];
         }
     }
 
     public static class NavItem {
         public Drawable mIcon;
         public String mText;
-        public View mClickView;
+        public Object mClickObj;
 
-        public NavItem(Drawable icon, String text, View clickView) {
+        public NavItem(Drawable icon, String text, Object clickObj) {
             mIcon = icon;
             mText = text;
-            mClickView = clickView;
+            mClickObj = clickObj;
         }
     }
 
@@ -184,7 +184,15 @@ public class SimpleDrawer extends DrawerLayout {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            getItem(position).mClickView.performClick();
+            Logger.i("Drawer item " + getItem(position).mText + " is clicked.");
+            Object clickObj = getItem(position).mClickObj;
+            if (clickObj instanceof View) {
+                ((View) clickObj).performClick();
+            } else if (clickObj instanceof View.OnClickListener) {
+                ((View.OnClickListener) clickObj).onClick(view);
+            } else {
+                Logger.e("Unknown type of click obj in drawer.");
+            }
             closeDrawers();
         }
     }
