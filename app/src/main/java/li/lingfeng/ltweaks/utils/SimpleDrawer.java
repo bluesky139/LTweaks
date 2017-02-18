@@ -42,15 +42,12 @@ public class SimpleDrawer extends DrawerLayout {
     protected ListView mNavList;
     protected NavListAdapter mNavListAdapter;
     protected NavItem[] mNavItems;
-    protected Drawable mAppIcon;
-    protected String mAppName;
+    protected NavItem mHeaderItem;
 
-    public SimpleDrawer(Context context, View mainView, NavItem[] navItems,
-                        Drawable appIcon, String appName) {
+    public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem) {
         super(context);
         mNavItems = navItems;
-        mAppIcon  = appIcon;
-        mAppName  = appName;
+        mHeaderItem = headerItem;
 
         addView(mainView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         mNavLayout = new LinearLayout(getContext());
@@ -81,12 +78,18 @@ public class SimpleDrawer extends DrawerLayout {
 
         mHeaderImage = new ImageView(getContext());
         mHeaderImage.setPadding(0, padding, 0, 0);
-        mHeaderImage.setImageDrawable(mAppIcon);
+        mHeaderImage.setImageDrawable(mHeaderItem.mIcon);
+        mHeaderImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHeaderItem.onClick(v);
+            }
+        });
         mHeaderLayout.addView(mHeaderImage, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
         mHeaderText = new TextView(getContext());
         mHeaderText.setPadding(0, padding, 0, 0);
-        mHeaderText.setText(mAppName);
+        mHeaderText.setText(mHeaderItem.mText);
         mHeaderText.setTextSize(14);
         mHeaderText.setTextColor(Color.WHITE);
         mHeaderLayout.addView(mHeaderText, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -117,15 +120,33 @@ public class SimpleDrawer extends DrawerLayout {
         }
     }
 
+    public ImageView getHeaderImage() {
+        return mHeaderImage;
+    }
+
     public static class NavItem {
-        public Drawable mIcon;
-        public String mText;
-        public Object mClickObj;
+        Drawable mIcon;
+        String mText;
+        Object mClickObj;
 
         public NavItem(Drawable icon, String text, Object clickObj) {
             mIcon = icon;
             mText = text;
             mClickObj = clickObj;
+        }
+
+        void onClick(View view) {
+            Logger.i("Drawer item " + mText + " is clicked.");
+            if (mClickObj == null) {
+                return;
+            }
+            if (mClickObj instanceof View) {
+                ((View) mClickObj).performClick();
+            } else if (mClickObj instanceof View.OnClickListener) {
+                ((View.OnClickListener) mClickObj).onClick(view);
+            } else {
+                Logger.e("Unknown type of click obj in drawer.");
+            }
         }
     }
 
@@ -184,15 +205,7 @@ public class SimpleDrawer extends DrawerLayout {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Logger.i("Drawer item " + getItem(position).mText + " is clicked.");
-            Object clickObj = getItem(position).mClickObj;
-            if (clickObj instanceof View) {
-                ((View) clickObj).performClick();
-            } else if (clickObj instanceof View.OnClickListener) {
-                ((View.OnClickListener) clickObj).onClick(view);
-            } else {
-                Logger.e("Unknown type of click obj in drawer.");
-            }
+            getItem(position).onClick(view);
             closeDrawers();
         }
     }

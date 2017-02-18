@@ -33,6 +33,7 @@ import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ReflectedGlide;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
 import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
@@ -49,6 +50,7 @@ public class XposedCoolapk extends XposedBase {
     private static final String THEME_ACTIVITY = "com.coolapk.market.view.theme.ThemeListActivity";
     private static final String SETTINGS_ACTIVITY = "com.coolapk.market.view.settings.SettingsActivity";
     private static final String CENTER_FRAGMENT = "com.coolapk.market.view.center.CenterFragment";
+    private static final String USER_SPACE_ACTIVITY = "com.coolapk.market.view.user.UserSpaceActivity";
 
     private Activity mActivity;
     private ViewGroup mRootView;
@@ -162,38 +164,6 @@ public class XposedCoolapk extends XposedBase {
                 };
             }
         });
-
-        findAndHookMethod("com.coolapk.market.view.center.CenterFragment", "a", ViewGroup.class, int.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("CenterFragment a " + param.args[1]);
-            }
-        });
-
-        // try get theme set methods
-        /*if (mThemeSetMethods == null) {
-            mThemeSetMethods = new ArrayList<>();
-            Class<?> clsAppTheme = findClass(APP_THEME);
-            Method[] methods = clsAppTheme.getDeclaredMethods();
-            for (Method method : methods) {
-                if (Modifier.isStatic(method.getModifiers()) || !Modifier.isPublic(method.getModifiers())
-                        || method.getReturnType() != void.class || method.getParameterTypes().length != 2
-                        || !method.getParameterTypes()[0].getName().equals(ClassNames.APP_COMPAT_ACTIVITY)
-                        || method.getParameterTypes()[1] != String.class) {
-                    continue;
-                }
-                mThemeSetMethods.add(method);
-                Logger.i("Got theme set method " + method);
-            }
-        }
-
-        findAndHookConstructor(APP_THEME, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                mAppTheme = param.thisObject;
-                Logger.i("Got mAppTheme.");
-            }
-        });*/
     }
 
     private void handleWithTabContainer(ViewGroup tabContainer) {
@@ -274,6 +244,24 @@ public class XposedCoolapk extends XposedBase {
             navItem = new SimpleDrawer.NavItem(icon, text, listener);
             navItems.add(navItem);
 
+            // drawer header
+            icon = mActivity.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+            final SharedPreferences pref = mActivity.getSharedPreferences("coolapk_preferences_v7", 0);
+            text = pref.getString("username", "没有底栏的感觉真好~");
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String uid = pref.getString("uid", "");
+                    if (uid.isEmpty())
+                        return;
+                    Intent intent = new Intent();
+                    intent.setClassName(PackageNames.COOLAPK, USER_SPACE_ACTIVITY);
+                    intent.putExtra("EXTRA_UID_EXTRA_USERNAME", uid);
+                    mActivity.startActivity(intent);
+                }
+            };
+            SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(icon, text, listener);
+
             // create drawer
             FrameLayout allView = new FrameLayout(mActivity);
             while (mRootView.getChildCount() > 0) {
@@ -283,13 +271,28 @@ public class XposedCoolapk extends XposedBase {
             }
             SimpleDrawer.NavItem[] navItemArray = new SimpleDrawer.NavItem[navItems.size()];
             mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems.toArray(navItemArray),
-                    mActivity.getResources().getDrawable(android.R.drawable.sym_def_app_icon),
-                    "没有底栏的感觉真好~");
+                    headerItem);
             updateDrawerColor(mActivity.getTheme());
             mRootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
             mTabContainer.setVisibility(View.GONE);
             Logger.i("drawer is created.");
+
+            // update header image
+            String userAvatar = pref.getString("userAvatar", "");
+            if (!userAvatar.isEmpty()) {
+                try {
+                    Logger.i("Updating header image.");
+                    ReflectedGlide.with(mActivity, lpparam.classLoader)
+                            .load(userAvatar)
+                            .diskCacheStrategy("NONE")
+                            .placeholder(android.R.drawable.sym_def_app_icon)
+                            .into(mDrawerLayout.getHeaderImage());
+                } catch (Throwable e) {
+                    Logger.e("Failed to update header image, " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
         } else {
             mDrawerLayout.updateClickObjs(tabViews.toArray());
             Logger.i("drawer click views are updated.");
