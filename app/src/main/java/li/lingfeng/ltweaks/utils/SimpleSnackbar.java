@@ -3,6 +3,9 @@ package li.lingfeng.ltweaks.utils;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.view.ViewCompat;
@@ -76,8 +79,18 @@ public class SimpleSnackbar extends LinearLayout {
     }
 
     protected void createButton(String buttonText, final OnClickListener clickListener) {
-        mButton = new Button(getContext(), null, android.R.attr.borderlessButtonStyle);
+        mButton = new Button(getContext());
         mButton.setMinWidth(dp2px(48f));
+
+        StateListDrawable bgColor = new StateListDrawable();
+        bgColor.setExitFadeDuration(250);
+        GradientDrawable pressedDrawable = new GradientDrawable();
+        pressedDrawable.setColor(Color.parseColor("#FF464646"));
+        pressedDrawable.setStroke(dp2px(4f), Color.parseColor("#FF303030"));
+        bgColor.addState(new int[] { android.R.attr.state_pressed }, pressedDrawable);
+        bgColor.addState(new int[] {}, new ColorDrawable(Color.parseColor("#FF303030")));
+        mButton.setBackgroundDrawable(bgColor);
+
         mButton.setTextColor(Color.parseColor("#FFFF4081"));
         mButton.setText(buttonText);
         mButton.setOnClickListener(new OnClickListener() {
@@ -91,6 +104,7 @@ public class SimpleSnackbar extends LinearLayout {
 
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT | Gravity.END;
+        params.rightMargin = dp2px(6f);
         addView(mButton, params);
     }
 
