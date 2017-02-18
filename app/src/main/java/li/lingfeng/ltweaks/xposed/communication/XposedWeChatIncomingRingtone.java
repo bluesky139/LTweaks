@@ -27,7 +27,7 @@ public class XposedWeChatIncomingRingtone extends XposedBase {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Context context = (Context) param.args[0];
                 Uri uri = (Uri) param.args[1];
-                Logger.d("Setting media source, original is " + uri.toString());
+                Logger.i("Setting media source, original is " + uri.toString());
 
                 int idPhonering =context.getResources().getIdentifier("phonering", "raw", "com.tencent.mm");
                 if (uri.toString().equals("android.resource://com.tencent.mm/" + idPhonering)) {

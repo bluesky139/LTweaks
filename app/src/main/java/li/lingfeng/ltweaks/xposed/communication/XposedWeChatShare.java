@@ -129,7 +129,7 @@ public class XposedWeChatShare extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mWebViewUI = (Activity) param.thisObject;
                 mShareClicked = false;
-                Logger.d("In WebViewUI.");
+                Logger.i("In WebViewUI.");
             }
         });
 
@@ -139,7 +139,7 @@ public class XposedWeChatShare extends XposedBase {
                 mWebViewUI = null;
                 mMenuItemCopy = null;
                 mShareClicked = false;
-                Logger.d("Not in WebViewUI.");
+                Logger.i("Not in WebViewUI.");
             }
         });
 
@@ -151,7 +151,7 @@ public class XposedWeChatShare extends XposedBase {
                 }
                 mPosCopy = -1;
                 mMenuItemCopy = null;
-                Logger.d("Creating menu.");
+                Logger.i("Creating menu.");
             }
         });
 

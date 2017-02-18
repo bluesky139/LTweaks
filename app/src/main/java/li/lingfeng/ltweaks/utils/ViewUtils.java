@@ -27,7 +27,7 @@ public class ViewUtils {
         views.add(rootView);
         while (views.size() > 0) {
             ViewGroup view = views.poll();
-            //Logger.d("findViewGroupByName " + view);
+            //Logger.v("findViewGroupByName " + view);
             if (view.getId() > 0) {
                 String name_ = ContextUtils.getResNameById(view.getId());
                 if (name.equals(name_)) {
@@ -55,7 +55,7 @@ public class ViewUtils {
         List<View> results = new ArrayList<>();
         while (views.size() > 0) {
             View view = views.poll();
-            //Logger.d("findAllViewByName " + view);
+            //Logger.v("findAllViewByName " + view);
             if (view.getId() > 0) {
                 String name_ = ContextUtils.getResNameById(view.getId());
                 if (name.equals(name_)) {

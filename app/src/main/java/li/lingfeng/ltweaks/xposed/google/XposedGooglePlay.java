@@ -55,7 +55,7 @@ public class XposedGooglePlay extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 if (item == param.args[0]) {
-                    Logger.d("Menu is clicked .");
+                    Logger.i("Menu is clicked .");
                     Object navigationMgr = fNavigationMgr.get(param.thisObject);
                     Object doc = mGetCurrentDoc.invoke(navigationMgr);
 

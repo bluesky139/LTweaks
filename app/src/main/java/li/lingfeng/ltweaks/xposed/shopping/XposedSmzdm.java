@@ -44,7 +44,7 @@ public class XposedSmzdm extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                Logger.d("InnerBrowserActivity before onCreate.");
+                Logger.i("InnerBrowserActivity before onCreate.");
                 mInnerBrowser = (Activity) param.thisObject;
             }
         });
@@ -53,7 +53,7 @@ public class XposedSmzdm extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                Logger.d("kepler WebViewActivity before onCreate.");
+                Logger.i("kepler WebViewActivity before onCreate.");
                 mKeplerActivity = (Activity) param.thisObject;
             }
         });
@@ -61,7 +61,7 @@ public class XposedSmzdm extends XposedBase {
         findAndHookMethod("com.smzdm.client.android.extend.InnerBrowser.SMZDMWebViewBuilder$SMZDMWebViewClient", "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("SMZDMWebViewBuilder$SMZDMWebViewClient url " + param.args[1]);
+                Logger.i("SMZDMWebViewBuilder$SMZDMWebViewClient url " + param.args[1]);
                 if (handleUrl((String) param.args[1])) {
                     return true;
                 }
@@ -72,7 +72,7 @@ public class XposedSmzdm extends XposedBase {
         findAndHookMethod("com.kepler.jd.sdk.JdView$JDBaseWebViewClient", "shouldOverrideUrlLoading", WebView.class, String.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("JdView$JDBaseWebViewClient url " + param.args[1]);
+                Logger.i("JdView$JDBaseWebViewClient url " + param.args[1]);
                 if (handleUrl((String) param.args[1])) {
                     return true;
                 }
@@ -85,7 +85,7 @@ public class XposedSmzdm extends XposedBase {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 if (param.thisObject == mKeplerActivity) {
-                    Logger.d("mKeplerActivity onDestroy.");
+                    Logger.i("mKeplerActivity onDestroy.");
                     mKeplerActivity = null;
                 }
             }
@@ -110,7 +110,7 @@ public class XposedSmzdm extends XposedBase {
                     mKeplerActivity.finish();
                     mKeplerActivity = null;
                 }
-                Logger.d("InnerBrowser finished.");
+                Logger.i("InnerBrowser finished.");
                 return true;
             }
         }

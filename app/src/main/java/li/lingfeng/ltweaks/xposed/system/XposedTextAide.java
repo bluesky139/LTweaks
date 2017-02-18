@@ -36,7 +36,7 @@ public class XposedTextAide extends XposedBase {
                     word = intent.getStringExtra("android.intent.extra.PROCESS_TEXT");
                 if (word == null)
                     word = intent.getStringExtra("android.intent.extra.TEXT");
-                Logger.d("Text Aide word " + word);
+                Logger.i("Text Aide word " + word);
 
                 intent = new Intent();
                 intent.setClassName("com.youdao.dict", "com.youdao.dict.activity.QuickDictQueryActivity");

@@ -42,7 +42,7 @@ public class XposedGoogle extends XposedBase {
         findAndHookActivity(MAIN_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("SearchNowActivity onCreate.");
+                Logger.i("SearchNowActivity onCreate.");
                 if (!mActivities.containsKey(param.thisObject)) {
                     Activity activity = (Activity) param.thisObject;
                     mActivities.put(activity, new HandleOneActivity(activity));
@@ -53,7 +53,7 @@ public class XposedGoogle extends XposedBase {
         findAndHookActivity(MAIN_ACTIVITY, "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("SearchNowActivity onDestroy.");
+                Logger.i("SearchNowActivity onDestroy.");
                 if (!mActivities.containsKey(param.thisObject)) {
                     Activity activity = (Activity) param.thisObject;
                     HandleOneActivity handleOneActivity = mActivities.remove(activity);
@@ -84,7 +84,7 @@ public class XposedGoogle extends XposedBase {
                     if (mNowTabs != null) {
                         if (mNowTabs.getVisibility() != View.GONE) {
                             mNowTabs.setVisibility(View.GONE);
-                            Logger.d("Set mNowTabs gone.");
+                            Logger.i("Set mNowTabs gone.");
                         }
                         return;
                     }

@@ -50,7 +50,7 @@ public class XposedGoogleNewsstand extends XposedBase {
         findAndHookMethod("com.google.apps.dots.android.newsstand.home.HomeActivity", "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.d("HomeActivity onCreate.");
+                Logger.i("HomeActivity onCreate.");
                 mActivity = (Activity) param.thisObject;
                 final int idTabBarLayout = getResId("tab_bar_layout", "id");
 
@@ -61,7 +61,7 @@ public class XposedGoogleNewsstand extends XposedBase {
                         if (mTabBarLayout != null) {
                             if (mTabBarLayout.getVisibility() != View.GONE) {
                                 mTabBarLayout.setVisibility(View.GONE);
-                                Logger.d("Set mTabBarLayout gone.");
+                                Logger.i("Set mTabBarLayout gone.");
                             }
                             return;
                         }
@@ -89,7 +89,7 @@ public class XposedGoogleNewsstand extends XposedBase {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (!param.thisObject.getClass().getName().equals("com.google.apps.dots.android.newsstand.home.HomeActivity"))
                     return;
-                Logger.d("HomeActivity onDestroy.");
+                Logger.i("HomeActivity onDestroy.");
                 mActivity           = null;
                 mTabBarLayout       = null;
                 mTabForYou          = null;

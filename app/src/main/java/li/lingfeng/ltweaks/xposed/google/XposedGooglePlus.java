@@ -126,7 +126,7 @@ public class XposedGooglePlus extends XposedBase {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); ++i) {
                 view = viewGroup.getChildAt(i);
-                //Logger.d("child view" + depth + " " + view + " id " + view.getId());
+                //Logger.v("child view" + depth + " " + view + " id " + view.getId());
                 if (tabBar == null) {
                     if (getResNameById(view.getId()).equals("bottom_navigation_container")) {
                         Logger.i("got bottom_navigation_container.");

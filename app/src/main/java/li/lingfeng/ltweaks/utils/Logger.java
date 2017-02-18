@@ -2,6 +2,8 @@ package li.lingfeng.ltweaks.utils;
 
 import android.util.Log;
 
+import li.lingfeng.ltweaks.BuildConfig;
+
 /**
  * Created by smallville on 2016/11/23.
  */
@@ -9,11 +11,13 @@ public class Logger {
     private final static String TAG = "Xposed";
 
     public static void v(String msg) {
-        Log.v(TAG, msg);
+        if (BuildConfig.DEBUG)
+            Log.v(TAG, msg);
     }
 
     public static void d(String msg) {
-        Log.d(TAG, msg);
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, msg);
     }
 
     public static void i(String msg) {

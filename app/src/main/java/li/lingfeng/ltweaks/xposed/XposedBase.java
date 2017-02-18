@@ -69,7 +69,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
             try {
                 Class<?> clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
                 clsActivity.getDeclaredMethod(methodName, parameterTypes);
-                //Logger.d("Hook " + className + " " + methodName);
+                Logger.v("Hook " + className + " " + methodName);
                 return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
             } catch (Throwable e) {}
 
@@ -100,7 +100,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 }
             };
             parameterTypesAndCallback[parameterTypesAndCallback.length - 1] = middleHook;
-            //Logger.d("Hook android.app.Activity " + methodName + " for " + className);
+            Logger.v("Hook android.app.Activity " + methodName + " for " + className);
             return findAndHookMethod(Activity.class, methodName, parameterTypesAndCallback);
         } else {
             throw new IllegalArgumentException("no callback defined");

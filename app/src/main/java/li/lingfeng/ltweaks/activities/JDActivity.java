@@ -27,7 +27,7 @@ public class JDActivity extends Activity {
         }
 
         String text = getIntent().getDataString();
-        Logger.d("JDActivity url " + text);
+        Logger.i("JDActivity url " + text);
         Pattern[] patterns = {
                 Pattern.compile("https?://item\\.jd\\.com/(\\d+)\\.html"),
                 Pattern.compile("https?://re\\.jd\\.com/cps/item/(\\d+)\\.html"),

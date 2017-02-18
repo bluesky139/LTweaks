@@ -83,7 +83,7 @@ public class XposedCoolapk extends XposedBase {
                     @Override
                     public void onGlobalLayout() {
                         try {
-                            //Logger.d("layout changed.");
+                            //Logger.v("layout changed.");
                             if (mContentView == null) {
                                 mContentView = (ViewGroup) mActivity.findViewById(idContentView);
                                 if (mContentView != null) {
@@ -105,7 +105,7 @@ public class XposedCoolapk extends XposedBase {
 
                             if (mTabContainer != null && mTabContainer.getVisibility() == View.VISIBLE) {
                                 mTabContainer.setVisibility(View.GONE);
-                                Logger.d("Set mTabContainer gone.");
+                                Logger.i("Set mTabContainer gone.");
                             }
                         } catch (Exception e) {
                             Logger.e("onGlobalLayout error, " + e.getMessage());
@@ -314,7 +314,7 @@ public class XposedCoolapk extends XposedBase {
             if (mCenterFragmentB1 == null) {
                 Class<?> clsCenterFragment = findClass(CENTER_FRAGMENT);
                 Object centerFragment = clsCenterFragment.newInstance();
-                Logger.d("centerFragment is created.");
+                Logger.i("centerFragment is created.");
 
                 Class<?> clsRebindReportingHolder = findClass(ClassNames.REBIND_REPORTING_HOLDER);
                 Class<?>[] classes = clsCenterFragment.getDeclaredClasses();
@@ -342,18 +342,18 @@ public class XposedCoolapk extends XposedBase {
                     Logger.e("Can't find clsB and clsB1.");
                     return;
                 }
-                Logger.d("Got clsB " + clsB + ", clsB1 " + clsB1);
+                Logger.i("Got clsB " + clsB + ", clsB1 " + clsB1);
 
                 Constructor<?> constructorB = clsB.getConstructors()[0];
                 constructorB.setAccessible(true);
                 View view = LayoutInflater.from(mActivity).inflate(ContextUtils.getLayoutId("main_me_setting"), null, false);
                 Object b = constructorB.newInstance(centerFragment, view, null);
-                Logger.d("b is created.");
+                Logger.i("b is created.");
 
                 Constructor<?> constructorB1 = clsB1.getDeclaredConstructor(clsB);
                 constructorB1.setAccessible(true);
                 mCenterFragmentB1 = constructorB1.newInstance(b);
-                Logger.d("b1 is created.");
+                Logger.i("b1 is created.");
             }
 
             SharedPreferences pref = mActivity.getSharedPreferences("coolapk_preferences_v7", 0);
