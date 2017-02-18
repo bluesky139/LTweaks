@@ -18,6 +18,8 @@ public class PackageNames {
 
     // Shopping
     public static final String SMZDM = "com.smzdm.client.android";
+    public static final String SUNING = "com.suning.mobile.ebuy";
+    public static final String TAOBAO = "com.taobao.taobao";
 
     // Communication
     public static final String WE_CHAT = "com.tencent.mm";

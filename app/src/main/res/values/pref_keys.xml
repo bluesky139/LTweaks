@@ -13,6 +13,8 @@
     <string name="key_jd_open_link_in_app">key_jd_open_link_in_app</string>
     <string name="key_jd_history">key_jd_history</string>
     <string name="key_smzdm_open_link_in_jd_app">key_smzdm_open_link_in_jd_app</string>
+    <string name="key_suning_share_item">key_suning_share_item</string>
+    <string name="key_taobao_share_item">key_taobao_share_item</string>
 
     <!--Communication-->
     <string name="key_wechat_system_share_in_inner_browser">key_wechat_system_share_in_inner_browser</string>

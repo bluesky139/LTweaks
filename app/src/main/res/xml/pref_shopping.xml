@@ -12,6 +12,25 @@
             android:title="@string/pref_jd_history"
             android:summary="@string/pref_jd_history_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_suning">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_suning_share_item"
+            android:title="@string/pref_suning_share_item"
+            android:summary="@string/pref_suning_share_item_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_taobao">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_taobao_share_item"
+            android:title="@string/pref_taobao_share_item"
+            android:summary="@string/pref_taobao_share_item_summary" />
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/pref_category_smzdm">
         <SwitchPreference

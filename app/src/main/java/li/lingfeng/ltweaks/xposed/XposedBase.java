@@ -66,12 +66,12 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
             System.arraycopy(parameterTypesAndCallback, 0, parameterTypes, 0, parameterTypes.length);
 
             // If method is override by extended activity, then hook it directly.
-            Class<?> clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
             try {
+                Class<?> clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
                 clsActivity.getDeclaredMethod(methodName, parameterTypes);
                 //Logger.d("Hook " + className + " " + methodName);
                 return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
-            } catch (NoSuchMethodException e) {}
+            } catch (Throwable e) {}
 
             // If method is not override by extended activity, hook android.app.Activity.
             final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
