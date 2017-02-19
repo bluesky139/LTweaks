@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -43,13 +44,15 @@ import java.util.regex.Pattern;
 
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.utils.ShoppingUtils;
 
+// This name should be PriceHistoryActivity, due to compatible with old version, keep it for now.
 public class JDHistoryActivity extends AppCompatActivity implements
         OnChartGestureListener, OnChartValueSelectedListener {
 
     private ProgressBar mProgressBar;
     private LineChart mChart;
-    private JDHistoryGrabber.Result mData;
+    private PriceHistoryGrabber.Result mData;
     private DecimalFormat mDec = new DecimalFormat("#,###.00");
 
     @Override
@@ -63,22 +66,22 @@ public class JDHistoryActivity extends AppCompatActivity implements
 
         String text = getIntent().getStringExtra(Intent.EXTRA_TEXT);
         Logger.i("Got share text: " + text);
-        Pattern pattern = Pattern.compile(".*https?://(item\\.)?m\\.jd\\.com/product/(\\d+)\\.html.*");
-        Matcher matcher = pattern.matcher(text);
-        if (!matcher.find()) {
+        Pair<String, Integer> item = ShoppingUtils.findItemId(text);
+        if (item == null) {
             Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-        String itemId = matcher.group(2);
+        String itemId = item.first;
+        @ShoppingUtils.Store int store = item.second;
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_jd_history);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mChart = (LineChart) findViewById(R.id.chart1);
-        JDHistoryGrabber grabber = new JDHistoryGrabber(itemId, new JDHistoryGrabber.GrabCallback() {
+        PriceHistoryGrabber grabber = new PriceHistoryGrabber(store, itemId, new PriceHistoryGrabber.GrabCallback() {
             @Override
-            public void onResult(final JDHistoryGrabber.Result result) {
+            public void onResult(final PriceHistoryGrabber.Result result) {
                 Logger.i("Prices result " + result);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -99,7 +102,7 @@ public class JDHistoryActivity extends AppCompatActivity implements
         grabber.startRequest();
     }
 
-    private void createChart(final JDHistoryGrabber.Result data) {
+    private void createChart(final PriceHistoryGrabber.Result data) {
         mChart.setOnChartGestureListener(this);
         mChart.setOnChartValueSelectedListener(this);
         mChart.setDrawGridBackground(false);
@@ -215,7 +218,7 @@ public class JDHistoryActivity extends AppCompatActivity implements
         // mChart.invalidate();
     }
 
-    private void setData(JDHistoryGrabber.Result data) {
+    private void setData(PriceHistoryGrabber.Result data) {
 
         ArrayList<Entry> values = new ArrayList<Entry>();
         for (int i = 0; i < data.prices.size(); i++) {

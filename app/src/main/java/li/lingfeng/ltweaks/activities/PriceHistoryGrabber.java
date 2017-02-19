@@ -1,14 +1,19 @@
 package li.lingfeng.ltweaks.activities;
 
+import android.support.annotation.IntDef;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ShoppingUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -18,7 +23,7 @@ import okhttp3.Response;
 /**
  * Created by smallville on 2016/11/22.
  */
-public class JDHistoryGrabber {
+public class PriceHistoryGrabber {
 
     public interface GrabCallback {
         void onResult(Result result);
@@ -27,19 +32,19 @@ public class JDHistoryGrabber {
     public class Result {
         public int startTime;
         public int endTime;
-        public List<Float> prices;
+        public List<Float> prices = new ArrayList<>();
         public float minPrice = Float.MAX_VALUE;
         public float maxPrice = 0f;
     }
 
     private String mItemId;
-    private String mUrl = "https://browser.gwdang.com/extension?ac=price_trend&dp_ids=&dp_id=%s-3&price=&format=json&union=union_gwdang&version=1478246552639&from_device=chrome&crc64=1";
+    private String mUrl = "https://browser.gwdang.com/extension?ac=price_trend&dp_ids=&dp_id=%s-%d&price=&format=json&union=union_gwdang&version=1478246552639&from_device=chrome&crc64=1";
     private OkHttpClient client = new OkHttpClient();
     private GrabCallback mGrabCallback;
 
-    public JDHistoryGrabber(String itemId, GrabCallback callback) {
+    public PriceHistoryGrabber(@ShoppingUtils.Store int store, String itemId, GrabCallback callback) {
         mItemId = itemId;
-        mUrl = String.format(mUrl, itemId);
+        mUrl = String.format(mUrl, itemId, store);
         mGrabCallback = callback;
     }
 
@@ -70,7 +75,7 @@ public class JDHistoryGrabber {
                 }
             });
         } catch (Exception e) {
-            Logger.e("JDHistoryGrabber request exception, " + e.getMessage());
+            Logger.e("PriceHistoryGrabber request exception, " + e.getMessage());
             mGrabCallback.onResult(null);
         }
     }
@@ -84,7 +89,6 @@ public class JDHistoryGrabber {
 
             result.startTime = (int) (Long.parseLong(jdStore.get("all_line_begin_time").toString()) / 1000);
             result.endTime = Integer.parseInt(jdStore.get("max_stamp").toString());
-            result.prices = new ArrayList<Float>();
 
             List prices = (List) jdStore.get("all_line");
             if (prices.size() == 0) {
@@ -103,7 +107,7 @@ public class JDHistoryGrabber {
             }
             return result;
         } catch (Exception e) {
-            Logger.e("Failed to parse json.");
+            Logger.e("Failed to parse json, " + e.getMessage());
             return null;
         }
     }

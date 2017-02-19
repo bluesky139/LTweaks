@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 import android.support.annotation.StringRes;
 import android.view.MenuItem;
 
@@ -141,6 +142,14 @@ public class BasePrefFragment extends PreferenceFragment
 
     public Preference findPreference(@StringRes int key) {
         return findPreference(getString(key));
+    }
+
+    public SwitchPreference findSwitchPreference(@StringRes int key) {
+        Preference preference = findPreference(key);
+        if (!(preference instanceof SwitchPreference)) {
+            throw new RuntimeException("Preference " + getString(key) + " is not SwitchPreference.");
+        }
+        return (SwitchPreference) preference;
     }
 
     protected void listenPreferenceChange(@StringRes int key) {

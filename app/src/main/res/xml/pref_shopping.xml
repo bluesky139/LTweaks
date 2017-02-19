@@ -20,6 +20,11 @@
             android:key="@string/key_suning_share_item"
             android:title="@string/pref_suning_share_item"
             android:summary="@string/pref_suning_share_item_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_suning_history"
+            android:title="@string/pref_suning_history"
+            android:summary="@string/pref_suning_history_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

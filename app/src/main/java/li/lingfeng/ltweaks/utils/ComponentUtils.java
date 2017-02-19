@@ -18,4 +18,10 @@ public class ComponentUtils {
                 enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
     }
+
+    public static boolean isComponentEnabled(Class<?> componentCls) {
+        ComponentName componentName = new ComponentName(MyApplication.instance(), componentCls);
+        return MyApplication.instance().getPackageManager().getComponentEnabledSetting(componentName)
+                == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+    }
 }

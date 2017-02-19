@@ -28,8 +28,10 @@ public class ShoppingPrefFragment extends BasePrefFragment {
         ComponentUtils.enableComponent(JDActivity.class, enabled);
     }
 
-    @PreferenceChange(prefs = R.string.key_jd_history)
+    @PreferenceChange(prefs = { R.string.key_jd_history, R.string.key_suning_history })
     private void enableJdHistory(Preference preference, boolean enabled) {
         ComponentUtils.enableComponent(JDHistoryActivity.class, enabled);
+        findSwitchPreference(R.string.key_jd_history).setChecked(enabled);
+        findSwitchPreference(R.string.key_suning_history).setChecked(enabled);
     }
 }
