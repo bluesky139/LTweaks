@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
+import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -35,6 +36,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,11 +47,17 @@ import java.util.regex.Pattern;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.utils.ShoppingUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 // This name should be PriceHistoryActivity, due to compatible with old version, keep it for now.
 public class JDHistoryActivity extends AppCompatActivity implements
         OnChartGestureListener, OnChartValueSelectedListener {
 
+    private OkHttpClient mHttpClient;
     private ProgressBar mProgressBar;
     private LineChart mChart;
     private PriceHistoryGrabber.Result mData;
@@ -64,22 +72,29 @@ public class JDHistoryActivity extends AppCompatActivity implements
             return;
         }
 
-        String text = getIntent().getStringExtra(Intent.EXTRA_TEXT);
-        Logger.i("Got share text: " + text);
-        Pair<String, Integer> item = ShoppingUtils.findItemId(text);
-        if (item == null) {
-            Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-        String itemId = item.first;
-        @ShoppingUtils.Store int store = item.second;
-
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_jd_history);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mChart = (LineChart) findViewById(R.id.chart1);
-        PriceHistoryGrabber grabber = new PriceHistoryGrabber(store, itemId, new PriceHistoryGrabber.GrabCallback() {
+
+        String text = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        Logger.i("Got share text: " + text);
+        boolean ok = findItemIdAndGrabHistory(text);
+        if (!ok) {
+            tryRedirect(text);
+        }
+    }
+
+    private boolean findItemIdAndGrabHistory(String text) {
+        Pair<String, Integer> item = ShoppingUtils.findItemId(text);
+        if (item == null) {
+            return false;
+        }
+        String itemId = item.first;
+        @ShoppingUtils.Store int store = item.second;
+
+        PriceHistoryGrabber grabber = new PriceHistoryGrabber(store, itemId,
+                new PriceHistoryGrabber.GrabCallback() {
             @Override
             public void onResult(final PriceHistoryGrabber.Result result) {
                 Logger.i("Prices result " + result);
@@ -100,6 +115,61 @@ public class JDHistoryActivity extends AppCompatActivity implements
             }
         });
         grabber.startRequest();
+        return true;
+    };
+
+    private void tryRedirect(String text) {
+        Matcher matcher = Patterns.WEB_URL.matcher(text);
+        if (!matcher.find()) {
+            exit();
+            return;
+        }
+
+        String url = matcher.group();
+        Logger.i("Try redirect " + url);
+        try {
+            if (mHttpClient == null) {
+                mHttpClient = new OkHttpClient.Builder()
+                        .followRedirects(false)
+                        .followSslRedirects(false)
+                        .build();
+            }
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            mHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    exit();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String location = response.header("Location");
+                    if (location != null && !location.isEmpty() && findItemIdAndGrabHistory(location)) {
+                        return;
+                    }
+                    String body = response.body().string();
+                    if (findItemIdAndGrabHistory(body)) {
+                        return;
+                    }
+                    exit();
+                }
+            });
+        } catch (Exception e) {
+            exit();
+        }
+    }
+
+    private void exit() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(JDHistoryActivity.this, R.string.jd_history_can_not_find_item_id, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     private void createChart(final PriceHistoryGrabber.Result data) {

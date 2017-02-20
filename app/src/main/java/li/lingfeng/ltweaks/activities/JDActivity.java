@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ShoppingUtils;
 
 /**
  * Created by smallville on 2017/1/4.
@@ -28,23 +29,13 @@ public class JDActivity extends Activity {
 
         String text = getIntent().getDataString();
         Logger.i("JDActivity url " + text);
-        Pattern[] patterns = {
-                Pattern.compile("https?://item\\.jd\\.com/(\\d+)\\.html"),
-                Pattern.compile("https?://re\\.jd\\.com/cps/item/(\\d+)\\.html"),
-                Pattern.compile("https?://item\\.m\\.jd\\.com/product/(\\d+)\\.html")
-        };
-
-        for (Pattern pattern : patterns) {
-            Matcher matcher = pattern.matcher(text);
-            if (matcher.find()) {
-                String itemId = matcher.group(matcher.groupCount());
-                Logger.i("Got jd item id " + itemId);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("openapp.jdmobile://virtual?params={\"category\":\"jump\",\"des\":\"productDetail\",\"skuId\":\"" + itemId + "\",\"sourceType\":\"Item\",\"sourceValue\":\"view-ware\"}"));
-                startActivity(intent);
-                finish();
-                return;
-            }
+        String itemId = ShoppingUtils.findItemIdByStore(text, ShoppingUtils.STORE_JD);
+        if (itemId != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("openapp.jdmobile://virtual?params={\"category\":\"jump\",\"des\":\"productDetail\",\"skuId\":\"" + itemId + "\",\"sourceType\":\"Item\",\"sourceValue\":\"view-ware\"}"));
+            startActivity(intent);
+            finish();
+            return;
         }
 
         Toast.makeText(this, "Not supported.", Toast.LENGTH_SHORT).show();

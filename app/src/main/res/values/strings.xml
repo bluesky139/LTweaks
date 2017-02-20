@@ -65,6 +65,7 @@ Open source on github: \n
     <!-- JD -->
     <string name="jd_app">JD App</string>
     <string name="jd_history">Price History</string>
+    <string name="jd_history_can_not_find_item_id">Can\'t find product id.</string>
     <string name="jd_history_can_not_get_prices">Can\'t get history prices.</string>
     <string name="jd_history_highest">Highest</string>
     <string name="jd_history_lowest">Lowest</string>
