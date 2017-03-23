@@ -33,4 +33,5 @@ public class PackageNames {
     public static final String TEXT_AIDE = "com.arjerine.textxposed";
     public static final String YOUDAO_DICT = "com.youdao.dict";
     public static final String ANDROID_SYSTEM_UI = "com.android.systemui";
+    public static final String ANDROID = "android";
 }
