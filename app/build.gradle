@@ -36,6 +36,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     provided files('lib/XposedBridgeApi-54.jar')
     compile project(':lib')
+    provided project(':hiddenapi')
     provided project(':compiler')
     compile 'com.google.zxing:core:3.3.0'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'

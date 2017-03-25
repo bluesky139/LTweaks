@@ -2,9 +2,14 @@ package li.lingfeng.ltweaks.utils;
 
 import android.net.Uri;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import li.lingfeng.ltweaks.MyApplication;
 
@@ -36,5 +41,19 @@ public class IOUtils {
             } catch (Exception _) {}
         }
         return bytes;
+    }
+
+    public static List<String> readLines(String path) {
+        try {
+            final File file = new File(path);
+            if (!file.exists() || !file.canRead()) {
+                Logger.w("File doesn't exist or can't be read, " + path);
+                return new ArrayList<>();
+            }
+            return FileUtils.readLines(file, "utf-8");
+        } catch (Exception e) {
+            Logger.w("File can't be read, " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 }

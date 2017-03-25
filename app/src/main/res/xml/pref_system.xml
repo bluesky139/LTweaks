@@ -45,5 +45,10 @@
             android:key="@string/key_prevent_running_prevent_foreground_service"
             android:title="@string/pref_prevent_running_prevent_foreground_service"
             android:summary="@string/pref_prevent_running_prevent_foreground_service_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_prevent_running_set_inactive"
+            android:title="@string/pref_prevent_running_set_inactive"
+            android:summary="@string/pref_prevent_running_set_inactive_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

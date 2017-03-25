@@ -4,8 +4,6 @@ import android.app.Notification;
 import android.content.ComponentName;
 import android.os.IBinder;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.util.List;
 
@@ -14,6 +12,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -24,19 +23,12 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedPreventForegroundService extends XposedBase {
     @Override
     protected void handleLoadPackage() throws Throwable {
-        final File file = new File("/data/system/me.piebridge.prevent.list");
-        if (!file.exists() || !file.canRead()) {
-            Logger.e("Can't read me.piebridge.prevent.list, file doesn't exist or can't be read.");
-            return;
-        }
-        final List<String> lines = FileUtils.readLines(file, "utf-8");
+        final List<String> lines = IOUtils.readLines("/data/system/me.piebridge.prevent.list");
         for (String line : lines) {
             Logger.d("Prevent list item: " + line);
         }
 
-        findAndHookMethod(ClassNames.ACTIVITY_MANAGER_SERVICE, "setServiceForeground",
-                ComponentName.class, IBinder.class, int.class, Notification.class, boolean.class,
-                new XC_MethodHook() {
+        hookAllMethods(ClassNames.ACTIVITY_MANAGER_SERVICE, "setServiceForeground", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 ComponentName className = (ComponentName) param.args[0];

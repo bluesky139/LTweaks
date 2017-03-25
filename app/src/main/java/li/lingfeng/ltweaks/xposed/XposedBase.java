@@ -5,9 +5,11 @@ import android.app.Application;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.MyApplication;
@@ -58,6 +60,22 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected XC_MethodHook.Unhook findAndHookConstructor(Class<?> clazz, Object... parameterTypesAndCallback) {
         return XposedHelpers.findAndHookConstructor(clazz, parameterTypesAndCallback);
+    }
+
+    protected Set<XC_MethodHook.Unhook> hookAllMethods(Class<?> hookClass, String methodName, XC_MethodHook callback) {
+        return XposedBridge.hookAllMethods(hookClass, methodName, callback);
+    }
+
+    protected Set<XC_MethodHook.Unhook> hookAllMethods(String className, String methodName, XC_MethodHook callback) {
+        return XposedBridge.hookAllMethods(findClass(className), methodName, callback);
+    }
+
+    protected Set<XC_MethodHook.Unhook> hookAllConstructors(Class<?> hookClass, XC_MethodHook callback) {
+        return XposedBridge.hookAllConstructors(hookClass, callback);
+    }
+
+    protected Set<XC_MethodHook.Unhook> hookAllConstructors(String className, XC_MethodHook callback) {
+        return XposedBridge.hookAllConstructors(findClass(className), callback);
     }
 
     protected XC_MethodHook.Unhook findAndHookActivity(final String className, String methodName, Object... parameterTypesAndCallback) {
