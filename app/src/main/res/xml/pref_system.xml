@@ -50,5 +50,10 @@
             android:key="@string/key_prevent_running_set_inactive"
             android:title="@string/pref_prevent_running_set_inactive"
             android:summary="@string/pref_prevent_running_set_inactive_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_prevent_running_prevent_exact_alarm"
+            android:title="@string/pref_prevent_running_prevent_exact_alarm"
+            android:summary="@string/pref_prevent_running_prevent_exact_alarm_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

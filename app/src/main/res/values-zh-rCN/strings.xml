@@ -41,7 +41,7 @@ Open source on github: \n
     <string name="pref_google_play_view_in_coolapk_summary">酷安有个\"去 Play 查看\"，这个恰好相反</string>
     <string name="pref_category_google_messenger">Google Messenger</string>
     <string name="pref_google_messenger_disable_direct_share">禁用 direct share</string>
-    <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
+    <string name="pref_google_messenger_disable_direct_share_summary">仅 Android 6.0+</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>
@@ -106,7 +106,9 @@ Open source on github: \n
     <string name="pref_prevent_running_prevent_foreground_service">阻止前台服务</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">有些应用为避免被杀死会创建看不见的前台服务，阻止其变为前台服务</string>
     <string name="pref_prevent_running_set_inactive">休眠应用</string>
-    <string name="pref_prevent_running_set_inactive_summary">尝试休眠应用而不是杀掉它. (需要在阻止运行里设置\"强行停止后台程序\"为\"永不\")</string>
+    <string name="pref_prevent_running_set_inactive_summary">尝试休眠应用而不是杀掉它. (需要在阻止运行里设置\"强行停止后台程序\"为\"永不\")\n仅 Android 6.0+</string>
+    <string name="pref_prevent_running_prevent_exact_alarm">延迟精确的唤醒</string>
+    <string name="pref_prevent_running_prevent_exact_alarm_summary">系统为优化电池使用而延迟一些任务\n仅 Android 6.0+</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
