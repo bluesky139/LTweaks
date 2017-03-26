@@ -20,19 +20,15 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
  * Created by smallville on 2017/3/22.
  */
 @XposedLoad(packages = PackageNames.ANDROID, prefs = R.string.key_prevent_running_prevent_foreground_service)
-public class XposedPreventForegroundService extends XposedBase {
+public class XposedPreventForegroundService extends XposedPreventRunning {
     @Override
     protected void handleLoadPackage() throws Throwable {
-        final List<String> lines = IOUtils.readLines("/data/system/me.piebridge.prevent.list");
-        for (String line : lines) {
-            Logger.d("Prevent list item: " + line);
-        }
-
+        super.handleLoadPackage();
         hookAllMethods(ClassNames.ACTIVITY_MANAGER_SERVICE, "setServiceForeground", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 ComponentName className = (ComponentName) param.args[0];
-                if (!lines.contains(className.getPackageName())) {
+                if (!sPreventList.contains(className.getPackageName())) {
                     return;
                 }
                 Logger.i("Prevent foreground service " + className.getClassName());

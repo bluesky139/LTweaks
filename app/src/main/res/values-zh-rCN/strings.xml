@@ -109,6 +109,7 @@ Open source on github: \n
     <string name="pref_prevent_running_set_inactive_summary">尝试休眠应用而不是杀掉它. (需要在阻止运行里设置\"强行停止后台程序\"为\"永不\")\n仅 Android 6.0+</string>
     <string name="pref_prevent_running_prevent_exact_alarm">延迟精确的唤醒</string>
     <string name="pref_prevent_running_prevent_exact_alarm_summary">系统为优化电池使用而延迟一些任务\n仅 Android 6.0+</string>
+    <string name="pref_prevent_running_prevent_wake_lock">阻止唤醒锁</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
