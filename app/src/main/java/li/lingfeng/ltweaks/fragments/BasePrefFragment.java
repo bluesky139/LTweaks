@@ -8,6 +8,9 @@ import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.annotation.StringRes;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import li.lingfeng.ltweaks.lib.PreferenceClick;
+import li.lingfeng.ltweaks.lib.PreferenceLongClick;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 
@@ -25,10 +29,12 @@ import li.lingfeng.ltweaks.lib.PreferenceChange;
  */
 
 public class BasePrefFragment extends PreferenceFragment
-        implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+        implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener,
+        AdapterView.OnItemLongClickListener {
 
     private Map<String, List<Method>> mPrefChangeListeners = new HashMap<>();
     private Map<String, List<Method>> mPrefClickListeners = new HashMap<>();
+    private Map<String, List<Method>> mPrefLongClickListeners = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class BasePrefFragment extends PreferenceFragment
         super.onActivityCreated(savedInstanceState);
         listenPreferenceChanges();
         listenPreferenceClicks();
+        listenPreferenceLongClicks();
     }
 
     private void listenPreferenceChanges() {
@@ -96,6 +103,28 @@ public class BasePrefFragment extends PreferenceFragment
         }
     }
 
+    private void listenPreferenceLongClicks() {
+        Method[] methods = getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            PreferenceLongClick preferenceLongClick = method.getAnnotation(PreferenceLongClick.class);
+            if (preferenceLongClick == null) {
+                continue;
+            }
+
+            for (int pref : preferenceLongClick.prefs()) {
+                List<Method> clickMethods = mPrefLongClickListeners.get(getString(pref));
+                if (clickMethods == null) {
+                    clickMethods = new ArrayList<>();
+                    clickMethods.add(method);
+                    mPrefLongClickListeners.put(getString(pref), clickMethods);
+                }
+            }
+        }
+
+        ListView listView = (ListView) getView().findViewById(android.R.id.list);
+        listView.setOnItemLongClickListener(this);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -133,6 +162,24 @@ public class BasePrefFragment extends PreferenceFragment
                     method.invoke(this, preference);
                 } catch (Exception e) {
                     Logger.e("Can't invoke preference click method " + method + ", " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Preference preference = (Preference) parent.getAdapter().getItem(position);
+        List<Method> clickMethods = mPrefLongClickListeners.get(preference.getKey());
+        if (clickMethods != null) {
+            for (Method method : clickMethods) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(this, preference);
+                } catch (Exception e) {
+                    Logger.e("Can't invoke preference long click method " + method + ", " + e.getMessage());
                     e.printStackTrace();
                 }
             }

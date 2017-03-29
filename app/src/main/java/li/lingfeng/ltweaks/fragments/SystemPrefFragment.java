@@ -1,14 +1,12 @@
 package li.lingfeng.ltweaks.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import li.lingfeng.ltweaks.R;
@@ -16,6 +14,8 @@ import li.lingfeng.ltweaks.activities.ImageSearchActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
+import li.lingfeng.ltweaks.lib.PreferenceLongClick;
+import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
@@ -95,5 +95,14 @@ public class SystemPrefFragment extends BasePrefFragment {
         } else {
             ComponentUtils.enableComponent(ImageSearchActivity.class, false);
         }
+    }
+
+    @PreferenceLongClick(prefs = R.string.key_prevent_running_prevent_receiver)
+    private void seeReceiverPreventedActions(final SwitchPreference preference) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Actions")
+                .setItems(IntentActions.sReceiverPreventedArray, null)
+                .create()
+                .show();
     }
 }

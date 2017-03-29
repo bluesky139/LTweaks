@@ -102,7 +102,7 @@ Open source on github: \n
     <string name="pref_category_coolapk">Coolapk</string>
     <string name="pref_coolapk_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_coolapk_remove_bottom_bar_summary">Put them into drawer menu</string>
-    <string name="pref_category_prevent_running">Prevent Running (Only for apps from prevent list)</string>
+    <string name="pref_category_prevent_running">Prevent Running (Only for apps in prevent list)</string>
     <string name="pref_prevent_running_prevent_foreground_service">Prevent foreground service</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">Prevent service becomes foreground service, some app will create invisible foreground service to avoid low memory kill</string>
     <string name="pref_prevent_running_set_inactive">App standby</string>
@@ -110,6 +110,8 @@ Open source on github: \n
     <string name="pref_prevent_running_prevent_exact_alarm">Delay wakeup of exact alarm</string>
     <string name="pref_prevent_running_prevent_exact_alarm_summary">Some task will be delayed due to optimize battery use by system\nFor Android 6.0+</string>
     <string name="pref_prevent_running_prevent_wake_lock">Prevent wake lock</string>
+    <string name="pref_prevent_running_prevent_receiver">Prevent some broadcast</string>
+    <string name="pref_prevent_running_prevent_receiver_summary">Long click to see list</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>

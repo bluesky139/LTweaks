@@ -14,4 +14,5 @@ public class ClassNames {
     public static final String ACTIVITY_MANAGER_SERVICE = "com.android.server.am.ActivityManagerService";
     public static final String ALARM_MANAGER_SERVICE = "com.android.server.AlarmManagerService";
     public static final String POWER_MANAGER_SERVICE = "com.android.server.power.PowerManagerService";
+    public static final String PACKAGE_PARSER = "android.content.pm.PackageParser";
 }
