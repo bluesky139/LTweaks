@@ -7,8 +7,8 @@ android {
         applicationId "li.lingfeng.ltweaks"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 9
-        versionName '1.6.1'
+        versionCode 10
+        versionName '1.7.0'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -39,5 +39,5 @@ dependencies {
     provided project(':hiddenapi')
     provided project(':compiler')
     compile 'com.google.zxing:core:3.3.0'
-    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'org.apache.commons:commons-io:1.3.2'
 }
