@@ -105,8 +105,11 @@ public class XposedShadowsocksPreciseRoute extends XposedBase {
 
     private String getProfileAcl(Object vpnService) throws Throwable {
         Method methodProfile = vpnService.getClass().getDeclaredMethod("profile");
+        methodProfile.setAccessible(true);
         Object profile = methodProfile.invoke(vpnService);
+
         Method methodRoute = profile.getClass().getDeclaredMethod("route");
+        methodRoute.setAccessible(true);
         return (String) methodRoute.invoke(profile);
     }
 }
