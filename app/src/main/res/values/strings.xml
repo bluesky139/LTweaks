@@ -112,6 +112,9 @@ Open source on github: \n
     <string name="pref_prevent_running_prevent_wake_lock">Prevent wake lock</string>
     <string name="pref_prevent_running_prevent_receiver">Prevent some broadcast</string>
     <string name="pref_prevent_running_prevent_receiver_summary">Long click to see list</string>
+    <string name="pref_category_shadowsocks">Shadowsocks</string>
+    <string name="pref_shadowsocks_precise_route">Use precise ip range</string>
+    <string name="pref_shadowsocks_precise_route_summary">For \"Bypass LAN &amp; mainland China\"</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
