@@ -20,6 +20,7 @@ public class PackageNames {
     public static final String SMZDM = "com.smzdm.client.android";
     public static final String SUNING = "com.suning.mobile.ebuy";
     public static final String TAOBAO = "com.taobao.taobao";
+    public static final String JD = "com.jingdong.app.mall";
 
     // Communication
     public static final String WE_CHAT = "com.tencent.mm";
