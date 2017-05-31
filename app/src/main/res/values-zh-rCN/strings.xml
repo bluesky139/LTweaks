@@ -84,7 +84,9 @@ Open source on github: \n
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
     <string name="pref_category_douban_movie">豆瓣电影</string>
+    <string name="pref_douban_movie_url">豆瓣电影的链接直接由客户端打开</string>
     <string name="pref_douban_movie_skip_splash">跳过启动屏</string>
+    <string name="pref_douban_movie_skip_splash_summary">针对 2.x 的老版本</string>
     <string name="pref_category_bilibili">Bilibili</string>
     <string name="pref_bilibili_subscriptions_goto_top">点击标签页滚回顶部</string>
     <string name="pref_bilibili_subscriptions_goto_top_summary">只在\"关注\"页面有效</string>

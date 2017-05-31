@@ -24,6 +24,7 @@
     <string name="key_wechat_set_incoming_ringtone">key_wechat_set_incoming_ringtone</string>
 
     <!--Entertainment-->
+    <string name="key_douban_movie_url">key_douban_movie_url</string>
     <string name="key_douban_movie_skip_splash">key_douban_movie_skip_splash</string>
     <string name="key_bilibili_subscriptions_goto_top">key_bilibili_subscriptions_goto_top</string>
 
