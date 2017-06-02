@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -8,6 +9,7 @@ import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.TypedValue;
 
 import li.lingfeng.ltweaks.MyApplication;
@@ -183,5 +185,12 @@ public class ContextUtils {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static void startBrowser(Context context, String url) {
+        Logger.i("startBrowser " + url);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
     }
 }

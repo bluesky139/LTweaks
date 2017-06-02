@@ -31,4 +31,8 @@ public class Logger {
     public static void e(String msg) {
         Log.e(TAG, msg);
     }
+
+    public static void stackTrace(Throwable e) {
+        Log.e(TAG, Log.getStackTraceString(e));
+    }
 }

@@ -2,10 +2,15 @@ package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -15,15 +20,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import li.lingfeng.ltweaks.activities.LoadingDialog;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.Callback;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.xposed.XposedBase;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by smallville on 2017/1/5.
@@ -31,12 +45,13 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.GOOGLE_PLAY, prefs = R.string.key_google_play_view_in_coolapk)
 public class XposedGooglePlay extends XposedBase {
 
-    private MenuItem item;
+    private MenuItem itemCoolApk;
+    private MenuItem itemApkPure;
+    private HashMap<MenuItem, String> markets;
 
     private Field fNavigationMgr;
     private Method mGetCurrentDoc;
     private Field fDocv2;
-    private Object mLastKnownDoc;
 
     @Override
     public void handleLoadPackage() throws Throwable {
@@ -45,8 +60,13 @@ public class XposedGooglePlay extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 Menu menu = (Menu) param.args[0];
-                item = menu.add("View in Coolapk");
-                Logger.i("Menu is added, " + item.toString());
+                itemCoolApk = menu.add("View in CoolApk");
+                itemApkPure = menu.add("View in ApkPure");
+                markets = new HashMap<MenuItem, String>(2) {{
+                    put(itemCoolApk, PackageNames.COOLAPK);
+                    put(itemApkPure, PackageNames.APKPURE);
+                }};
+                Logger.i("Menu is added, View in other market.");
             }
         });
 
@@ -54,14 +74,16 @@ public class XposedGooglePlay extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                if (item == param.args[0]) {
+                MenuItem item = (MenuItem) param.args[0];
+                if (itemCoolApk != item && itemApkPure != item) {
+                    return;
+                }
+
+                Activity activity = (Activity) param.thisObject;
+                try {
                     Logger.i("Menu is clicked .");
                     Object navigationMgr = fNavigationMgr.get(param.thisObject);
                     Object doc = mGetCurrentDoc.invoke(navigationMgr);
-
-                    if (doc == null) {
-                        doc = mLastKnownDoc;
-                    }
 
                     Object docv2 = fDocv2.get(doc);
                     Field[] fields = docv2.getClass().getDeclaredFields();
@@ -71,7 +93,7 @@ public class XposedGooglePlay extends XposedBase {
                         if (!Modifier.isStatic(f.getModifiers()) && f.getType() == String.class) {
                             Logger.d("docv2 str " + f.getName() + " -> " + f.get(docv2));
                             String str = (String) f.get(docv2);
-                            if (str == null || str.isEmpty() || str.contains(" ")) {
+                            if (str == null || str.isEmpty() || str.contains(" ") || !str.contains(".")) {
                                 continue;
                             }
                             if (!stringCount.containsKey(str)) {
@@ -102,11 +124,11 @@ public class XposedGooglePlay extends XposedBase {
                         }
                     }
                     Logger.i("Got package name " + maxStr);
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setPackage("com.coolapk.market");
-                    intent.setData(Uri.parse("market://details?id=" + maxStr));
-                    ((Activity) param.thisObject).startActivity(intent);
+                    openAppInMarket(activity, maxStr, markets.get(item));
+                } catch (Exception e) {
+                    Logger.e("Can't view in other market.");
+                    Logger.stackTrace(e);
+                    Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -117,7 +139,7 @@ public class XposedGooglePlay extends XposedBase {
             if (f.getType().getName().startsWith("com.google.android.finsky.navigationmanager.")) {
                 fNavigationMgr = f;
                 fNavigationMgr.setAccessible(true);
-                Logger.i("Got fNavigationMgr.");
+                Logger.i("Got fNavigationMgr " + f.getType().getName());
                 break;
             }
         }
@@ -131,7 +153,7 @@ public class XposedGooglePlay extends XposedBase {
             if (Modifier.isPublic(m.getModifiers()) && m.getReturnType() == clsDocument && m.getParameterTypes().length == 0) {
                 mGetCurrentDoc = m;
                 mGetCurrentDoc.setAccessible(true);
-                Logger.i("Got mGetCurrentDoc.");
+                Logger.i("Got mGetCurrentDoc " + m.getName());
                 break;
             }
         }
@@ -156,21 +178,85 @@ public class XposedGooglePlay extends XposedBase {
             if (stringCount > 10) {
                 fDocv2 = docv2Field;
                 fDocv2.setAccessible(true);
-                Logger.i("Got fDocv2.");
+                Logger.i("Got fDocv2 " + fDocv2.getType().getName());
                 break;
             }
         }
+    }
 
-        if (mGetCurrentDoc != null) {
-            findAndHookMethod(fNavigationMgr.getType(), mGetCurrentDoc.getName(), new XC_MethodHook() {
+    private void openAppInMarket(Activity activity, String app, String market) throws Throwable {
+        boolean hasMarket = false;
+        try {
+            ApplicationInfo info = activity.getPackageManager().getApplicationInfo(market, 0);
+            hasMarket = info.enabled;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        if (hasMarket) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setPackage(market);
+            intent.setData(Uri.parse("market://details?id=" + app));
+            activity.startActivity(intent);
+        } else {
+            openAppInWebMarket(activity, app, market);
+        }
+    }
+
+    private void openAppInWebMarket(final Activity activity, String app, String market) throws Throwable {
+        if (market.equals(PackageNames.COOLAPK)) {
+            ContextUtils.startBrowser(activity, "http://coolapk.com/apk/" + app);
+        } else if (market.equals(PackageNames.APKPURE)) {
+            getApkPureUrl(activity, app, new Callback.C1<String>() {
                 @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
-                    if (param.getResult() != null) {
-                        mLastKnownDoc = param.getResult();
+                public void onResult(String url) {
+                    if (url != null) {
+                        ContextUtils.startBrowser(activity, url);
+                    } else {
+                        Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
+        } else {
+            throw new Exception("Unknown market in openAppInWebMarket().");
         }
+    }
+
+    private void getApkPureUrl(final Activity activity, final String app, final Callback.C1<String> callback) {
+        LoadingDialog.show(activity);
+        Request request = new Request.Builder().url("https://m.apkpure.com/search?q=" + app).build();
+        new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                gotApkPureUrl(activity, null, callback);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String content = response.body().string();
+                    Pattern pattern = Pattern.compile("<a class=\"dd\" href=\"(/.+/(.+))\">");
+                    Matcher matcher = pattern.matcher(content);
+                    while (matcher.find()) {
+                        String href = matcher.group(1);
+                        String packageName = matcher.group(2);
+                        if (packageName.equals(app)) {
+                            Logger.i("Got " + href);
+                            gotApkPureUrl(activity, "https://m.apkpure.com" + href, callback);
+                            return;
+                        }
+                    }
+                }
+                gotApkPureUrl(activity, null, callback);
+            }
+        });
+    }
+
+    private void gotApkPureUrl(Activity activity, final String url, final Callback.C1<String> callback) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.onResult(url);
+                LoadingDialog.dismiss();
+            }
+        });
     }
 }
