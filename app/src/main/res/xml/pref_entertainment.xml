@@ -11,13 +11,4 @@
             android:title="@string/pref_douban_movie_skip_splash"
             android:summary="@string/pref_douban_movie_skip_splash_summary" />
     </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/pref_category_bilibili">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_bilibili_subscriptions_goto_top"
-            android:title="@string/pref_bilibili_subscriptions_goto_top"
-            android:summary="@string/pref_bilibili_subscriptions_goto_top_summary" />
-    </PreferenceCategory>
 </PreferenceScreen>
