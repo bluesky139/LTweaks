@@ -26,7 +26,7 @@
     <!--Entertainment-->
     <string name="key_douban_movie_url">key_douban_movie_url</string>
     <string name="key_douban_movie_skip_splash">key_douban_movie_skip_splash</string>
-    <string name="key_bilibili_subscriptions_goto_top">key_bilibili_subscriptions_goto_top</string>
+    <!-- Removed "key_bilibili_subscriptions_goto_top" -->
 
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>

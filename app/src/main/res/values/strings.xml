@@ -88,8 +88,6 @@ Open source on github: \n
     <string name="pref_douban_movie_skip_splash">Skip splash screen</string>
     <string name="pref_douban_movie_skip_splash_summary">For 2.x old version</string>
     <string name="pref_category_bilibili">Bilibili</string>
-    <string name="pref_bilibili_subscriptions_goto_top">Scroll to top when clicking tab</string>
-    <string name="pref_bilibili_subscriptions_goto_top_summary">Only for \"Subscriptions\" tab</string>
 
     <!--System-->
     <string name="pref_header_system">System / Tools</string>
