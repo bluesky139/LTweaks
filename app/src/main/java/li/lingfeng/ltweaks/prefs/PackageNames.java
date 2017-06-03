@@ -9,6 +9,7 @@ public class PackageNames {
     public static final String L_TWEAKS = "li.lingfeng.ltweaks";
 
     // Google
+    public static final String GMS = "com.google.android.gms";
     public static final String GOOGLE = "com.google.android.googlequicksearchbox";
     public static final String GOOGLE_PLUS = "com.google.android.apps.plus";
     public static final String GOOGLE_PHOTOS = "com.google.android.apps.photos";

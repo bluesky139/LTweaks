@@ -25,6 +25,8 @@ Open source on github: \n
     <!-- Google -->
     <string name="pref_header_google">Google</string>
     <string name="pref_category_google">Google</string>
+    <string name="pref_google_dismiss_location_checker">不提示\"打开位置服务\"</string>
+    <string name="pref_google_dismiss_location_checker_summary">不提示 \"要继续,请允许设备使用 Google 的位置信息服务开启位置信息功能.\"</string>
     <string name="pref_google_remove_bottom_bar">去底栏</string>
     <string name="pref_google_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_google_plus">Google+</string>

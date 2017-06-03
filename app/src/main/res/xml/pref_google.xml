@@ -3,6 +3,11 @@
         android:title="@string/pref_category_google">
         <SwitchPreference
             android:defaultValue="false"
+            android:key="@string/key_google_dismiss_location_checker"
+            android:title="@string/pref_google_dismiss_location_checker"
+            android:summary="@string/pref_google_dismiss_location_checker_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="@string/key_google_remove_bottom_bar"
             android:title="@string/pref_google_remove_bottom_bar"
             android:summary="@string/pref_google_remove_bottom_bar_summary" />
