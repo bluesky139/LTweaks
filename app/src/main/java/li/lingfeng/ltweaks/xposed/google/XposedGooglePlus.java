@@ -216,14 +216,11 @@ public class XposedGooglePlus extends XposedBase {
                         tabBarCounter = view;
                     }
                 }
-                if (newPostsButtonContainer == null && view.getId() > 0) {
+                if (view.getId() > 0) {
                     if (getResNameById(view.getId()).equals("new_posts_button_container")) {
                         Logger.i("got new_posts_button_container.");
                         newPostsButtonContainer = view;
-                    }
-                }
-                if (newPostsButton == null && view.getId() > 0) {
-                    if (getResNameById(view.getId()).equals("new_posts_button")) {
+                    } else if (getResNameById(view.getId()).equals("new_posts_button")) {
                         Logger.i("got new_posts_button.");
                         newPostsButton = view;
                     }
