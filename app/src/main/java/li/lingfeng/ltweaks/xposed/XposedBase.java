@@ -88,15 +88,28 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
             Class<?>[] parameterTypes = new Class<?>[parameterTypesAndCallback.length - 1];
             System.arraycopy(parameterTypesAndCallback, 0, parameterTypes, 0, parameterTypes.length);
 
-            // If method is override by extended activity, then hook it directly.
+            // If method is overrided by extended activity, then hook it directly.
+            Class<?> clsActivity = null;
             try {
-                Class<?> clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
+                clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
                 clsActivity.getDeclaredMethod(methodName, parameterTypes);
                 Logger.v("Hook " + className + " " + methodName);
                 return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
             } catch (Throwable e) {}
 
-            // If method is not override by extended activity, hook android.app.Activity.
+            // Try find from parent activity class.
+            while (clsActivity != null && clsActivity != Object.class) {
+                clsActivity = clsActivity.getSuperclass();
+                if (clsActivity == Activity.class) {
+                    break;
+                }
+                try {
+                    clsActivity.getDeclaredMethod(methodName, parameterTypes);
+                    break;
+                } catch (NoSuchMethodException e) {}
+            }
+
+            // Hook parent activity class or android.app.Activity.
             final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
             XC_MethodHook middleHook = new XC_MethodHook() {
                 @Override
@@ -123,8 +136,8 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 }
             };
             parameterTypesAndCallback[parameterTypesAndCallback.length - 1] = middleHook;
-            Logger.v("Hook android.app.Activity " + methodName + " for " + className);
-            return findAndHookMethod(Activity.class, methodName, parameterTypesAndCallback);
+            Logger.v("Hook " + clsActivity.getName() + " " + methodName + " for " + className);
+            return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
         } else {
             throw new IllegalArgumentException("no callback defined");
         }
