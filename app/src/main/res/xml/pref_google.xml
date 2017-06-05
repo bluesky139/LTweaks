@@ -20,6 +20,10 @@
             android:key="@string/key_google_plus_remove_bottom_bar"
             android:title="@string/pref_google_plus_remove_bottom_bar"
             android:summary="@string/pref_google_plus_remove_bottom_bar_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_google_plus_top_right_refresh"
+            android:title="@string/pref_google_plus_top_right_refresh" />
     </PreferenceCategory>
 
     <PreferenceCategory

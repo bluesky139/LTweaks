@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 
 import li.lingfeng.ltweaks.R;
@@ -48,5 +49,16 @@ public class GooglePrefFragment extends BasePrefFragment {
             return;
         }
         UninstallUtils.tryUninstallPackage(packageName, appName, getActivity());
+    }
+
+    @PreferenceChange(prefs = R.string.key_google_plus_remove_bottom_bar)
+    private void setGooglePlusNewPostsPosition(Preference preference, boolean enabled) {
+        SwitchPreference newPostsPreference = findSwitchPreference(R.string.key_google_plus_top_right_refresh);
+        if (!enabled) {
+            newPostsPreference.setChecked(false);
+            newPostsPreference.setEnabled(false);
+        } else {
+            newPostsPreference.setEnabled(true);
+        }
     }
 }

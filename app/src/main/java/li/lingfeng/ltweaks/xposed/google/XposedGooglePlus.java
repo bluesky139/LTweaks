@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -29,6 +31,7 @@ import java.util.Arrays;
 import de.robv.android.xposed.XC_MethodHook;
 
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
@@ -59,6 +62,10 @@ public class XposedGooglePlus extends XposedBase {
 
     private boolean done = false;
 
+    private View newPostsButtonContainer;
+    private View newPostsButton;
+    private MenuItem refreshMenu;
+
     @Override
     public void handleLoadPackage() throws Throwable {
         findAndHookActivity(sActivityName, "onCreate", Bundle.class, new XC_MethodHook() {
@@ -87,8 +94,47 @@ public class XposedGooglePlus extends XposedBase {
                             counter.setVisibility(tabBarCounter.getVisibility());
                         if (!done && isReady())
                             createBarList();
+
+                        if (newPostsButton != null && newPostsButtonContainer != null && refreshMenu != null) {
+                            Logger.i("newPostsButton's visibility " + newPostsButtonContainer.getVisibility());
+                            if (newPostsButtonContainer.getVisibility() == View.VISIBLE) {
+                                newPostsButton.setVisibility(View.INVISIBLE);
+                                refreshMenu.setVisible(true);
+                            } else if (newPostsButtonContainer.getVisibility() == View.GONE) {
+                                refreshMenu.setVisible(false);
+                            }
+                        }
                     }
                 });
+            }
+        });
+
+        findAndHookActivity(sActivityName, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (!Prefs.instance().getBoolean(R.string.key_google_plus_top_right_refresh, false)) {
+                    return;
+                }
+                Logger.i("Add menu \"Refresh\"");
+                Menu menu = (Menu) param.args[0];
+                refreshMenu = menu.add(Menu.NONE, Menu.NONE, 1000, "Refresh");
+                refreshMenu.setIcon(ContextUtils.getResId("quantum_ic_refresh_white_24", "drawable"));
+                refreshMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            }
+        });
+
+        findAndHookActivity(sActivityName, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                MenuItem item = (MenuItem) param.args[0];
+                if (item != refreshMenu) {
+                    return;
+                }
+
+                Logger.i("Menu \"Refresh\" is clicked.");
+                if (newPostsButton != null) {
+                    newPostsButton.performClick();
+                }
             }
         });
 
@@ -101,6 +147,9 @@ public class XposedGooglePlus extends XposedBase {
                 tabBarSpacerId = 0;
                 Arrays.fill(tabButtons, null);
                 tabBarCounter = null;
+                newPostsButtonContainer = null;
+                newPostsButton = null;
+                refreshMenu = null;
                 drawerFragment = null;
                 barList = null;
                 barListAdapter = null;
@@ -165,6 +214,18 @@ public class XposedGooglePlus extends XposedBase {
                     if (getResNameById(view.getId()).equals("navigation_notifications_count")) {
                         Logger.i("got navigation_notifications_count.");
                         tabBarCounter = view;
+                    }
+                }
+                if (newPostsButtonContainer == null && view.getId() > 0) {
+                    if (getResNameById(view.getId()).equals("new_posts_button_container")) {
+                        Logger.i("got new_posts_button_container.");
+                        newPostsButtonContainer = view;
+                    }
+                }
+                if (newPostsButton == null && view.getId() > 0) {
+                    if (getResNameById(view.getId()).equals("new_posts_button")) {
+                        Logger.i("got new_posts_button.");
+                        newPostsButton = view;
                     }
                 }
                 if (drawerFragment == null && view.getId() > 0) {
