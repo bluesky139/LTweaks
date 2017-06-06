@@ -108,6 +108,9 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                     break;
                 } catch (NoSuchMethodException e) {}
             }
+            if (clsActivity == null || clsActivity == Object.class) {
+                clsActivity = Activity.class;
+            }
 
             // Hook parent activity class or android.app.Activity.
             final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
