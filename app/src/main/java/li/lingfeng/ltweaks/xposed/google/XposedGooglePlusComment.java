@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -66,6 +68,8 @@ public class XposedGooglePlusComment extends XposedBase {
                         mFooter.setVisibility(View.VISIBLE);
                         View editText = activity.findViewById(ContextUtils.getIdId("footer_text_with_embeds"));
                         editText.requestFocus();
+                        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.showSoftInput(editText, 0);
                     }
                 });
             }
