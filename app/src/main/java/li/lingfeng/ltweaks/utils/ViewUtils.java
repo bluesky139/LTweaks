@@ -73,4 +73,30 @@ public class ViewUtils {
         }
         return results;
     }
+
+    public static <T extends View> List<T> findAllViewByType(ViewGroup rootView, Class<T> type) {
+        Queue<View> views = new LinkedList<>();
+        for (int i = 0; i < rootView.getChildCount(); ++i) {
+            View child = rootView.getChildAt(i);
+            views.add(child);
+        }
+
+        List<T> results = new ArrayList<>();
+        while (views.size() > 0) {
+            View view = views.poll();
+            //Logger.v("findAllViewByType " + view);
+            if (type.isAssignableFrom(view.getClass())) {
+                results.add((T) view);
+            }
+
+            if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                for (int i = 0; i < viewGroup.getChildCount(); ++i) {
+                    View child = viewGroup.getChildAt(i);
+                    views.add(child);
+                }
+            }
+        }
+        return results;
+    }
 }
