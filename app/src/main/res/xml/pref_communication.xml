@@ -18,4 +18,12 @@
             android:showSilent="true"
             android:ringtoneType="ringtone" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_qq">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_qq_dismiss_contacts_enabler"
+            android:title="@string/pref_qq_dismiss_contacts_enabler"
+            android:summary="@string/pref_qq_dismiss_contacts_enabler_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>
