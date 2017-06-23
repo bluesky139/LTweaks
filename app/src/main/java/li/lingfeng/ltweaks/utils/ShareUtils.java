@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.utils;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
@@ -27,5 +28,12 @@ public class ShareUtils {
                     }
                 })
                 .show();
+    }
+
+    public static void shareText(Context context, String text) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        context.startActivity(Intent.createChooser(shareIntent, "Share with..."));
     }
 }

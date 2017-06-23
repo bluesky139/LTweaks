@@ -11,4 +11,12 @@
             android:title="@string/pref_douban_movie_skip_splash"
             android:summary="@string/pref_douban_movie_skip_splash_summary" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_steam">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_steam_share_url"
+            android:title="@string/pref_steam_share_url"
+            android:summary="@string/pref_steam_share_url_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

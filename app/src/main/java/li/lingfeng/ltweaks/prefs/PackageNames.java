@@ -35,6 +35,7 @@ public class PackageNames {
     public static final String BILIBILI = "tv.danmaku.bili";
     public static final String COOLAPK = "com.coolapk.market";
     public static final String APKPURE = "com.apkpure.aegon";
+    public static final String STEAM = "com.valvesoftware.android.steam.community";
 
     // System
     public static final String TEXT_AIDE = "com.arjerine.textxposed";
