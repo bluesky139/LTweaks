@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -281,11 +282,7 @@ public class XposedGooglePhotos extends XposedBase {
 
         barList = new ListView(XposedGooglePhotos.this.activity);
         barListAdapter = new BarListAdapter();
-        View one = barListAdapter.getView(0, null, barList);
-        one.measure(0, 0);
-        int height = one.getMeasuredHeight();
 
-        barList.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * barListAdapter.getCount()));
         barList.setHeaderDividersEnabled(false);
         barList.setFooterDividersEnabled(false);
         barList.setDividerHeight(0);
@@ -294,7 +291,7 @@ public class XposedGooglePhotos extends XposedBase {
 
         ((ViewGroup) navList.getParent()).removeView(navList);
         navLayout = new FrameLayout(XposedGooglePhotos.this.activity);
-        navLayout.addView(navList, ViewGroup.LayoutParams.MATCH_PARENT, height * navList.getAdapter().getCount());
+        navLayout.addView(navList);
 
         scrollLayout = new LinearLayout(XposedGooglePhotos.this.activity);
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
@@ -303,6 +300,18 @@ public class XposedGooglePhotos extends XposedBase {
         scrollView = new ScrollView(XposedGooglePhotos.this.activity);
         scrollView.addView(scrollLayout);
         drawerFragment.addView(scrollView, 1);
+
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                final View one = barListAdapter.getView(0, null, barList);
+                int height = one.getMeasuredHeight();
+                barList.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        height * barListAdapter.getCount()));
+                navList.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        height * navList.getAdapter().getCount()));
+            }
+        });
 
         done = true;
     }
