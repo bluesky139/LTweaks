@@ -110,6 +110,7 @@ Open source on github: \n
     <string name="pref_system_share_qrcode_scan_summary">你可以通过浏览器、本地文件、截屏等分享图片</string>
     <string name="pref_system_share_image_search">添加菜单\"以图搜图\"</string>
     <string name="pref_system_share_image_search_summary">你可以通过其它应用、本地文件等分享图片</string>
+    <string name="pref_system_share_filter">隐藏分享菜单项</string>
     <string name="pref_category_coolapk">酷市场</string>
     <string name="pref_coolapk_remove_bottom_bar">去底栏</string>
     <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>

@@ -1,16 +1,21 @@
 package li.lingfeng.ltweaks.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.widget.Toast;
 
+import java.util.List;
+
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
+import li.lingfeng.ltweaks.activities.ListCheckActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
@@ -94,6 +99,43 @@ public class SystemPrefFragment extends BasePrefFragment {
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
             ComponentUtils.enableComponent(ImageSearchActivity.class, false);
+        }
+    }
+
+    @PreferenceClick(prefs = R.string.key_system_share_filter)
+    private void systemShareFilter(Preference preference) {
+        ListCheckActivity.create(getActivity(), DataProvider.class);
+    }
+
+    public static class DataProvider extends ListCheckActivity.DataProvider {
+
+        private List<ResolveInfo> mAppInfos;
+
+        public DataProvider(Activity activity) {
+            super(activity);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("*/*");
+            mAppInfos = activity.getPackageManager().queryIntentActivities(intent, 0);
+        }
+
+        @Override
+        protected String[] getTabTitles() {
+            return new String[] { "All", "Disabled", "Enabled" };
+        }
+
+        @Override
+        protected int getListItemCount(int tab) {
+            return mAppInfos.size();
+        }
+
+        @Override
+        protected ListItem getListItem(int tab, int position) {
+            ListItem item = new ListItem();
+            ResolveInfo info = mAppInfos.get(position);
+            item.mIcon = info.loadIcon(mActivity.getPackageManager());
+            item.mTitle = info.activityInfo.applicationInfo.loadLabel(mActivity.getPackageManager());
+            item.mDescription = info.loadLabel(mActivity.getPackageManager());
+            return item;
         }
     }
 

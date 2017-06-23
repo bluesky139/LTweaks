@@ -27,6 +27,9 @@
             android:key="@string/key_system_share_image_search"
             android:title="@string/pref_system_share_image_search"
             android:summary="@string/pref_system_share_image_search_summary" />
+        <Preference
+            android:key="@string/key_system_share_filter"
+            android:title="@string/pref_system_share_filter" />
     </PreferenceCategory>
 
     <PreferenceCategory
