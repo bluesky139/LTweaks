@@ -32,6 +32,7 @@
     <string name="key_douban_movie_url">key_douban_movie_url</string>
     <string name="key_douban_movie_skip_splash">key_douban_movie_skip_splash</string>
     <string name="key_steam_share_url">key_steam_share_url</string>
+    <string name="key_steam_database">key_steam_database</string>
     <!-- Removed "key_bilibili_subscriptions_goto_top" -->
 
     <!--System-->

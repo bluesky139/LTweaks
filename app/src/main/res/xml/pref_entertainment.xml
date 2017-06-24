@@ -18,5 +18,9 @@
             android:key="@string/key_steam_share_url"
             android:title="@string/pref_steam_share_url"
             android:summary="@string/pref_steam_share_url_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_steam_database"
+            android:title="@string/pref_steam_database" />
     </PreferenceCategory>
 </PreferenceScreen>

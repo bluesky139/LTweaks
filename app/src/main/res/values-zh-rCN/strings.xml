@@ -100,6 +100,7 @@ Open source on github: \n
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">分享链接</string>
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>
+    <string name="pref_steam_database">去 Steam Database 查看</string>
 
     <!--System-->
     <string name="pref_header_system">系统 / 工具</string>

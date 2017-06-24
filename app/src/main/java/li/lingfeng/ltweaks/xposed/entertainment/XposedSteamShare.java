@@ -20,40 +20,15 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
  * Created by smallville on 2017/6/24.
  */
 @XposedLoad(packages = PackageNames.STEAM, prefs = R.string.key_steam_share_url)
-public class XposedSteamShare extends XposedBase {
-
-    private static final String MAIN_ACTIVITY = "com.valvesoftware.android.steam.community.activity.MainActivity";
-    private MenuItem mMenuShare;
+public class XposedSteamShare extends XposedSteam {
 
     @Override
-    protected void handleLoadPackage() throws Throwable {
-        findAndHookActivity(MAIN_ACTIVITY, "onPrepareOptionsMenu", Menu.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Menu menu = (Menu) param.args[0];
-                mMenuShare = menu.add("Share");
-            }
-        });
+    protected String newMenuName() {
+        return "Share";
+    }
 
-        findAndHookActivity(MAIN_ACTIVITY, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (mMenuShare != (MenuItem) param.args[0]) {
-                    return;
-                }
-
-                Activity activity = (Activity) param.thisObject;
-                int idWebView = ContextUtils.getResId("webView", "id");
-                WebView webView = (WebView) activity.findViewById(idWebView);
-                if (webView == null) {
-                    Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                String url = webView.getUrl();
-                Logger.i("Got url " + url);
-                ShareUtils.shareText(activity, url);
-            }
-        });
+    @Override
+    protected void gotUrl(Activity activity, String url) {
+        ShareUtils.shareText(activity, url);
     }
 }
