@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class ListCheckActivity extends AppCompatActivity {
             public Drawable mIcon;
             public CharSequence mTitle;
             public CharSequence mDescription;
+            public CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
         }
 
         protected Activity mActivity;
@@ -149,7 +151,7 @@ public class ListCheckActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(final ViewHolder holder, int position) {
-                DataProvider.ListItem data = getDataProvider().getListItem(getTabPosition(), position);
+                final DataProvider.ListItem data = getDataProvider().getListItem(getTabPosition(), position);
                 holder.mIcon.setImageDrawable(data.mIcon);
                 holder.mTitle.setText(data.mTitle);
                 holder.mDescription.setText(data.mDescription);
@@ -158,6 +160,12 @@ public class ListCheckActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         holder.mEnabler.toggle();
+                    }
+                });
+                holder.mEnabler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        data.mOnCheckedChangeListener.onCheckedChanged(buttonView, isChecked);
                     }
                 });
             }

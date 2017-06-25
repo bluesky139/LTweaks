@@ -9,9 +9,12 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
@@ -22,11 +25,13 @@ import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
 import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.PermissionUtils;
 import li.lingfeng.ltweaks.utils.UninstallUtils;
+import li.lingfeng.ltweaks.xposed.system.XposedShareFilter;
 
 /**
  * Created by smallville on 2017/1/4.
@@ -131,10 +136,30 @@ public class SystemPrefFragment extends BasePrefFragment {
         @Override
         protected ListItem getListItem(int tab, int position) {
             ListItem item = new ListItem();
-            ResolveInfo info = mAppInfos.get(position);
+            final ResolveInfo info = mAppInfos.get(position);
             item.mIcon = info.loadIcon(mActivity.getPackageManager());
             item.mTitle = info.activityInfo.applicationInfo.loadLabel(mActivity.getPackageManager());
             item.mDescription = info.loadLabel(mActivity.getPackageManager());
+            item.mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    String fullActivityName = info.activityInfo.applicationInfo.packageName + "/" + info.activityInfo.name;
+                    Logger.i((isChecked ? "Disabled" : "Enabled") + " share activity " + fullActivityName);
+
+                    Set<String> activities = new HashSet<>(
+                            Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, new HashSet<String>())
+                    );
+                    if (isChecked) {
+                        activities.add(fullActivityName);
+                    } else {
+                        activities.remove(fullActivityName);
+                    }
+
+                    Prefs.instance().edit()
+                            .putStringSet(R.string.key_system_share_filter_activities, activities)
+                            .commit();
+                }
+            };
             return item;
         }
     }

@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface XposedLoad {
     String[] packages();
-    int[] prefs();
+    int[] prefs();  // Always load if empty.
 }

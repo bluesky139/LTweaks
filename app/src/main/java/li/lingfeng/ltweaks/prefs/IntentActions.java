@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import li.lingfeng.ltweaks.xposed.system.XposedShareFilter;
+
 /**
  * Created by smallville on 2017/3/29.
  */
@@ -53,4 +55,10 @@ public class IntentActions {
             Intent.ACTION_SHUTDOWN
     };
     public static final Set<String> sReceiverPrevented = new HashSet<>(Arrays.asList(sReceiverPreventedArray));
+
+    public static final String[] sSendActionArray = {
+            Intent.ACTION_SEND,
+            Intent.ACTION_SEND_MULTIPLE
+    };
+    public static final Set<String> sSendActions = new HashSet<>(Arrays.asList(sSendActionArray));
 }

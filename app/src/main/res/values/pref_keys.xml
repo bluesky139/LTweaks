@@ -41,6 +41,7 @@
     <string name="key_system_share_qrcode_scan">key_system_share_qrcode_scan</string>
     <string name="key_system_share_image_search">key_system_share_image_search</string>
     <string name="key_system_share_filter">key_system_share_filter</string>
+    <string name="key_system_share_filter_activities">key_system_share_filter_activities</string>
     <string name="key_coolapk_remove_bottom_bar">key_coolapk_remove_bottom_bar</string>
     <string name="key_prevent_running_prevent_foreground_service">key_prevent_running_prevent_foreground_service</string>
     <string name="key_prevent_running_set_inactive">key_prevent_running_set_inactive</string>

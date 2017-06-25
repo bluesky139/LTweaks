@@ -11,6 +11,7 @@ import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.prefs.Prefs;
 
@@ -71,22 +72,25 @@ public abstract class Xposed implements IXposedHookLoadPackage {
         for (Class<?> cls : modules) {
             try {
                 List<String> enabledPrefs = new ArrayList<>();
-                for (String pref : getModulePrefs(cls)) {
-                    if (Prefs.instance().getBoolean(pref, false)) {
-                        enabledPrefs.add(pref);
+                Set<String> prefs = getModulePrefs(cls);
+                if (prefs != null) {
+                    for (String pref : prefs) {
+                        if (Prefs.instance().getBoolean(pref, false)) {
+                            enabledPrefs.add(pref);
+                        }
                     }
                 }
 
-                if (enabledPrefs.size() > 0) {
+                if (enabledPrefs.size() > 0 || cls.getAnnotation(XposedLoad.class).prefs().length == 0) {
                     IXposedHookLoadPackage module = (IXposedHookLoadPackage) cls.newInstance();
                     Logger.i("Load " + cls.getName() + " for " + lpparam.packageName
                             + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
                     module.handleLoadPackage(lpparam);
                     mLoaded.add(module);
                 }
-            } catch (Throwable throwable) {
-                Logger.e("Can't handleLoadPackage, " + throwable.getMessage());
-                throwable.printStackTrace();
+            } catch (Throwable e) {
+                Logger.e("Can't handleLoadPackage, " + e.getMessage());
+                Logger.stackTrace(e);
             }
         }
     }

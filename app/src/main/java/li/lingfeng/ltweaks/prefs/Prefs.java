@@ -26,7 +26,6 @@ public class Prefs {
 
     private static SharedPreferences createXSharedPreferences() {
         XSharedPreferences pref = new XSharedPreferences(PackageNames.L_TWEAKS);
-        pref.reload();
         return new SharedPreferences(pref);
     }
 
