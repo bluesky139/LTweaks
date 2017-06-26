@@ -28,6 +28,7 @@ import java.lang.reflect.Constructor;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 
 /**
  * Created by lilingfeng on 2017/6/23.
@@ -41,6 +42,7 @@ public class ListCheckActivity extends AppCompatActivity {
             public Drawable mIcon;
             public CharSequence mTitle;
             public CharSequence mDescription;
+            public boolean mDisabled;
             public CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
         }
 
@@ -53,6 +55,7 @@ public class ListCheckActivity extends AppCompatActivity {
         protected abstract String[] getTabTitles();
         protected abstract int getListItemCount(int tab);
         protected abstract ListItem getListItem(int tab, int position);
+        protected abstract boolean reload(); // reload to refresh data list for listview.
     }
 
     private DataProvider mDataProvider;
@@ -82,10 +85,11 @@ public class ListCheckActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_list_check);
+        mTabLayout = (PagerTabStrip) findViewById(R.id.tabs);
         mPagerAdapter = new ListFragmentPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(mPagerAdapter);
-        mTabLayout = (PagerTabStrip) findViewById(R.id.tabs);
+        mViewPager.addOnPageChangeListener(new ListFragmentPageChangeListener());
     }
 
     private class ListFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -101,7 +105,7 @@ public class ListCheckActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new ListFragment();
+            return ListFragment.newInstance(position);
         }
 
         @Override
@@ -110,13 +114,47 @@ public class ListCheckActivity extends AppCompatActivity {
         }
     }
 
+    private class ListFragmentPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (mDataProvider.reload()) {
+                for (int i = 0; i < mPagerAdapter.getCount(); ++i) {
+                    ListFragment fragment = (ListFragment) ViewUtils.findFragmentByPosition(
+                            getSupportFragmentManager(), mViewPager, i);
+                    if (fragment != null) {
+                        fragment.notifyListChanged();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    }
+
     public static class ListFragment extends Fragment {
 
         private RecyclerView mListView;
+        private ListAdapter mListAdapter;
 
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public static ListFragment newInstance(int tab) {
+            ListFragment fragment = new ListFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("tab", tab);
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+
+        public int getTab() {
+            return getArguments().getInt("tab");
         }
 
         @Override
@@ -124,7 +162,8 @@ public class ListCheckActivity extends AppCompatActivity {
             View view = inflater.inflate(R.layout.fragment_list_check, container, false);
             mListView = (RecyclerView) view.findViewById(R.id.list);
             mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mListView.setAdapter(new ListAdapter());
+            mListAdapter = new ListAdapter();
+            mListView.setAdapter(mListAdapter);
             return view;
         }
 
@@ -138,10 +177,6 @@ public class ListCheckActivity extends AppCompatActivity {
                 return getActivity().mDataProvider;
             }
 
-            private int getTabPosition() {
-                return getActivity().mViewPager.getCurrentItem();
-            }
-
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(getActivity())
@@ -151,10 +186,12 @@ public class ListCheckActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(final ViewHolder holder, int position) {
-                final DataProvider.ListItem data = getDataProvider().getListItem(getTabPosition(), position);
+                final DataProvider.ListItem data = getDataProvider().getListItem(getTab(), position);
                 holder.mIcon.setImageDrawable(data.mIcon);
                 holder.mTitle.setText(data.mTitle);
                 holder.mDescription.setText(data.mDescription);
+                holder.mEnabler.setOnCheckedChangeListener(null);
+                holder.mEnabler.setChecked(data.mDisabled);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -172,7 +209,7 @@ public class ListCheckActivity extends AppCompatActivity {
 
             @Override
             public int getItemCount() {
-                return getDataProvider().getListItemCount(getTabPosition());
+                return getDataProvider().getListItemCount(getTab());
             }
 
             class ViewHolder extends RecyclerView.ViewHolder {
@@ -190,6 +227,10 @@ public class ListCheckActivity extends AppCompatActivity {
                     mEnabler = (CheckBox) view.findViewById(R.id.enabler);
                 }
             }
+        }
+
+        public void notifyListChanged() {
+            mListAdapter.notifyDataSetChanged();
         }
     }
 }

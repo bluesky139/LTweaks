@@ -12,9 +12,13 @@ import android.preference.SwitchPreference;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
@@ -114,13 +118,46 @@ public class SystemPrefFragment extends BasePrefFragment {
 
     public static class DataProvider extends ListCheckActivity.DataProvider {
 
-        private List<ResolveInfo> mAppInfos;
+        public class ActivityInfo {
+            public ResolveInfo mInfo;
+            public boolean mDisabled;
+
+            public ActivityInfo(ResolveInfo info, boolean disabled) {
+                mInfo = info;
+                mDisabled = disabled;
+            }
+        }
+
+        private Map<String, ActivityInfo> mMapAllInfos = new TreeMap<>();
+        private Map<String, ActivityInfo> mMapDisabledInfos = new TreeMap<>();
+        private Map<String, ActivityInfo> mMapEnabledInfos = new TreeMap<>();
+        private List<ActivityInfo> mAllInfos;
+        private List<ActivityInfo> mDisabledInfos;
+        private List<ActivityInfo> mEnabledInfos;
+        private Set<String> mDisabledActivities;
+        private boolean mNeedReload = true;
 
         public DataProvider(Activity activity) {
             super(activity);
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("*/*");
-            mAppInfos = activity.getPackageManager().queryIntentActivities(intent, 0);
+            mDisabledActivities = new HashSet<>(
+                    Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, new HashSet<String>())
+            );
+            for (String action : IntentActions.sSendActions) {
+                Intent intent = new Intent(action);
+                intent.setType("*/*");
+                List<ResolveInfo> infos = mActivity.getPackageManager().queryIntentActivities(intent, 0);
+                for (ResolveInfo info : infos) {
+                    String fullActivityName = info.activityInfo.applicationInfo.packageName + "/" + info.activityInfo.name;
+                    ActivityInfo activityInfo = new ActivityInfo(info, mDisabledActivities.contains(fullActivityName));
+                    mMapAllInfos.put(fullActivityName, activityInfo);
+                    if (activityInfo.mDisabled) {
+                        mMapDisabledInfos.put(fullActivityName, activityInfo);
+                    } else {
+                        mMapEnabledInfos.put(fullActivityName, activityInfo);
+                    }
+                }
+            }
+            reload();
         }
 
         @Override
@@ -130,37 +167,74 @@ public class SystemPrefFragment extends BasePrefFragment {
 
         @Override
         protected int getListItemCount(int tab) {
-            return mAppInfos.size();
+            if (tab == 0) {
+                return mAllInfos.size();
+            } else if (tab == 1) {
+                return mDisabledInfos.size();
+            } else if (tab == 2) {
+                return mEnabledInfos.size();
+            } else {
+                throw new RuntimeException("Unknown tab " + tab);
+            }
         }
 
         @Override
         protected ListItem getListItem(int tab, int position) {
+            List<ActivityInfo> infos;
+            if (tab == 0) {
+                infos = mAllInfos;
+            } else if (tab == 1) {
+                infos = mDisabledInfos;
+            } else if (tab == 2) {
+                infos = mEnabledInfos;
+            } else {
+                throw new RuntimeException("Unknown tab " + tab);
+            }
+
             ListItem item = new ListItem();
-            final ResolveInfo info = mAppInfos.get(position);
-            item.mIcon = info.loadIcon(mActivity.getPackageManager());
-            item.mTitle = info.activityInfo.applicationInfo.loadLabel(mActivity.getPackageManager());
-            item.mDescription = info.loadLabel(mActivity.getPackageManager());
+            final ActivityInfo activityInfo = infos.get(position);
+            item.mIcon = activityInfo.mInfo.loadIcon(mActivity.getPackageManager());
+            item.mTitle = activityInfo.mInfo.activityInfo.applicationInfo.loadLabel(mActivity.getPackageManager());
+            item.mDescription = activityInfo.mInfo.loadLabel(mActivity.getPackageManager());
+            item.mDisabled = activityInfo.mDisabled;
             item.mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    String fullActivityName = info.activityInfo.applicationInfo.packageName + "/" + info.activityInfo.name;
+                    String fullActivityName = activityInfo.mInfo.activityInfo.applicationInfo.packageName + "/" + activityInfo.mInfo.activityInfo.name;
                     Logger.i((isChecked ? "Disabled" : "Enabled") + " share activity " + fullActivityName);
 
-                    Set<String> activities = new HashSet<>(
-                            Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, new HashSet<String>())
-                    );
+                    activityInfo.mDisabled = isChecked;
                     if (isChecked) {
-                        activities.add(fullActivityName);
+                        mMapDisabledInfos.put(fullActivityName, activityInfo);
+                        mMapEnabledInfos.remove(fullActivityName);
+                        mDisabledActivities.add(fullActivityName);
                     } else {
-                        activities.remove(fullActivityName);
+                        mMapDisabledInfos.remove(fullActivityName);
+                        mMapEnabledInfos.put(fullActivityName, activityInfo);
+                        mDisabledActivities.remove(fullActivityName);
                     }
+                    mNeedReload = true;
 
                     Prefs.instance().edit()
-                            .putStringSet(R.string.key_system_share_filter_activities, activities)
+                            .putStringSet(R.string.key_system_share_filter_activities, mDisabledActivities)
                             .commit();
                 }
             };
             return item;
+        }
+
+        @Override
+        protected boolean reload() {
+            if (!mNeedReload) {
+                return false;
+            }
+
+            mNeedReload = false;
+            mAllInfos = new ArrayList<>(mMapAllInfos.values());
+            mDisabledInfos = new ArrayList<>(mMapDisabledInfos.values());
+            mEnabledInfos = new ArrayList<>(mMapEnabledInfos.values());
+            Logger.d("mAllInfos " + mAllInfos.size() + ", mDisabledInfos " + mDisabledInfos.size() + ", mEnabledInfos " + mEnabledInfos.size());
+            return true;
         }
     }
 

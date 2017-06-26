@@ -1,8 +1,13 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,5 +103,17 @@ public class ViewUtils {
             }
         }
         return results;
+    }
+
+    public static Fragment findFragmentByPosition(FragmentManager fragmentManager, ViewPager viewPager, int position) {
+        try {
+            Method method = FragmentPagerAdapter.class.getDeclaredMethod("makeFragmentName", int.class, long.class);
+            method.setAccessible(true);
+            String tag = (String) method.invoke(viewPager.getAdapter(), viewPager.getId(), position);
+            return fragmentManager.findFragmentByTag(tag);
+        } catch (Exception e) {
+            Logger.e("findFragmentByPosition error, " + e);
+            return null;
+        }
     }
 }
