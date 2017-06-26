@@ -162,7 +162,11 @@ public class SystemPrefFragment extends BasePrefFragment {
 
         @Override
         protected String[] getTabTitles() {
-            return new String[] { "All", "Disabled", "Enabled" };
+            return new String[] {
+                    mActivity.getString(R.string.all),
+                    mActivity.getString(R.string.disabled),
+                    mActivity.getString(R.string.enabled)
+            };
         }
 
         @Override

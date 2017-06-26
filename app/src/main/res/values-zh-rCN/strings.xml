@@ -21,6 +21,9 @@ Open source on github: \n
     <string name="request_failed">请求失败.</string>
     <string name="upload_failed">上传失败.</string>
     <string name="error">发生错误.</string>
+    <string name="all">所有</string>
+    <string name="disabled">已禁用</string>
+    <string name="enabled">已启用</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>

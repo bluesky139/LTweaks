@@ -21,6 +21,9 @@ Open source on github: \n
     <string name="request_failed">Request failed.</string>
     <string name="upload_failed">Upload failed.</string>
     <string name="error">Error.</string>
+    <string name="all">All</string>
+    <string name="disabled">Disabled</string>
+    <string name="enabled">Enabled</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
