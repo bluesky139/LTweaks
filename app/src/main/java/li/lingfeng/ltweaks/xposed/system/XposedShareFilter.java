@@ -35,7 +35,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.ANDROID, prefs = {})
 public class XposedShareFilter extends XposedBase {
 
-    private int mLTweaksUid = -1;
+    private Context mContext;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -44,9 +44,7 @@ public class XposedShareFilter extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Field field = param.thisObject.getClass().getDeclaredField("mContext");
                 field.setAccessible(true);
-                Context context = (Context) field.get(param.thisObject);
-                ApplicationInfo info = context.getPackageManager().getApplicationInfo(PackageNames.L_TWEAKS, PackageManager.GET_META_DATA);
-                mLTweaksUid = info.uid;
+                mContext = (Context) field.get(param.thisObject);
             }
         });
 
@@ -54,11 +52,12 @@ public class XposedShareFilter extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
-                if (!IntentActions.sSendActions.contains(intent.getAction()) || mLTweaksUid <= 0) {
+                if (!IntentActions.sSendActions.contains(intent.getAction()) || mContext == null) {
                     return;
                 }
                 int uid = Binder.getCallingUid();
-                if (uid == mLTweaksUid) {
+                ApplicationInfo appInfo = mContext.getPackageManager().getApplicationInfo(PackageNames.L_TWEAKS, 0);
+                if (uid == appInfo.uid) {
                     return;
                 }
 

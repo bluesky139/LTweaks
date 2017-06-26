@@ -10,8 +10,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import li.lingfeng.ltweaks.xposed.system.XposedShareFilter;
-
 /**
  * Created by smallville on 2017/3/29.
  */
