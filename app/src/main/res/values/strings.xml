@@ -92,6 +92,7 @@ Open source on github: \n
     <string name="pref_qq_dismiss_contacts_enabler">Dismiss contacts enabler</string>
     <string name="pref_qq_dismiss_contacts_enabler_summary">Don\'t enable this if you are using contacts</string>
     <string name="pref_qq_remove_ads">Remove banner ads</string>
+    <string name="pref_qq_outer_browser">Use outer browser</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>

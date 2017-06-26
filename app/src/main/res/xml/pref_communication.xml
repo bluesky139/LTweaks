@@ -29,5 +29,9 @@
             android:defaultValue="false"
             android:key="@string/key_qq_remove_ads"
             android:title="@string/pref_qq_remove_ads" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_qq_outer_browser"
+            android:title="@string/pref_qq_outer_browser" />
     </PreferenceCategory>
 </PreferenceScreen>
