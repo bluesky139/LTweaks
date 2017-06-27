@@ -50,4 +50,5 @@
     <string name="key_prevent_running_prevent_wake_lock">key_prevent_running_prevent_wake_lock</string>
     <string name="key_prevent_running_prevent_receiver">key_prevent_running_prevent_receiver</string>
     <string name="key_shadowsocks_precise_route">key_shadowsocks_precise_route</string>
+    <string name="key_quick_settings_tile_adb_wireless">key_quick_settings_tile_adb_wireless</string>
 </resources>

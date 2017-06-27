@@ -77,4 +77,13 @@
             android:title="@string/pref_shadowsocks_precise_route"
             android:summary="@string/pref_shadowsocks_precise_route_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_quick_settings">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_quick_settings_tile_adb_wireless"
+            android:title="@string/pref_quick_settings_tile_adb_wireless"
+            android:summary="@string/pref_quick_settings_tile_adb_wireless_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>
