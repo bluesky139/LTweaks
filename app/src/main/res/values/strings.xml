@@ -124,9 +124,11 @@ Open source on github: \n
     <string name="pref_coolapk_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_prevent_running">Prevent Running (Only for apps in prevent list)</string>
     <string name="pref_prevent_running_prevent_foreground_service">Prevent foreground service</string>
-    <string name="pref_prevent_running_prevent_foreground_service_summary">Prevent service becomes foreground service, some app will create invisible foreground service to avoid low memory kill</string>
+    <string name="pref_prevent_running_prevent_foreground_service_summary">Prevent service becomes foreground service, some app will create invisible foreground service to avoid low memory kill.\n
+Note, this is a simple and crude way, visible \"Running Notification\" will also disappear.</string>
     <string name="pref_prevent_running_set_inactive">App standby</string>
-    <string name="pref_prevent_running_set_inactive_summary">Try set app to standby, rather than kill it. (\"Force stop background apps\" should be set to \"Never\" in Prevent Running)\nFor Android 6.0+</string>
+    <string name="pref_prevent_running_set_inactive_summary">Try set app to standby, rather than kill it. (\"Force stop background apps\" should be set to \"Never\" in Prevent Running)\nFor Android 6.0+\n
+Note, somehow, some app will disconnect from internet, those apps didn\'t have a long time test on 6.0</string>
     <string name="pref_prevent_running_prevent_exact_alarm">Delay wakeup of exact alarm</string>
     <string name="pref_prevent_running_prevent_exact_alarm_summary">Some task will be delayed due to optimize battery use by system\nFor Android 6.0+</string>
     <string name="pref_prevent_running_prevent_wake_lock">Prevent wake lock</string>

@@ -124,9 +124,11 @@ Open source on github: \n
     <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_prevent_running">阻止运行 (仅针对阻止列表中的应用)</string>
     <string name="pref_prevent_running_prevent_foreground_service">阻止前台服务</string>
-    <string name="pref_prevent_running_prevent_foreground_service_summary">有些应用为避免被杀死会创建看不见的前台服务，阻止其变为前台服务</string>
+    <string name="pref_prevent_running_prevent_foreground_service_summary">有些应用为避免被杀死会创建看不见的前台服务，阻止其变为前台服务.\n
+注意，这是一个简单粗暴的方法，如果应用本身有可见的\"正在运行的通知\"，这个通知也将变得不可见.</string>
     <string name="pref_prevent_running_set_inactive">休眠应用</string>
-    <string name="pref_prevent_running_set_inactive_summary">尝试休眠应用而不是杀掉它. (需要在阻止运行里设置\"强行停止后台程序\"为\"永不\")\n仅 Android 6.0+</string>
+    <string name="pref_prevent_running_set_inactive_summary">尝试休眠应用而不是杀掉它. (需要在阻止运行里设置\"强行停止后台程序\"为\"永不\")\n仅 Android 6.0+\n
+注意，这个方法可能使得某些应用在使用一段时间后变得不能正常联网，那些破应用根本不会针对 6.0 系统进行长时间测试.</string>
     <string name="pref_prevent_running_prevent_exact_alarm">延迟精确的唤醒</string>
     <string name="pref_prevent_running_prevent_exact_alarm_summary">系统为优化电池使用而延迟一些任务\n仅 Android 6.0+</string>
     <string name="pref_prevent_running_prevent_wake_lock">阻止唤醒锁</string>
