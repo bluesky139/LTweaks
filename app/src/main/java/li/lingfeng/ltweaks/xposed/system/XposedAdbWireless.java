@@ -37,7 +37,14 @@ public class XposedAdbWireless extends XposedBase {
         final Class clsQsTileHost = findClass(ClassNames.QS_TILE_HOST);
         final Class clsIntentTile = findClass(ClassNames.INTENT_TILE);
 
-        findAndHookMethod(clsQsTileHost, "onTuningChanged", String.class, String.class, new XC_MethodHook() {
+        String methodOnTuningChanged = "onTuningChanged";
+        try {
+            XposedHelpers.findMethodExact(clsQsTileHost, "onTuningChanged", String.class, String.class);
+        } catch (Exception e) {
+            methodOnTuningChanged = "recreateTiles";
+        }
+
+        hookAllMethods(clsQsTileHost, methodOnTuningChanged, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
