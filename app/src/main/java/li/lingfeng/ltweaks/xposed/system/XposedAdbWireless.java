@@ -17,6 +17,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.Callback;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.Shell;
 import li.lingfeng.ltweaks.xposed.XposedBase;
@@ -88,25 +89,30 @@ public class XposedAdbWireless extends XposedBase {
     private class AdbSwitchReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
             if (!intent.getAction().equals(ACTION_ADB_SWITCH)) {
                 return;
             }
-            boolean isWireless = intent.getBooleanExtra("is_wireless", true);
-            try {
-                runCmd(isWireless);
-                updateTileState(!isWireless);
-            } catch (Exception e) {
-                Toast.makeText(context, "Failed to switch adb, no root?", Toast.LENGTH_SHORT).show();
-            }
-        }
 
-        private void runCmd(boolean isWireless) throws Exception {
-            Shell shell = new Shell("su");
-            shell.run("setprop service.adb.tcp.port " + (isWireless ? "5555" : "-1"));
-            shell.run("stop adbd");
-            shell.run("start adbd");
-            shell.close();
+            final boolean isWireless = intent.getBooleanExtra("is_wireless", true);
+            new Shell("su", new String[] {
+                        "setprop service.adb.tcp.port " + (isWireless ? "5555" : "-1"),
+                        "stop adbd",
+                        "start adbd"
+                    },
+                    3000, new Callback.C3<Boolean, List<String>, List<String>>() {
+                @Override
+                public void onResult(Boolean isOk, List<String> stderr, List<String> stdout) {
+                    Logger.d("Adb Wireless onResult " + isOk);
+                    if (isOk) {
+                        Toast.makeText(context, isWireless ? "Switched to adb wireless" : "Switched to adb usb", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Failed to switch adb, no root?", Toast.LENGTH_SHORT).show();
+                        updateTileState(isWireless);
+                    }
+                }
+            }).execute();
+            updateTileState(!isWireless);
         }
     }
 
