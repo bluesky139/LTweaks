@@ -41,7 +41,7 @@ public class XposedAdbWireless extends XposedBase {
         String methodOnTuningChanged = "onTuningChanged";
         try {
             XposedHelpers.findMethodExact(clsQsTileHost, "onTuningChanged", String.class, String.class);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             methodOnTuningChanged = "recreateTiles";
         }
 
