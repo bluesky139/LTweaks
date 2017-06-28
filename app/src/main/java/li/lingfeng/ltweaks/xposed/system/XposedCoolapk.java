@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
@@ -350,9 +351,29 @@ public class XposedCoolapk extends XposedBase {
                 Object b = constructorB.newInstance(centerFragment, view, null);
                 Logger.i("b is created.");
 
-                Constructor<?> constructorB1 = clsB1.getDeclaredConstructor(clsB);
-                constructorB1.setAccessible(true);
-                mCenterFragmentB1 = constructorB1.newInstance(b);
+                if (clsB1.getDeclaredConstructors()[0].getParameterTypes().length == 2) {
+                    Method methodG = null; // com.coolapk.market.i.g.g() in v7.9.3
+                    Method[] methods = clsB.getSuperclass().getDeclaredMethods();
+                    for (Method method : methods) {
+                        if (method.getReturnType().getName().startsWith("android.databinding.")) {
+                            methodG = method;
+                            break;
+                        }
+                    }
+                    if (methodG == null) {
+                        throw new Exception("Can't find method g.");
+                    }
+                    Object g = methodG.invoke(b);
+                    Logger.d("g " + g);
+
+                    Constructor<?> constructorB1 = clsB1.getDeclaredConstructors()[0];
+                    constructorB1.setAccessible(true);
+                    mCenterFragmentB1 = constructorB1.newInstance(b, g);
+                } else {
+                    Constructor<?> constructorB1 = clsB1.getDeclaredConstructors()[0];
+                    constructorB1.setAccessible(true);
+                    mCenterFragmentB1 = constructorB1.newInstance(b);
+                }
                 Logger.i("b1 is created.");
             }
 
@@ -367,8 +388,8 @@ public class XposedCoolapk extends XposedBase {
             if (e instanceof InvocationTargetException) {
                 e = new Exception(e.getCause());
             }
-            Logger.e("Can't switch day/night, " + e.getMessage());
-            e.printStackTrace();
+            Logger.e("Can't switch day/night, " + e);
+            Logger.stackTrace(e);
         }
     }
 }
