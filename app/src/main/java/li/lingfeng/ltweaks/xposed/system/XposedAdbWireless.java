@@ -124,9 +124,9 @@ public class XposedAdbWireless extends XposedBase {
         intent.putExtra("label", "Adb Wireless");
         intent.putExtra("iconPackage", PackageNames.L_TWEAKS);
         if (isWireless)
-            intent.putExtra("iconId", R.drawable.ic_google);
+            intent.putExtra("iconId", R.drawable.ic_quick_settings_adb_wireless_off);
         else
-            intent.putExtra("iconId", R.drawable.ic_communication);
+            intent.putExtra("iconId", R.drawable.ic_quick_settings_adb_wireless_on);
 
         Intent clickIntent = new Intent(ACTION_ADB_SWITCH);
         clickIntent.putExtra("is_wireless", isWireless);
