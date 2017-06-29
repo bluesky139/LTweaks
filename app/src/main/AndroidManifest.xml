@@ -103,6 +103,36 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity-alias
+            android:name=".activities.GoogleImageSearchActivity"
+            android:label="@string/share_image_google_search"
+            android:targetActivity=".activities.ImageSearchActivity">
+            <intent-filter>
+                <action android:name="li.lingfeng.ltweaks.ACTION_IMAGE_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".activities.TinEyeImageSearchActivity"
+            android:label="@string/share_image_tineye_search"
+            android:targetActivity=".activities.ImageSearchActivity">
+            <intent-filter>
+                <action android:name="li.lingfeng.ltweaks.ACTION_IMAGE_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".activities.IQDBImageSearchActivity"
+            android:label="@string/share_image_iqdb_search"
+            android:targetActivity=".activities.ImageSearchActivity">
+            <intent-filter>
+                <action android:name="li.lingfeng.ltweaks.ACTION_IMAGE_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity-alias>
     </application>
 
 </manifest>

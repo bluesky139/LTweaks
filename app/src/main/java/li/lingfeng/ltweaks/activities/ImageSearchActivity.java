@@ -10,8 +10,12 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import okhttp3.Call;
@@ -29,11 +33,21 @@ import okhttp3.Response;
 public class ImageSearchActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+    private static final String ACTION_IMAGE_SEARCH = PackageNames.L_TWEAKS + ".ACTION_IMAGE_SEARCH";
+
+    private static final Map<String, String> sEngines = new HashMap<String, String>() {{
+        put("Google", "https://www.google.com/searchbyimage?image_url=%s");
+        put("TinEye", "https://tineye.com/search/?pluginver=chrome-1.1.5&url=%s");
+        put("IQDB", "https://iqdb.org/?url=%s");
+    }};
+    private String mEngine;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!getIntent().getAction().equals(Intent.ACTION_SEND) || !getIntent().getType().startsWith("image/")) {
+        if (!(getIntent().getAction().equals(Intent.ACTION_SEND)
+                || getIntent().getAction().equals(ACTION_IMAGE_SEARCH))
+                || !getIntent().getType().startsWith("image/")) {
             Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -47,8 +61,26 @@ public class ImageSearchActivity extends AppCompatActivity {
             return;
         }
 
-        Logger.i("Uploading image file " + uri.toString());
-        new SearchByImage().execute(uri);
+        String name = getIntent().getComponent().getClassName();
+        if (name.equals(ImageSearchActivity.class.getName())) {
+            Logger.i("Choose image engine.");
+            Intent intent = new Intent(ACTION_IMAGE_SEARCH);
+            intent.setType(getIntent().getType());
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(intent, "Choose image engine..."));
+            finish();
+        } else {
+            mEngine = name.substring(ImageSearchActivity.class.getPackage().getName().length() + 1,
+                    name.length() - ImageSearchActivity.class.getSimpleName().length());
+            Logger.i("Use image engine " + mEngine);
+            if (!sEngines.containsKey(mEngine)) {
+                Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+            Logger.i("Uploading image file " + uri.toString());
+            new SearchByImage().execute(uri);
+        }
     }
 
     private class SearchByImage extends AsyncTask<Uri, Void, byte[]> {
@@ -110,10 +142,8 @@ public class ImageSearchActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://www.google.com/searchbyimage?image_url="
-                            + URLEncoder.encode(location, "utf-8")));
-                    startActivity(intent);
+                    String finalUrl = String.format(sEngines.get(mEngine), URLEncoder.encode(location, "utf-8"));
+                    ContextUtils.startBrowser(ImageSearchActivity.this, finalUrl);
                 } catch (Exception e) {
                     Logger.e("Error to search image, " + e.getMessage());
                     Toast.makeText(ImageSearchActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
