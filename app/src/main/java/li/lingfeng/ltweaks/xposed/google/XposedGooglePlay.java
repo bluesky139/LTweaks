@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -47,6 +49,7 @@ public class XposedGooglePlay extends XposedBase {
 
     private MenuItem itemCoolApk;
     private MenuItem itemApkPure;
+    private MenuItem itemSearchInMobilism;
     private HashMap<MenuItem, String> markets;
 
     private Field fNavigationMgr;
@@ -62,6 +65,7 @@ public class XposedGooglePlay extends XposedBase {
                 Menu menu = (Menu) param.args[0];
                 itemCoolApk = menu.add("View in CoolApk");
                 itemApkPure = menu.add("View in ApkPure");
+                itemSearchInMobilism = menu.add("Search in Mobilism");
                 markets = new HashMap<MenuItem, String>(2) {{
                     put(itemCoolApk, PackageNames.COOLAPK);
                     put(itemApkPure, PackageNames.APKPURE);
@@ -75,58 +79,65 @@ public class XposedGooglePlay extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 MenuItem item = (MenuItem) param.args[0];
-                if (itemCoolApk != item && itemApkPure != item) {
+                if (itemCoolApk != item && itemApkPure != item && itemSearchInMobilism != item) {
                     return;
                 }
 
                 Activity activity = (Activity) param.thisObject;
                 try {
-                    Logger.i("Menu is clicked .");
-                    Object navigationMgr = fNavigationMgr.get(param.thisObject);
-                    Object doc = mGetCurrentDoc.invoke(navigationMgr);
+                    if (itemSearchInMobilism == item) {
+                        int idTitle = ContextUtils.getIdId("title_title");
+                        TextView titleView = (TextView) activity.findViewById(idTitle);
+                        String url = "https://forum.mobilism.org/search.php?keywords=" + titleView.getText() + "&sr=topics&sf=titleonly";
+                        ContextUtils.startBrowser(activity, url);
+                    } else {
+                        Logger.i("Menu is clicked .");
+                        Object navigationMgr = fNavigationMgr.get(param.thisObject);
+                        Object doc = mGetCurrentDoc.invoke(navigationMgr);
 
-                    Object docv2 = fDocv2.get(doc);
-                    Field[] fields = docv2.getClass().getDeclaredFields();
-                    Map<String, Integer> stringCount = new HashMap<>();
-                    for (Field f : fields) {
-                        f.setAccessible(true);
-                        if (!Modifier.isStatic(f.getModifiers()) && f.getType() == String.class) {
-                            Logger.d("docv2 str " + f.getName() + " -> " + f.get(docv2));
-                            String str = (String) f.get(docv2);
-                            if (str == null || str.isEmpty() || str.contains(" ") || !str.contains(".")) {
-                                continue;
-                            }
-                            if (!stringCount.containsKey(str)) {
-                                stringCount.put(str, 1);
-                            } else {
-                                stringCount.put(str, stringCount.get(str) + 1);
-                            }
-                        }
-                    }
-
-                    for (String key : stringCount.keySet()) {
-                        Set<String> keys = new HashSet<>(stringCount.keySet());
-                        keys.remove(key);
-                        for (String k : keys) {
-                            if (k.contains(key)) {
-                                stringCount.put(key, stringCount.get(key) + 1);
+                        Object docv2 = fDocv2.get(doc);
+                        Field[] fields = docv2.getClass().getDeclaredFields();
+                        Map<String, Integer> stringCount = new HashMap<>();
+                        for (Field f : fields) {
+                            f.setAccessible(true);
+                            if (!Modifier.isStatic(f.getModifiers()) && f.getType() == String.class) {
+                                Logger.d("docv2 str " + f.getName() + " -> " + f.get(docv2));
+                                String str = (String) f.get(docv2);
+                                if (str == null || str.isEmpty() || str.contains(" ") || !str.contains(".")) {
+                                    continue;
+                                }
+                                if (!stringCount.containsKey(str)) {
+                                    stringCount.put(str, 1);
+                                } else {
+                                    stringCount.put(str, stringCount.get(str) + 1);
+                                }
                             }
                         }
-                    }
 
-                    int maxCount = 0;
-                    String maxStr = null;
-                    for (Map.Entry<String, Integer> kv : stringCount.entrySet()) {
-                        Logger.d("count " + kv.getKey() + " " + kv.getValue());
-                        if (maxCount < kv.getValue()) {
-                            maxCount = kv.getValue();
-                            maxStr = kv.getKey();
+                        for (String key : stringCount.keySet()) {
+                            Set<String> keys = new HashSet<>(stringCount.keySet());
+                            keys.remove(key);
+                            for (String k : keys) {
+                                if (k.contains(key)) {
+                                    stringCount.put(key, stringCount.get(key) + 1);
+                                }
+                            }
                         }
+
+                        int maxCount = 0;
+                        String maxStr = null;
+                        for (Map.Entry<String, Integer> kv : stringCount.entrySet()) {
+                            Logger.d("count " + kv.getKey() + " " + kv.getValue());
+                            if (maxCount < kv.getValue()) {
+                                maxCount = kv.getValue();
+                                maxStr = kv.getKey();
+                            }
+                        }
+                        Logger.i("Got package name " + maxStr);
+                        openAppInMarket(activity, maxStr, markets.get(item));
                     }
-                    Logger.i("Got package name " + maxStr);
-                    openAppInMarket(activity, maxStr, markets.get(item));
                 } catch (Exception e) {
-                    Logger.e("Can't view in other market.");
+                    Logger.e("Can't view in other market, " + e);
                     Logger.stackTrace(e);
                     Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
                 }

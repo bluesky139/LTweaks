@@ -45,8 +45,8 @@ Open source on github: \n
     <string name="pref_google_newsstand_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_newsstand_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_google_play">Google Play</string>
-    <string name="pref_google_play_view_in_coolapk">Add menu \"View in CoolApk / ApkPure\"</string>
-    <string name="pref_google_play_view_in_coolapk_summary">Jump to CoolApk or ApkPure, just like jump to Google Play from CoolApk</string>
+    <string name="pref_google_play_view_in_coolapk">Add menu \"View in CoolApk / ApkPure / Mobilism\"</string>
+    <string name="pref_google_play_view_in_coolapk_summary">Jump to CoolApk / ApkPure, just like jump to Google Play from CoolApk, or search in Mobilism</string>
     <string name="pref_category_google_messenger">Google Messenger</string>
     <string name="pref_google_messenger_disable_direct_share">Disable direct share</string>
     <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
