@@ -16,6 +16,7 @@ public class PackageNames {
     public static final String GOOGLE_NEWSSTAND = "com.google.android.apps.magazines";
     public static final String GOOGLE_PLAY = "com.android.vending";
     public static final String GOOGLE_MESSENGER = "com.google.android.apps.messaging";
+    public static final String CHROME = "com.android.chrome";
 
     // Shopping
     public static final String SMZDM = "com.smzdm.client.android";

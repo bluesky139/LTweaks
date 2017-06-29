@@ -86,4 +86,13 @@
             android:title="@string/pref_quick_settings_tile_adb_wireless"
             android:summary="@string/pref_quick_settings_tile_adb_wireless_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_native_clipboard">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_native_clipboard_fix_chrome"
+            android:title="@string/pref_native_clipboard_fix_chrome"
+            android:summary="@string/pref_native_clipboard_fix_chrome_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

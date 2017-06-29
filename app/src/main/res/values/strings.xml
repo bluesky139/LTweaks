@@ -122,7 +122,7 @@ Open source on github: \n
     <string name="pref_category_coolapk">Coolapk</string>
     <string name="pref_coolapk_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_coolapk_remove_bottom_bar_summary">Put them into drawer menu</string>
-    <string name="pref_category_prevent_running">Prevent Running (Only for apps in prevent list)</string>
+    <string name="pref_category_prevent_running">Prevent Running (A Xposed module, use prevent list from it)</string>
     <string name="pref_prevent_running_prevent_foreground_service">Prevent foreground service</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">Prevent service becomes foreground service, some app will create invisible foreground service to avoid low memory kill.\n
 Note, this is a simple and crude way, visible \"Running Notification\" will also disappear.</string>
@@ -140,6 +140,9 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="pref_category_quick_settings">Quick Settings in status bar</string>
     <string name="pref_quick_settings_tile_adb_wireless">Add tile \"Adb Wireless\"</string>
     <string name="pref_quick_settings_tile_adb_wireless_summary">Use \"adb connect x:x:x:x:5555\" to connect\nFor Android 5.0+, root is needed</string>
+    <string name="pref_category_native_clipboard">Native Clipboard (A Xposed module)</string>
+    <string name="pref_native_clipboard_fix_chrome">Fix in Chrome</string>
+    <string name="pref_native_clipboard_fix_chrome_summary">Try this if \"Native Clipboard\" doesn\'t work in Chrome</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>

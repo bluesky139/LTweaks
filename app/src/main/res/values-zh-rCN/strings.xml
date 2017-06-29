@@ -122,7 +122,7 @@ Open source on github: \n
     <string name="pref_category_coolapk">酷市场</string>
     <string name="pref_coolapk_remove_bottom_bar">去底栏</string>
     <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
-    <string name="pref_category_prevent_running">阻止运行 (仅针对阻止列表中的应用)</string>
+    <string name="pref_category_prevent_running">阻止运行 (一个 Xposed 模块，使用其阻止列表)</string>
     <string name="pref_prevent_running_prevent_foreground_service">阻止前台服务</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">有些应用为避免被杀死会创建看不见的前台服务，阻止其变为前台服务.\n
 注意，这是一个简单粗暴的方法，如果应用本身有可见的\"正在运行的通知\"，这个通知也将变得不可见.</string>
@@ -140,6 +140,9 @@ Open source on github: \n
     <string name="pref_category_quick_settings">通知栏快捷菜单</string>
     <string name="pref_quick_settings_tile_adb_wireless">添加菜单 \"Adb Wireless\"</string>
     <string name="pref_quick_settings_tile_adb_wireless_summary">使用 \"adb connect x:x:x:x:5555\" 来连接\n仅 Android 5.0+, 需要 root</string>
+    <string name="pref_category_native_clipboard">原生剪贴板（一个 Xposed 模块）</string>
+    <string name="pref_native_clipboard_fix_chrome">修复在 Chrome 上不工作的问题</string>
+    <string name="pref_native_clipboard_fix_chrome_summary">如果 \"原生剪贴板\" 在 Chrome 上不工作，你可以尝试这个</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
