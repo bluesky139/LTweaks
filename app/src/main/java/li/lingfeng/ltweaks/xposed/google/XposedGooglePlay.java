@@ -88,7 +88,12 @@ public class XposedGooglePlay extends XposedBase {
                     if (itemSearchInMobilism == item) {
                         int idTitle = ContextUtils.getIdId("title_title");
                         TextView titleView = (TextView) activity.findViewById(idTitle);
-                        String url = "https://forum.mobilism.org/search.php?keywords=" + titleView.getText() + "&sr=topics&sf=titleonly";
+                        String title = titleView.getText().toString().replaceAll("[^a-zA-Z\\d]", " ").replaceAll("\\s{2,}", " ").trim();
+                        Logger.i("title " + title);
+                        if (title.isEmpty()) {
+                            throw new Exception("Title is empty.");
+                        }
+                        String url = "https://forum.mobilism.org/search.php?keywords=" + title + "&sr=topics&sf=titleonly&fid%5B%5D=398";
                         ContextUtils.startBrowser(activity, url);
                     } else {
                         Logger.i("Menu is clicked .");
