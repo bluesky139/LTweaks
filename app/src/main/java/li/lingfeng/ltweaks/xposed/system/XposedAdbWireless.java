@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 import android.widget.Toast;
 
 import java.util.LinkedHashMap;
@@ -116,6 +118,7 @@ public class XposedAdbWireless extends XposedBase {
         }
     }
 
+    @SuppressWarnings("MissingPermission")
     private void updateTileState(boolean isWireless) {
         Logger.i("AdbWireless updateTileState");
         Intent intent = new Intent(ACTION_UPDATE_STATE);
@@ -123,10 +126,20 @@ public class XposedAdbWireless extends XposedBase {
         intent.putExtra("contentDescription", "Use \"adb connect x:x:x:x:5555\" to connect.");
         intent.putExtra("label", "Adb Wireless");
         intent.putExtra("iconPackage", PackageNames.L_TWEAKS);
-        if (isWireless)
+        if (isWireless) {
             intent.putExtra("iconId", R.drawable.ic_quick_settings_adb_wireless_off);
-        else
+        } else {
             intent.putExtra("iconId", R.drawable.ic_quick_settings_adb_wireless_on);
+            try {
+                WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+                int ip = wifiManager.getConnectionInfo().getIpAddress();
+                String strIp = Formatter.formatIpAddress(ip);
+                intent.putExtra("label", strIp);
+                Logger.d("Got ip " + strIp);
+            } catch (Exception e) {
+                Logger.e("Can't get ip, " + e);
+            }
+        }
 
         Intent clickIntent = new Intent(ACTION_ADB_SWITCH);
         clickIntent.putExtra("is_wireless", isWireless);
