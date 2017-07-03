@@ -34,6 +34,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_steam_database"
-            android:title="@string/pref_steam_database" />
+            android:title="@string/pref_steam_database"
+            android:summary="@string/pref_steam_database_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

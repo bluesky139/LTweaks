@@ -100,15 +100,16 @@ Open source on github: \n
     <string name="pref_douban_movie_url">豆瓣电影的链接直接由客户端打开</string>
     <string name="pref_douban_movie_skip_splash">跳过启动屏</string>
     <string name="pref_douban_movie_skip_splash_summary">针对 2.x 的老版本</string>
-    <string name="pref_douban_movie_search">选中文本后搜索</string>
-    <string name="pref_douban_movie_search_summary">仅 Android 6.0+</string>
+    <string name="pref_douban_movie_search">选中文本后去豆瓣电影搜索</string>
+    <string name="pref_douban_movie_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
     <string name="pref_category_bilibili">Bilibili</string>
-    <string name="pref_bilibili_search">选中文本后搜索</string>
-    <string name="pref_bilibili_search_summary">仅 Android 6.0+</string>
+    <string name="pref_bilibili_search">选中文本后去 Bilibili 搜索</string>
+    <string name="pref_bilibili_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">分享链接</string>
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>
     <string name="pref_steam_database">去 Steam Database 查看</string>
+    <string name="pref_steam_database_summary">在右上角添加一个菜单</string>
 
     <!--System-->
     <string name="pref_header_system">系统 / 工具</string>
