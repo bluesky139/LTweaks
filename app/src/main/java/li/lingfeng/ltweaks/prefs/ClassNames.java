@@ -21,6 +21,8 @@ public class ClassNames {
     public static final String QS_TILE_HOST = "com.android.systemui.statusbar.phone.QSTileHost";
     public static final String INTENT_TILE = "com.android.systemui.qs.tiles.IntentTile";
 
+    public static final String TEXT_ACTION_MODE_CALLBACK = "android.widget.Editor.TextActionModeCallback";
+
     // Douban Movie
     public static final String DOUBAN_MOVIE_SEARCH_ACTIVITY = "com.douban.frodo.search.activity.SearchActivity";
 
