@@ -29,7 +29,7 @@ public class SharedPreferences implements android.content.SharedPreferences {
                     pref.reload();
                 }
             }
-        } catch (Throwable _) {}
+        } catch (Throwable e) {}
     }
 
     private String getKeyById(int id) {

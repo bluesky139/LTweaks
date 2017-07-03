@@ -38,7 +38,7 @@ public class IOUtils {
             try {
                 if (stream != null)
                     stream.close();
-            } catch (Exception _) {}
+            } catch (Exception e) {}
         }
         return bytes;
     }
