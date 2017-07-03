@@ -8,13 +8,8 @@ import java.util.Collection;
 
 public class Utils {
 
-    public static String stringJoin(Collection<String> collection) {
-        StringBuilder builder = new StringBuilder();
-        for (String s : collection) {
-            if (collection.size() > 0)
-                builder.append('\n');
-            builder.append(s);
-        }
-        return builder.toString();
+    public static String[] splitByLastChar(String str, char ch) {
+        int pos = str.lastIndexOf(ch);
+        return new String[] { str.substring(0, pos), str.substring(pos + 1) };
     }
 }

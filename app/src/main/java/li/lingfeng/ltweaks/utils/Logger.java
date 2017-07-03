@@ -1,6 +1,9 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.content.Intent;
 import android.util.Log;
+
+import java.lang.reflect.InvocationTargetException;
 
 import li.lingfeng.ltweaks.BuildConfig;
 
@@ -33,6 +36,15 @@ public class Logger {
     }
 
     public static void stackTrace(Throwable e) {
+        if (e instanceof InvocationTargetException) {
+            e = ((InvocationTargetException) e).getTargetException();
+        }
         Log.e(TAG, Log.getStackTraceString(e));
+    }
+
+    public static void intentExtras(Intent intent) {
+        for (String key : intent.getExtras().keySet()) {
+            Logger.d(" intent extra: " + key + " -> " + intent.getExtras().get(key));
+        }
     }
 }

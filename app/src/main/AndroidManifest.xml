@@ -133,6 +133,31 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity-alias>
+
+        <activity android:name=".activities.ProcessTextActivity">
+        </activity>
+        <activity-alias
+            android:name=".activities.DoubanMovieProcessTextActivity"
+            android:targetActivity=".activities.ProcessTextActivity"
+            android:label="@string/process_text_douban_movie"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".activities.BilibiliProcessTextActivity"
+            android:targetActivity=".activities.ProcessTextActivity"
+            android:label="@string/process_text_bilibili"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity-alias>
     </application>
 
 </manifest>

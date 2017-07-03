@@ -15,6 +15,7 @@ import java.util.Map;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -61,8 +62,7 @@ public class ImageSearchActivity extends AppCompatActivity {
             return;
         }
 
-        String name = getIntent().getComponent().getClassName();
-        if (name.equals(ImageSearchActivity.class.getName())) {
+        if (!ComponentUtils.isAlias(this)) {
             Logger.i("Choose image engine.");
             Intent intent = new Intent(ACTION_IMAGE_SEARCH);
             intent.setType(getIntent().getType());
@@ -70,8 +70,7 @@ public class ImageSearchActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(intent, "Choose image engine..."));
             finish();
         } else {
-            mEngine = name.substring(ImageSearchActivity.class.getPackage().getName().length() + 1,
-                    name.length() - ImageSearchActivity.class.getSimpleName().length());
+            mEngine = ComponentUtils.getAlias(this);
             Logger.i("Use image engine " + mEngine);
             if (!sEngines.containsKey(mEngine)) {
                 Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();

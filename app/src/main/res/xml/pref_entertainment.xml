@@ -10,6 +10,19 @@
             android:key="@string/key_douban_movie_skip_splash"
             android:title="@string/pref_douban_movie_skip_splash"
             android:summary="@string/pref_douban_movie_skip_splash_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_douban_movie_search"
+            android:title="@string/pref_douban_movie_search"
+            android:summary="@string/pref_douban_movie_search_summary" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_bilibili">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_bilibili_search"
+            android:title="@string/pref_bilibili_search"
+            android:summary="@string/pref_bilibili_search_summary" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_steam">

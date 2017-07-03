@@ -100,7 +100,11 @@ Open source on github: \n
     <string name="pref_douban_movie_url">Open link in app</string>
     <string name="pref_douban_movie_skip_splash">Skip splash screen</string>
     <string name="pref_douban_movie_skip_splash_summary">For 2.x old version</string>
+    <string name="pref_douban_movie_search">Search with selected text</string>
+    <string name="pref_douban_movie_search_summary">For Android 6.0+</string>
     <string name="pref_category_bilibili">Bilibili</string>
+    <string name="pref_bilibili_search">Search with selected text</string>
+    <string name="pref_bilibili_search_summary">For Android 6.0+</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">Share url</string>
     <string name="pref_steam_share_url_summary">Add a top right menu to use system share</string>
@@ -151,4 +155,8 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="share_image_google_search">Google</string>
     <string name="share_image_tineye_search">TinEye</string>
     <string name="share_image_iqdb_search">IQDB</string>
+
+    <!-- Process Text -->
+    <string name="process_text_douban_movie">Douban Movie</string>
+    <string name="process_text_bilibili">Bilibili</string>
 </resources>
