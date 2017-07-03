@@ -12,6 +12,7 @@ import java.util.Set;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.prefs.Prefs;
 
@@ -21,7 +22,8 @@ import li.lingfeng.ltweaks.prefs.Prefs;
 
 public abstract class Xposed implements IXposedHookLoadPackage {
 
-    private Map<String, Set<Class<?>>> mModules = new HashMap<>();     // package name -> set of Xposed class implemented IXposedHookLoadPackage.
+    private Set<Class<? extends XposedBase>> mModulesForAll = new HashSet<>(); // These modules are loaded for all packages.
+    private Map<String, Set<Class<? extends XposedBase>>> mModules = new HashMap<>();     // package name -> set of Xposed class implemented IXposedHookLoadPackage.
     private Map<Class<?>, Set<String>> mModulePrefs = new HashMap<>(); // Xposed class -> set of enalbed pref.
     private List<IXposedHookLoadPackage> mLoaded = new ArrayList<>();  // Loaded Xposed classes.
 
@@ -29,18 +31,23 @@ public abstract class Xposed implements IXposedHookLoadPackage {
         return  mModules.size() == 0;
     }
 
-    protected void addModule(String packageName, Class<?> cls) {
+    protected void addModuleForAll(Class<? extends XposedBase> cls) {
+        mModulesForAll.add(cls);
+    }
+
+    protected void addModule(String packageName, Class<? extends XposedBase> cls) {
         if (!mModules.containsKey(packageName)) {
-            mModules.put(packageName, new HashSet<Class<?>>());
+            mModules.put(packageName, new HashSet<Class<? extends XposedBase>>());
         }
         mModules.get(packageName).add(cls);
     }
 
-    private Set<Class<?>> getModules(String packageName) {
+    private Set<Class<? extends XposedBase>> getModules(String packageName) {
+        Set<Class<? extends XposedBase>> modules = new HashSet<>(mModulesForAll);
         if (mModules.containsKey(packageName)) {
-            return mModules.get(packageName);
+            modules.addAll(mModules.get(packageName));
         }
-        return null;
+        return modules;
     }
 
     protected void addModulePref(Class<?> cls, String pref) {
@@ -54,17 +61,19 @@ public abstract class Xposed implements IXposedHookLoadPackage {
         return mModulePrefs.get(cls);
     }
 
+    protected abstract void addModulesForAll();
     protected abstract void addModules();
     protected abstract void addModulePrefs();
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (isEmptyModules()) {
+            addModulesForAll();
             addModules();
             addModulePrefs();
         }
 
-        Set<Class<?>> modules = getModules(lpparam.packageName);
+        Set<Class<? extends XposedBase>> modules = getModules(lpparam.packageName);
         if (modules == null) {
             return;
         }
@@ -83,8 +92,15 @@ public abstract class Xposed implements IXposedHookLoadPackage {
 
                 if (enabledPrefs.size() > 0 || cls.getAnnotation(XposedLoad.class).prefs().length == 0) {
                     IXposedHookLoadPackage module = (IXposedHookLoadPackage) cls.newInstance();
-                    Logger.i("Load " + cls.getName() + " for " + lpparam.packageName
-                            + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                    if (mModulesForAll.contains(cls)) {
+                        if (lpparam.packageName.equals(PackageNames.ANDROID)) {
+                            Logger.i("Load " + cls.getName() + " for all packages"
+                                    + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                        }
+                    } else {
+                        Logger.i("Load " + cls.getName() + " for " + lpparam.packageName
+                                + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                    }
                     module.handleLoadPackage(lpparam);
                     mLoaded.add(module);
                 }

@@ -77,6 +77,20 @@ public class XposedProcessor extends AbstractProcessor {
         writer.write("package li.lingfeng.ltweaks.xposed;\n\n");
         writer.write("public class XposedLoader extends Xposed {\n\n");
 
+        // Generate for all packages
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor typeElement " + typeElement.toString() + " for all packages");
+        writer.write("    @Override\n");
+        writer.write("    protected void addModulesForAll() {\n");
+        for (Element element_ : env.getElementsAnnotatedWith(typeElement)) {
+            TypeElement element = (TypeElement) element_;
+            XposedLoad load = element.getAnnotation(XposedLoad.class);
+            if (load.packages().length == 0) {
+                mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + element.getSimpleName());
+                writer.write("        addModuleForAll(" + element.getQualifiedName() + ".class);\n");
+            }
+        }
+        writer.write("    }\n");
+
         // Generate by package names
         mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor typeElement " + typeElement.toString());
         writer.write("    @Override\n");

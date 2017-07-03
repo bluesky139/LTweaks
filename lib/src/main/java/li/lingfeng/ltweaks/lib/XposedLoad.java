@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface XposedLoad {
-    String[] packages();
+    String[] packages(); // Load for all packages if empty.
     int[] prefs();  // Always load if empty.
 }
