@@ -77,7 +77,7 @@ public class XposedGoogleNewsstand extends XposedBase {
                             handleWithTabBarLayout();
                         } catch (Exception e) {
                             Logger.e("Can't handle with mTabBarLayout, " + e.getMessage());
-                            e.printStackTrace();
+                            Logger.stackTrace(e);
                         }
                     }
                 });
@@ -229,7 +229,7 @@ public class XposedGoogleNewsstand extends XposedBase {
                 mMethodCloseDrawers.invoke(mDrawer);
             } catch (Exception e) {
                 Logger.e("Can't invoke closeDrawers(), " + e.getMessage());
-                e.printStackTrace();
+                Logger.stackTrace(e);
             }
         }
     }

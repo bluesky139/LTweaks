@@ -154,7 +154,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 sMethodBeforeHooked.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 Logger.e("Can't get method beforeHookedMethod");
-                e.printStackTrace();
+                Logger.stackTrace(e);
             }
         }
         return sMethodBeforeHooked;
@@ -168,7 +168,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 sMethodAfterHooked.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 Logger.e("Can't get method afterHookedMethod");
-                e.printStackTrace();
+                Logger.stackTrace(e);
             }
         }
         return sMethodAfterHooked;

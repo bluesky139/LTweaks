@@ -76,7 +76,7 @@ public class BasePrefFragment extends PreferenceFragment
                         method.invoke(this, findPreference(pref), null);
                     } catch (Exception e) {
                         Logger.e("Can't invoke preference change method " + method + " at start, " + e.getMessage());
-                        e.printStackTrace();
+                        Logger.stackTrace(e);
                     }
                 }
             }
@@ -145,7 +145,7 @@ public class BasePrefFragment extends PreferenceFragment
                     method.invoke(this, preference, newValue);
                 } catch (Exception e) {
                     Logger.e("Can't invoke preference change method " + method + ", " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.stackTrace(e);
                 }
             }
         }
@@ -162,7 +162,7 @@ public class BasePrefFragment extends PreferenceFragment
                     method.invoke(this, preference);
                 } catch (Exception e) {
                     Logger.e("Can't invoke preference click method " + method + ", " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.stackTrace(e);
                 }
             }
         }
@@ -180,7 +180,7 @@ public class BasePrefFragment extends PreferenceFragment
                     method.invoke(this, preference);
                 } catch (Exception e) {
                     Logger.e("Can't invoke preference long click method " + method + ", " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.stackTrace(e);
                 }
             }
         }

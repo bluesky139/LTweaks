@@ -33,7 +33,7 @@ public class IOUtils {
             bytes = outputStream.toByteArray();
         } catch (Exception e) {
             Logger.e("uri2bytes error, " + e.getMessage());
-            e.printStackTrace();
+            Logger.stackTrace(e);
         } finally {
             try {
                 if (stream != null)

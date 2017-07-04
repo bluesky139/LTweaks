@@ -100,7 +100,7 @@ public class XposedSetInactive extends XposedPreventRunning {
                     Logger.i("set-inactive " + name);
                 } catch (Exception e) {
                     Logger.e("Failed to set-inactive, " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.stackTrace(e);
                 }
             }
         }

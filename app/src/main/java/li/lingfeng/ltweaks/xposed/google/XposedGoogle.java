@@ -100,7 +100,7 @@ public class XposedGoogle extends XposedBase {
                         handleWithNowTabs();
                     } catch (Exception e) {
                         Logger.e("Can't handle with mNowTabs, " + e.getMessage());
-                        e.printStackTrace();
+                        Logger.stackTrace(e);
                     }
                 }
             });
@@ -205,7 +205,7 @@ public class XposedGoogle extends XposedBase {
                         mMethodCloseDrawers.invoke(mDrawerLayout);
                     } catch (Exception e) {
                         Logger.e("Can't invoke mMethodCloseDrawers.");
-                        e.printStackTrace();
+                        Logger.stackTrace(e);
                     }
                 }
             });

@@ -26,7 +26,7 @@ public class ContextUtils {
             return MyApplication.instance().createPackageContext(packageName, Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
             Logger.e("Can't create context for package " + packageName + ", " + e.getMessage());
-            e.printStackTrace();
+            Logger.stackTrace(e);
             return null;
         }
     }
@@ -168,7 +168,7 @@ public class ContextUtils {
             return MyApplication.instance().getPackageManager().getApplicationIcon(packageName);
         } catch (PackageManager.NameNotFoundException e) {
             Logger.e("Can't get icon from app " + packageName);
-            e.printStackTrace();
+            Logger.stackTrace(e);
             return new ColorDrawable(Color.WHITE);
         }
     }
@@ -182,7 +182,7 @@ public class ContextUtils {
             ApplicationInfo appInfo = MyApplication.instance().getPackageManager().getApplicationInfo(packageName, 0);
             return MyApplication.instance().getPackageManager().getApplicationLabel(appInfo).toString();
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Logger.stackTrace(e);
             return "";
         }
     }

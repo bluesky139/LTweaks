@@ -52,7 +52,7 @@ public class ZXingUtils {
             result = multiFormatReader.decodeWithState(binaryBitmap);
         } catch (Exception e) {
             Logger.e("Can't decode qrcode from uri " + uri.toString() + ", " + e.getMessage());
-            e.printStackTrace();
+            Logger.stackTrace(e);
         } finally {
             try {
                 if (stream != null)

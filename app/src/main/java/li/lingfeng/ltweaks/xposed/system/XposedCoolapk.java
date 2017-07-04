@@ -110,7 +110,7 @@ public class XposedCoolapk extends XposedBase {
                             }
                         } catch (Exception e) {
                             Logger.e("onGlobalLayout error, " + e.getMessage());
-                            e.printStackTrace();
+                            Logger.stackTrace(e);
                         }
                     }
                 });
@@ -291,7 +291,7 @@ public class XposedCoolapk extends XposedBase {
                             .into(mDrawerLayout.getHeaderImage());
                 } catch (Throwable e) {
                     Logger.e("Failed to update header image, " + e.getMessage());
-                    e.printStackTrace();
+                    Logger.stackTrace(e);
                 }
             }
         } else {
