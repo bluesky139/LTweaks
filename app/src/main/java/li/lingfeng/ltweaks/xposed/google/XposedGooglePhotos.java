@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -41,7 +43,8 @@ public class XposedGooglePhotos extends XposedBase {
     Button tabAssistant;
     Button tabPhotos;
     Button tabAlbums;
-    Button[] tabButtons = new Button[3];
+    Button tabSharing;
+    Button[] tabButtons = new Button[4];
 
     LinearLayout drawerFragment;
     ListView navList;
@@ -73,6 +76,16 @@ public class XposedGooglePhotos extends XposedBase {
                         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
+                                if (tabSharing != null && barListAdapter != null)
+                                {
+                                    if (tabSharing.getVisibility() == View.VISIBLE && tabButtons[3] == null)
+                                    {
+                                        Logger.i("tabSharing visible");
+                                        tabButtons[3] = tabSharing;
+                                        barListAdapter.notifyDataSetChanged();
+                                    }
+                                }
+
                                 if (done)
                                     return;
                                 //Log.w(TAG, "layout changed.");
@@ -122,7 +135,8 @@ public class XposedGooglePhotos extends XposedBase {
                         tabAssistant = null;
                         tabPhotos = null;
                         tabAlbums = null;
-                        tabButtons = new Button[3];
+                        tabSharing = null;
+                        Arrays.fill(tabButtons, null);
                         drawerFragment = null;
                         barList = null;
                         barListAdapter = null;
@@ -251,6 +265,12 @@ public class XposedGooglePhotos extends XposedBase {
                         tabButtons[2] = tabAlbums;
                     }
                 }
+                if (tabSharing == null && view.getId() > 0) {
+                    if (activity.getResources().getResourceEntryName(view.getId()).equals("tab_sharing")) {
+                        Logger.i("got tab_sharing.");
+                        tabSharing = (Button) view;
+                    }
+                }
                 if (drawerFragment == null && view.getId() > 0) {
                     if (activity.getResources().getResourceEntryName(view.getId()).equals("navigation_list")) {
                         Logger.i("got navigation_list.");
@@ -318,10 +338,12 @@ public class XposedGooglePhotos extends XposedBase {
 
     class BarListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
-        View[] views = new View[3];
+        View[] views = new View[tabButtons.length];
 
         @Override
         public int getCount() {
+            if (tabButtons[tabButtons.length - 1] == null)
+                return tabButtons.length - 1;
             return tabButtons.length;
         }
 
@@ -352,6 +374,8 @@ public class XposedGooglePhotos extends XposedBase {
                 strDrwable = "photos_drawermenu_navigation_ic_drawer_assistant";
             } else if (getItem(position) == tabPhotos) {
                 strDrwable = "photos_drawable";
+            } else if (getItem(position) == tabSharing) {
+                strDrwable = "quantum_ic_people_grey600_24";
             }
             int iconDrawableId = activity.getResources().getIdentifier(strDrwable, "drawable", "com.google.android.apps.photos");
             if (iconDrawableId != 0) {

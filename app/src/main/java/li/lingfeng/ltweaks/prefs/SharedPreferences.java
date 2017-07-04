@@ -23,7 +23,7 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     public void reloadIfNecessary() {
         try {
-            if (mOriginal instanceof android.content.SharedPreferences) {
+            if (mOriginal instanceof XSharedPreferences) {
                 XSharedPreferences pref = (XSharedPreferences) mOriginal;
                 if (pref.hasFileChanged()) {
                     pref.reload();
