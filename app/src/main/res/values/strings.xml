@@ -10,7 +10,17 @@ You need restart app / system to let it work, after changing settings.\n
 Open source on github: \n
 <a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
     </string>
+    <string name="app_send_log">Send Log</string>
+    <string name="app_send_log_error">Send log error.</string>
+    <string name="app_retry_after_permission_granted">Retry after permission granted.</string>
+    <string name="app_save_log">Save Log</string>
+    <string name="app_save_log_ok">Log is saved to %s</string>
+    <string name="app_save_log_error">Save log error.</string>
+    <string name="app_send_mail">Send Mail</string>
+    <string name="app_send_mail_description">Please describe what you did, and what happened.\nAlso attach some screenshot if possible.</string>
+    <string name="app_send_to">Send To...</string>
     <string name="app_ok">OK</string>
+    <string name="app_close">Close</string>
     <string name="app_shortcut_is_created">Shortcut is created.</string>
 
     <!--Common-->

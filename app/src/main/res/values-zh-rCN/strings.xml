@@ -10,7 +10,17 @@
 Open source on github: \n
 <a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
     </string>
+    <string name="app_send_log">发送日志</string>
+    <string name="app_send_log_error">发送日志出错.</string>
+    <string name="app_retry_after_permission_granted">授权后再重试.</string>
+    <string name="app_save_log">保存</string>
+    <string name="app_save_log_ok">日志被保存到 %s</string>
+    <string name="app_save_log_error">保存日志出错.</string>
+    <string name="app_send_mail">发邮件</string>
+    <string name="app_send_mail_description">请描述一下你做了什么，出了什么错.\n可能的话请附上一些截屏.</string>
+    <string name="app_send_to">发送到...</string>
     <string name="app_ok">OK</string>
+    <string name="app_close">关闭</string>
     <string name="app_shortcut_is_created">快捷方式已创建.</string>
 
     <!--Common-->

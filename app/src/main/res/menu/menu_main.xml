@@ -2,6 +2,17 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="@string/app_send_log"
+        android:id="@+id/menu_send_log">
+        <menu>
+            <item android:title="@string/app_save_log"
+                android:id="@+id/menu_save_log" />
+            <item android:title="@string/app_send_mail"
+                android:id="@+id/menu_send_mail" />
+            <item android:title="@string/app_send_to"
+                android:id="@+id/menu_send_to" />
+        </menu>
+    </item>
     <item android:title="@string/app_about"
         android:id="@+id/menu_about" />
 </menu>

@@ -1,33 +1,32 @@
 package li.lingfeng.ltweaks;
 
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
-import android.preference.PreferenceFragment;
-import android.preference.RingtonePreference;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.util.List;
 
-import li.lingfeng.ltweaks.fragments.GooglePrefFragment;
+import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -102,11 +101,82 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_about) {
-            showAbout();
-            return true;
+        switch (id) {
+            case R.id.menu_about:
+            {
+                showAbout();
+                return true;
+            }
+            case R.id.menu_save_log:
+            {
+                File file = saveLog();
+                if (file != null) {
+                    ViewUtils.showDialog(this, getString(R.string.app_save_log_ok, file.getAbsolutePath()));
+                }
+                return true;
+            }
+            case R.id.menu_send_mail:
+            {
+                File file = saveLog();
+                if (file != null) {
+                    sendLogWithMail(file);
+                }
+                return true;
+            }
+            case R.id.menu_send_to:
+            {
+                File file = saveLog();
+                if (file != null) {
+                    sendLogTo(file);
+                }
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private File saveLog() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 555);
+            Toast.makeText(this, R.string.app_retry_after_permission_granted, Toast.LENGTH_LONG).show();
+            return null;
+        }
+
+        try {
+            File srcFile = new File("/data/data/de.robv.android.xposed.installer/log/error.log");
+            File dstFile = new File(getExternalFilesDir(null), "error.log");
+            FileUtils.copyFile(srcFile, dstFile);
+            return dstFile;
+        } catch (Exception e) {
+            Toast.makeText(this, R.string.app_save_log_error, Toast.LENGTH_SHORT).show();
+            Logger.e("Save log error, " + e);
+            return null;
+        }
+    }
+
+    private void sendLogWithMail(File file) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("vnd.android.cursor.dir/email");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "bluesky139+play@gmail.com" });
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + "] v" +
+                    getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.app_send_mail_description));
+            startActivity(Intent.createChooser(intent, getString(R.string.app_send_mail)));
+        } catch (Exception e) {
+            Toast.makeText(this, R.string.app_send_log_error, Toast.LENGTH_SHORT).show();
+            Logger.e("Send log error, " + e);
+            Logger.stackTrace(e);
+        }
+    }
+
+    private void sendLogTo(File file) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        intent.setType("text/plain");
+        startActivity(Intent.createChooser(intent, getString(R.string.app_send_to)));
     }
 
     private void showAbout() {

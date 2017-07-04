@@ -1,9 +1,11 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import li.lingfeng.ltweaks.R;
 
 /**
  * Created by smallville on 2017/2/9.
@@ -115,5 +119,12 @@ public class ViewUtils {
             Logger.e("findFragmentByPosition error, " + e);
             return null;
         }
+    }
+
+    public static void showDialog(Context context, String message) {
+        new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setPositiveButton(R.string.app_ok, null)
+                .show();
     }
 }
