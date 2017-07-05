@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -126,5 +128,13 @@ public class ViewUtils {
                 .setMessage(message)
                 .setPositiveButton(R.string.app_ok, null)
                 .show();
+    }
+
+    public static void executeJs(WebView webView, String js) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript(js, null);
+        } else {
+            webView.loadUrl("javascript:" + js);
+        }
     }
 }

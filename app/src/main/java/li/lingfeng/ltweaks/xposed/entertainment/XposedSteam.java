@@ -9,7 +9,6 @@ import android.widget.Toast;
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.utils.ShareUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -18,7 +17,8 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 
 public abstract class XposedSteam extends XposedBase {
 
-    private static final String MAIN_ACTIVITY = "com.valvesoftware.android.steam.community.activity.MainActivity";
+    protected static final String MAIN_ACTIVITY = "com.valvesoftware.android.steam.community.activity.MainActivity";
+    protected Activity mActivity;
     private MenuItem mMenuShare;
 
     @Override
@@ -27,7 +27,8 @@ public abstract class XposedSteam extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Menu menu = (Menu) param.args[0];
-                mMenuShare = menu.add(newMenuName());
+                mMenuShare = menu.add(Menu.NONE, Menu.NONE, newMenuPriority(), newMenuName());
+                mMenuShare.setShowAsAction(newMenuShowAsAction());
             }
         });
 
@@ -37,22 +38,42 @@ public abstract class XposedSteam extends XposedBase {
                 if (mMenuShare != (MenuItem) param.args[0]) {
                     return;
                 }
-
-                Activity activity = (Activity) param.thisObject;
-                int idWebView = ContextUtils.getResId("webView", "id");
-                WebView webView = (WebView) activity.findViewById(idWebView);
-                if (webView == null) {
-                    Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
-                    return;
+                mActivity = (Activity) param.thisObject;
+                try {
+                    menuItemSelected();
+                } catch (Throwable e) {
+                    Logger.stackTrace(e);
                 }
+            }
+        });
 
-                String url = webView.getUrl();
-                Logger.i("Got url " + url);
-                gotUrl(activity, url);
+        findAndHookActivity(MAIN_ACTIVITY, "onDestroy", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                mActivity = null;
             }
         });
     }
 
+    protected WebView getWebView() {
+        int idWebView = ContextUtils.getResId("webView", "id");
+        return (WebView) mActivity.findViewById(idWebView);
+    }
+
+    protected String getUrl() {
+        WebView webView = getWebView();
+        if (webView == null) {
+            Toast.makeText(mActivity, "Error.", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        String url = webView.getUrl();
+        Logger.i("Got url " + url);
+        return url;
+    }
+
     protected abstract String newMenuName();
-    protected abstract void gotUrl(Activity activity, String url);
+    protected abstract int newMenuPriority();
+    protected abstract int newMenuShowAsAction();
+    protected abstract void menuItemSelected() throws Throwable;
 }

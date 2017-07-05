@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed.entertainment;
 
 import android.app.Activity;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -24,15 +25,30 @@ public class XposedSteamDatabase extends XposedSteam {
     }
 
     @Override
-    protected void gotUrl(Activity activity, String url) {
+    protected int newMenuPriority() {
+        return 4;
+    }
+
+    @Override
+    protected int newMenuShowAsAction() {
+        return MenuItem.SHOW_AS_ACTION_NEVER;
+    }
+
+    @Override
+    protected void menuItemSelected() throws Throwable {
+        String url = getUrl();
+        if (url == null) {
+            return;
+        }
+
         Pattern pattern = Pattern.compile("^https?://store\\.steampowered\\.com/app/(\\d+)/");
         Matcher matcher = pattern.matcher(url);
         if (!matcher.find()) {
-            Toast.makeText(activity, "Can't find game id.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "Can't find game id.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String gameId = matcher.group(1);
-        ContextUtils.startBrowser(activity, "https://steamdb.info/app/" + gameId + "/");
+        ContextUtils.startBrowser(mActivity, "https://steamdb.info/app/" + gameId + "/");
     }
 }

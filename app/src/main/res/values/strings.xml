@@ -120,6 +120,10 @@ Open source on github: \n
     <string name="pref_steam_share_url_summary">Add a top right menu to use system share</string>
     <string name="pref_steam_database">View in Steam Database</string>
     <string name="pref_steam_database_summary">Add a top right menu</string>
+    <string name="pref_steam_go_top">Go top in store item page</string>
+    <string name="pref_steam_go_top_summary">Add a top right menu</string>
+    <string name="pref_steam_go_reviews">Go reviews in store item page</string>
+    <string name="pref_steam_go_reviews_summary">Add a top right menu</string>
 
     <!--System-->
     <string name="pref_header_system">System / Tools</string>

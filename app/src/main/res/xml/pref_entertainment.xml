@@ -36,5 +36,15 @@
             android:key="@string/key_steam_database"
             android:title="@string/pref_steam_database"
             android:summary="@string/pref_steam_database_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_steam_go_top"
+            android:title="@string/pref_steam_go_top"
+            android:summary="@string/pref_steam_go_top_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_steam_go_reviews"
+            android:title="@string/pref_steam_go_reviews"
+            android:summary="@string/pref_steam_go_reviews_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

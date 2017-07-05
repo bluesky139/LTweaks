@@ -120,6 +120,10 @@ Open source on github: \n
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>
     <string name="pref_steam_database">去 Steam Database 查看</string>
     <string name="pref_steam_database_summary">在右上角添加一个菜单</string>
+    <string name="pref_steam_go_top">在商品页跳到顶部</string>
+    <string name="pref_steam_go_top_summary">在右上角添加一个菜单</string>
+    <string name="pref_steam_go_reviews">在商品页跳到评测栏</string>
+    <string name="pref_steam_go_reviews_summary">在右上角添加一个菜单</string>
 
     <!--System-->
     <string name="pref_header_system">系统 / 工具</string>

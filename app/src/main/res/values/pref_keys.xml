@@ -37,6 +37,8 @@
     <string name="key_bilibili_search">key_bilibili_search</string>
     <string name="key_steam_share_url">key_steam_share_url</string>
     <string name="key_steam_database">key_steam_database</string>
+    <string name="key_steam_go_top">key_steam_go_top</string>
+    <string name="key_steam_go_reviews">key_steam_go_reviews</string>
 
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>
