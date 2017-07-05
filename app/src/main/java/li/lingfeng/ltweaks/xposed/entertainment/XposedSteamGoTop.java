@@ -35,6 +35,11 @@ public class XposedSteamGoTop extends XposedSteam {
     @Override
     protected void menuItemSelected() throws Throwable {
         Logger.i("Steam go top.");
-        ViewUtils.executeJs(getWebView(), "document.getElementsByClassName('page_content_ctn')[0].scrollIntoView();");
+        ViewUtils.executeJs(getWebView(),
+                  "if (document.getElementsByClassName('page_title_area game_title_area page_content').length > 0) {\n"
+                + "  document.getElementsByClassName('page_title_area game_title_area page_content')[0].scrollIntoView();\n"
+                + "} else {\n"
+                + "  window.scrollTo(0, 0);\n"
+                + "}");
     }
 }
