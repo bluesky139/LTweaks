@@ -73,8 +73,7 @@ public class ListCheckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         try {
-            Class clsDataProvider = (Class) getIntent().getSerializableExtra("data_provider");
-            Constructor constructor = clsDataProvider.getConstructor(Activity.class);
+            Constructor constructor = getDataProviderClass().getConstructor(Activity.class);
             mDataProvider = (DataProvider) constructor.newInstance(this);
         } catch (Exception e) {
             Toast.makeText(this, "No data provider", Toast.LENGTH_SHORT).show();
@@ -91,6 +90,10 @@ public class ListCheckActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(new ListFragmentPageChangeListener());
+    }
+
+    protected Class<? extends DataProvider> getDataProviderClass() {
+        return (Class<? extends DataProvider>) getIntent().getSerializableExtra("data_provider");
     }
 
     private class ListFragmentPagerAdapter extends FragmentPagerAdapter {

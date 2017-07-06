@@ -26,6 +26,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
 import li.lingfeng.ltweaks.activities.ListCheckActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
+import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
@@ -261,83 +262,7 @@ public class SystemPrefFragment extends BasePrefFragment {
 
     @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)
     private void setSmartLockWifiList(Preference preference) {
-        ListCheckActivity.create(getActivity(), SmartLockWifiDataProvider.class);
-    }
-
-    public static class SmartLockWifiDataProvider extends ListCheckActivity.DataProvider {
-
-        private Set<String> mTrustedAps;
-        private List<ListItem> mListItems;
-
-        public SmartLockWifiDataProvider(Activity activity) {
-            super(activity);
-            mTrustedAps = new HashSet<>(
-                    Prefs.instance().getStringSet(R.string.key_trust_agent_wifi_aps, new HashSet<String>())
-            );
-            mListItems = new ArrayList<>(mTrustedAps.size() + 1);
-            WifiInfo wifiInfo = NetUtils.getWifiInfo();
-            boolean hasCurrent = false;
-            for (String ap : mTrustedAps) {
-                final String[] s = Utils.splitByLastChar(ap, ',');
-                boolean isCurrent = (wifiInfo != null && StringUtils.strip(wifiInfo.getSSID(), "\"").equals(s[0]) && wifiInfo.getBSSID().equals(s[1]));
-                hasCurrent |= isCurrent;
-                ListItem item = createListItem(s[0], s[1], isCurrent, true);
-                mListItems.add(item);
-            }
-            if (wifiInfo != null && !hasCurrent) {
-                ListItem item = createListItem(StringUtils.strip(wifiInfo.getSSID(), "\""), wifiInfo.getBSSID(), true, false);
-                mListItems.add(item);
-            }
-        }
-
-        private ListItem createListItem(final String ssid, final String bssid, boolean isCurrent, boolean isChecked) {
-            ListItem item = new ListItem();
-            item.mIcon = mActivity.getResources().getDrawable(R.drawable.ic_wifi);
-            item.mTitle = ssid + (isCurrent ? (" (" + mActivity.getString(R.string.current) + ")") : "");
-            item.mDescription = bssid;
-            item.mChecked = isChecked;
-            item.mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    String ap = ssid + "," + bssid;
-                    if (isChecked) {
-                        Logger.i("Trust wifi " + ap);
-                        mTrustedAps.add(ap);
-                    } else {
-                        Logger.i("Revoke wifi " + ap);
-                        mTrustedAps.remove(ap);
-                    }
-                    Prefs.instance().edit()
-                            .putStringSet(R.string.key_trust_agent_wifi_aps, mTrustedAps)
-                            .commit();
-                }
-            };
-            return item;
-        }
-
-        @Override
-        protected String getActivityTitle() {
-            return mActivity.getString(R.string.pref_trust_agent_wifi);
-        }
-
-        @Override
-        protected String[] getTabTitles() {
-            return new String[] { mActivity.getString(R.string.list) };
-        }
-
-        @Override
-        protected int getListItemCount(int tab) {
-            return mListItems.size();
-        }
-
-        @Override
-        protected ListItem getListItem(int tab, int position) {
-            return mListItems.get(position);
-        }
-
-        @Override
-        protected boolean reload() {
-            return false;
-        }
+        Intent intent = new Intent(getActivity(), TrustAgentWifiSettings.class);
+        getActivity().startActivity(intent);
     }
 }
