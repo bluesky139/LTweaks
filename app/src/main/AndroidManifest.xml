@@ -165,7 +165,10 @@
         <activity
             android:name=".activities.TrustAgentWifiSettings"
             android:label="@string/pref_trust_agent_wifi"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.TrustAgentWifiSettings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
