@@ -36,6 +36,7 @@ Open source on github: \n
     <string name="enabled">Enabled</string>
     <string name="list">List</string>
     <string name="current">Current</string>
+    <string name="secure_lock_screen_not_setup">Secure lock screen hasn\'t set up.</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>

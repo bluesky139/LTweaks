@@ -36,6 +36,7 @@ Open source on github: \n
     <string name="enabled">已启用</string>
     <string name="list">列表</string>
     <string name="current">当前</string>
+    <string name="secure_lock_screen_not_setup">你还未给你的设备设置密码.</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>

@@ -3,10 +3,12 @@ package li.lingfeng.ltweaks.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.wifi.WifiInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
@@ -30,6 +32,7 @@ import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
+import li.lingfeng.ltweaks.prefs.ActivityRequestCode;
 import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
@@ -262,7 +265,28 @@ public class SystemPrefFragment extends BasePrefFragment {
 
     @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)
     private void setSmartLockWifiList(Preference preference) {
-        Intent intent = new Intent(getActivity(), TrustAgentWifiSettings.class);
-        getActivity().startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
+            if (keyguardManager.isKeyguardSecure()) {
+                Intent keyguardIntent = keyguardManager.createConfirmDeviceCredentialIntent(getString(R.string.pref_trust_agent_wifi), "");
+                startActivityForResult(keyguardIntent, ActivityRequestCode.KEYGUARD);
+            } else {
+                Toast.makeText(getActivity(), R.string.secure_lock_screen_not_setup, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getActivity(), R.string.not_supported, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivityRequestCode.KEYGUARD) {
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent(getActivity(), TrustAgentWifiSettings.class);
+                getActivity().startActivity(intent);
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
