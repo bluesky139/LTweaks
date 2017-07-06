@@ -1,11 +1,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/pref_category_google">
+        android:title="@string/pref_category_google_play_services">
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_google_dismiss_location_checker"
             android:title="@string/pref_google_dismiss_location_checker"
             android:summary="@string/pref_google_dismiss_location_checker_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_google">
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_google_remove_bottom_bar"

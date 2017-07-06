@@ -14,13 +14,11 @@ public class Logger {
     private final static String TAG = "Xposed";
 
     public static void v(String msg) {
-        if (BuildConfig.DEBUG)
-            Log.v(TAG, msg);
+        Log.v(TAG, msg);
     }
 
     public static void d(String msg) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, msg);
+        Log.d(TAG, msg);
     }
 
     public static void i(String msg) {
@@ -42,7 +40,8 @@ public class Logger {
         Log.e(TAG, Log.getStackTraceString(e));
     }
 
-    public static void intentExtras(Intent intent) {
+    public static void intent(Intent intent) {
+        Logger.d(" intent action: " + intent.getAction());
         for (String key : intent.getExtras().keySet()) {
             Logger.d(" intent extra: " + key + " -> " + intent.getExtras().get(key));
         }

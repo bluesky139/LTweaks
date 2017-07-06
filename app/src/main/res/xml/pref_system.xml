@@ -95,4 +95,12 @@
             android:title="@string/pref_native_clipboard_fix_chrome"
             android:summary="@string/pref_native_clipboard_fix_chrome_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_trust_agent">
+        <Preference
+            android:key="@string/key_trust_agent_wifi_aps"
+            android:title="@string/pref_trust_agent_wifi"
+            android:summary="@string/pref_trust_agent_wifi_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

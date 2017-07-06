@@ -3,8 +3,12 @@
     package="li.lingfeng.ltweaks">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CONTROL_KEYGUARD" />
+    <uses-permission android:name="android.permission.PROVIDE_TRUST_AGENT" />
 
     <application
         android:name=".MyApplication"
@@ -158,6 +162,17 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity-alias>
+        
+        <service
+            android:name=".services.WifiTrustAgent"
+            android:label="@string/pref_trust_agent_wifi"
+            android:permission="android.permission.BIND_TRUST_AGENT"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.trust.TrustAgentService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

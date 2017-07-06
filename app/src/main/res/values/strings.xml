@@ -34,12 +34,15 @@ Open source on github: \n
     <string name="all">All</string>
     <string name="disabled">Disabled</string>
     <string name="enabled">Enabled</string>
+    <string name="list">List</string>
+    <string name="current">Current</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
-    <string name="pref_category_google">Google</string>
+    <string name="pref_category_google_play_services">Google Play Services</string>
     <string name="pref_google_dismiss_location_checker">Dismiss location settings checker</string>
     <string name="pref_google_dismiss_location_checker_summary">Dismiss dialog \"To continue, let your device turn on location using Google\'s location service.\"</string>
+    <string name="pref_category_google">Google</string>
     <string name="pref_google_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_google_plus">Google+</string>
@@ -162,6 +165,9 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="pref_category_native_clipboard">Native Clipboard (A Xposed module)</string>
     <string name="pref_native_clipboard_fix_chrome">Fix in Chrome</string>
     <string name="pref_native_clipboard_fix_chrome_summary">Try this if \"Native Clipboard\" doesn\'t work in Chrome</string>
+    <string name="pref_category_trust_agent">Trust Agents</string>
+    <string name="pref_trust_agent_wifi">Smart Lock with WiFi</string>
+    <string name="pref_trust_agent_wifi_summary">Unlock device by certain Wifi connected, just like Smart Lock which provided by Google.\nUse both SSID and BSSID to match.\nYou need go \"Settings -> Security -> Trust agents\" to enable this agent.\nClick to set WiFi list, only connected WiFi can be added.\nFor Android 6.0+</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>

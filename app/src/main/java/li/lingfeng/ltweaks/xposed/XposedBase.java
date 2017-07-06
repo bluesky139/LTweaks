@@ -2,9 +2,11 @@ package li.lingfeng.ltweaks.xposed;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -84,45 +86,55 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
     }
 
     protected XC_MethodHook.Unhook findAndHookActivity(final String className, String methodName, Object... parameterTypesAndCallback) {
+        return findAndHookWithParent(className, Activity.class, methodName, parameterTypesAndCallback);
+    }
+
+    protected XC_MethodHook.Unhook findAndHookService(final String className, String methodName, Object... parameterTypesAndCallback) {
+        return findAndHookWithParent(className, Service.class, methodName, parameterTypesAndCallback);
+    }
+
+    protected XC_MethodHook.Unhook findAndHookWithParent(final String className, final Class clsBase, String methodName, Object... parameterTypesAndCallback) {
         if(parameterTypesAndCallback.length != 0 && parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof XC_MethodHook) {
             Class<?>[] parameterTypes = new Class<?>[parameterTypesAndCallback.length - 1];
             System.arraycopy(parameterTypesAndCallback, 0, parameterTypes, 0, parameterTypes.length);
 
-            // If method is overrided by extended activity, then hook it directly.
-            Class<?> clsActivity = null;
+            // If method is overridden by extended class, then hook it directly.
+            Class<?> clsExtended = null;
             try {
-                clsActivity = XposedHelpers.findClass(className, lpparam.classLoader);
-                clsActivity.getDeclaredMethod(methodName, parameterTypes);
+                clsExtended = XposedHelpers.findClass(className, lpparam.classLoader);
+                clsExtended.getDeclaredMethod(methodName, parameterTypes);
                 Logger.v("Hook " + className + " " + methodName);
-                return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
+                return findAndHookMethod(clsExtended, methodName, parameterTypesAndCallback);
             } catch (Throwable e) {}
 
-            // Try find from parent activity class.
-            while (clsActivity != null && clsActivity != Object.class) {
-                clsActivity = clsActivity.getSuperclass();
-                if (clsActivity == Activity.class) {
+            // Try find from parent class.
+            while (clsExtended != null && clsExtended != Object.class) {
+                clsExtended = clsExtended.getSuperclass();
+                if (clsExtended == clsBase) {
                     break;
                 }
+                if (Modifier.isAbstract(clsExtended.getModifiers())) {
+                    continue;
+                }
                 try {
-                    clsActivity.getDeclaredMethod(methodName, parameterTypes);
+                    clsExtended.getDeclaredMethod(methodName, parameterTypes);
                     break;
                 } catch (NoSuchMethodException e) {}
             }
-            if (clsActivity == null || clsActivity == Object.class) {
-                clsActivity = Activity.class;
+            if (clsExtended == null || clsExtended == Object.class) {
+                clsExtended = clsBase;
             }
 
-            // Hook parent activity class or android.app.Activity.
+            // Hook parent class or clsBase.
             final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
             XC_MethodHook middleHook = new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     if (param.thisObject.getClass().getName().equals(className)) {
                         try {
-                            getMethodBeforeHooked().invoke(hook, param);
-                        } catch (InvocationTargetException e) {
-                            Logger.e("Hook activity error in beforeHookedMethod, " + e.getMessage());
-                            throw new Exception(e.getCause());
+                            XposedHelpers.callMethod(hook, "beforeHookedMethod", param);
+                        } catch (XposedHelpers.InvocationTargetError e) {
+                            throw e.getCause();
                         }
                     }
                 }
@@ -130,47 +142,18 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     if (param.thisObject.getClass().getName().equals(className)) {
                         try {
-                            getMethodAfterHooked().invoke(hook, param);
-                        } catch (InvocationTargetException e) {
-                            Logger.e("Hook activity error in afterHookedMethod, " + e.getMessage());
-                            throw new Exception(e.getCause());
+                            XposedHelpers.callMethod(hook, "afterHookedMethod", param);
+                        } catch (XposedHelpers.InvocationTargetError e) {
+                            throw e.getCause();
                         }
                     }
                 }
             };
             parameterTypesAndCallback[parameterTypesAndCallback.length - 1] = middleHook;
-            Logger.v("Hook " + clsActivity.getName() + " " + methodName + " for " + className);
-            return findAndHookMethod(clsActivity, methodName, parameterTypesAndCallback);
+            Logger.v("Hook " + clsExtended.getName() + " " + methodName + " for " + className);
+            return findAndHookMethod(clsExtended, methodName, parameterTypesAndCallback);
         } else {
             throw new IllegalArgumentException("no callback defined");
         }
-    }
-
-    private Method getMethodBeforeHooked() {
-        if (sMethodBeforeHooked == null) {
-            try {
-                sMethodBeforeHooked = XC_MethodHook.class.getDeclaredMethod("beforeHookedMethod",
-                        XC_MethodHook.MethodHookParam.class);
-                sMethodBeforeHooked.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                Logger.e("Can't get method beforeHookedMethod");
-                Logger.stackTrace(e);
-            }
-        }
-        return sMethodBeforeHooked;
-    }
-
-    private Method getMethodAfterHooked() {
-        if (sMethodAfterHooked == null) {
-            try {
-                sMethodAfterHooked = XC_MethodHook.class.getDeclaredMethod("afterHookedMethod",
-                        XC_MethodHook.MethodHookParam.class);
-                sMethodAfterHooked.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                Logger.e("Can't get method afterHookedMethod");
-                Logger.stackTrace(e);
-            }
-        }
-        return sMethodAfterHooked;
     }
 }

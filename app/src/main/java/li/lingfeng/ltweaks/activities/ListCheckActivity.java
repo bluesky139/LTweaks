@@ -16,11 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +40,7 @@ public class ListCheckActivity extends AppCompatActivity {
             public Drawable mIcon;
             public CharSequence mTitle;
             public CharSequence mDescription;
-            public boolean mDisabled;
+            public boolean mChecked;
             public CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
         }
 
@@ -80,6 +78,7 @@ public class ListCheckActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "No data provider", Toast.LENGTH_SHORT).show();
             Logger.e("No data provider, " + e);
+            Logger.stackTrace(e);
             finish();
             return;
         }
@@ -191,7 +190,7 @@ public class ListCheckActivity extends AppCompatActivity {
                 holder.mTitle.setText(data.mTitle);
                 holder.mDescription.setText(data.mDescription);
                 holder.mEnabler.setOnCheckedChangeListener(null);
-                holder.mEnabler.setChecked(data.mDisabled);
+                holder.mEnabler.setChecked(data.mChecked);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                     @Override
