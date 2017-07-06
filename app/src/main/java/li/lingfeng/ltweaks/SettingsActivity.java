@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.List;
 
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PermissionUtils;
 import li.lingfeng.ltweaks.utils.ViewUtils;
 
 /**
@@ -136,9 +137,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     private File saveLog() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 555);
-            Toast.makeText(this, R.string.app_retry_after_permission_granted, Toast.LENGTH_LONG).show();
+        if (!PermissionUtils.tryPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             return null;
         }
 
