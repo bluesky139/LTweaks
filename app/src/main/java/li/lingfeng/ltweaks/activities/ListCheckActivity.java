@@ -50,6 +50,7 @@ public class ListCheckActivity extends AppCompatActivity {
             mActivity = activity;
         }
 
+        protected abstract String getActivityTitle();
         protected abstract String[] getTabTitles();
         protected abstract int getListItemCount(int tab);
         protected abstract ListItem getListItem(int tab, int position);
@@ -83,6 +84,7 @@ public class ListCheckActivity extends AppCompatActivity {
             return;
         }
 
+        setTitle(mDataProvider.getActivityTitle());
         setContentView(R.layout.activity_list_check);
         mTabLayout = (PagerTabStrip) findViewById(R.id.tabs);
         mPagerAdapter = new ListFragmentPagerAdapter(getSupportFragmentManager());

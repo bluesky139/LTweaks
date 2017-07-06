@@ -164,6 +164,11 @@ public class SystemPrefFragment extends BasePrefFragment {
         }
 
         @Override
+        protected String getActivityTitle() {
+            return mActivity.getString(R.string.pref_system_share_filter);
+        }
+
+        @Override
         protected String[] getTabTitles() {
             return new String[] {
                     mActivity.getString(R.string.all),
@@ -308,6 +313,11 @@ public class SystemPrefFragment extends BasePrefFragment {
                 }
             };
             return item;
+        }
+
+        @Override
+        protected String getActivityTitle() {
+            return mActivity.getString(R.string.pref_trust_agent_wifi);
         }
 
         @Override
