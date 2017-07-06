@@ -167,7 +167,7 @@ Open source on github: \n
     <string name="pref_native_clipboard_fix_chrome_summary">如果 \"原生剪贴板\" 在 Chrome 上不工作，你可以尝试这个</string>
     <string name="pref_category_trust_agent">信任的环境</string>
     <string name="pref_trust_agent_wifi">在指定 WiFi 下自动解锁屏幕</string>
-    <string name="pref_trust_agent_wifi_summary">在连接到指定 WiFi 后自动解锁屏幕, 类似 Google 提供的 Smart Lock.\n同时使用 SSID 和 BSSID 来确定 WiFi 是否可信.\n你需要到 \"设置 -> 安全 -> 信任的代理\" 启用此代理.\n点此设置可信的 WiFi 列表, 仅当前连上的 WiFi 才能加入到列表.\n仅 Android 6.0+</string>
+    <string name="pref_trust_agent_wifi_summary">在连接到指定 WiFi 后自动解锁屏幕, 类似 Google 提供的 Smart Lock.\n同时使用 SSID 和 BSSID 来确定 WiFi 是否可信.\n你需要到 \"设置 -> 安全 -> 信任的代理\" 启用此代理.\n点此设置可信的 WiFi 列表, 仅当前连上的 WiFi 才能加入到列表.\n仅 Android 5.0+</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
