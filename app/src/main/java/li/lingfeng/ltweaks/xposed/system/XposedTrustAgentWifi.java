@@ -1,4 +1,4 @@
-package li.lingfeng.ltweaks.xposed.google;
+package li.lingfeng.ltweaks.xposed.system;
 
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
@@ -16,7 +16,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
  * Created by lilingfeng on 2017/7/5.
  */
 @XposedLoad(packages = PackageNames.ANDROID, prefs = {})
-public class XposedWifiTrustAgent extends XposedBase {
+public class XposedTrustAgentWifi extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -30,8 +30,7 @@ public class XposedWifiTrustAgent extends XposedBase {
                 String packageName = (String) param.args[1];
                 String permissionName = (String) param.args[0];
                 if (packageName.equals(PackageNames.L_TWEAKS)
-                        && (permissionName.equals("android.permission.PROVIDE_TRUST_AGENT")
-                        || permissionName.equals("android.permission.CONTROL_KEYGUARD"))) {
+                        && permissionName.equals("android.permission.PROVIDE_TRUST_AGENT")) {
                     Logger.i("Grant permission " + permissionName + " for " + packageName);
                     param.setResult(PackageManager.PERMISSION_GRANTED);
                 }
