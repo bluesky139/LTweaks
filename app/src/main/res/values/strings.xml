@@ -21,6 +21,7 @@ Open source on github: \n
     <string name="app_send_to">Send To...</string>
     <string name="app_ok">OK</string>
     <string name="app_close">Close</string>
+    <string name="app_delete">Delete</string>
     <string name="app_shortcut_is_created">Shortcut is created.</string>
 
     <!--Common-->
@@ -169,6 +170,8 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="pref_category_trust_agent">Trust Agents</string>
     <string name="pref_trust_agent_wifi">Smart Lock with WiFi</string>
     <string name="pref_trust_agent_wifi_summary">Unlock device by certain Wifi connected, just like Smart Lock which provided by Google.\nUse both SSID and BSSID to match.\nYou need go \"Settings -> Security -> Trust agents\" to enable this agent.\nClick to set WiFi list, only connected WiFi can be added.\nFor Android 5.0+</string>
+    <string name="pref_category_solid_explorer">Solid Explorer</string>
+    <string name="pref_solid_explorer_replace_url">Replace Streaming Url</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
@@ -181,4 +184,10 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <!-- Process Text -->
     <string name="process_text_douban_movie">Douban Movie</string>
     <string name="process_text_bilibili">Bilibili</string>
+
+    <!-- Url Replacer -->
+    <string name="solid_explorer_url_replacer_dialog_title">Edit Url Replacer</string>
+    <string name="solid_explorer_url_replacer_dialog_instruction"></string>
+    <string name="solid_explorer_url_replacer_dialog_instruction_from">Server (eg: smb://10.0.0.4/download):</string>
+    <string name="solid_explorer_url_replacer_dialog_instruction_to">Replace To (eg: http://10.0.0.4/download):</string>
 </resources>

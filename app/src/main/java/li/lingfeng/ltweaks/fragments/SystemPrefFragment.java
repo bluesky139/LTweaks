@@ -144,7 +144,7 @@ public class SystemPrefFragment extends BasePrefFragment {
         private Set<String> mDisabledActivities;
         private boolean mNeedReload = true;
 
-        public DataProvider(Activity activity) {
+        public DataProvider(ListCheckActivity activity) {
             super(activity);
             mDisabledActivities = new HashSet<>(
                     Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, new HashSet<String>())
@@ -209,33 +209,11 @@ public class SystemPrefFragment extends BasePrefFragment {
 
             ListItem item = new ListItem();
             final ActivityInfo activityInfo = infos.get(position);
+            item.mData = activityInfo;
             item.mIcon = activityInfo.mInfo.loadIcon(mActivity.getPackageManager());
             item.mTitle = activityInfo.mInfo.activityInfo.applicationInfo.loadLabel(mActivity.getPackageManager());
             item.mDescription = activityInfo.mInfo.loadLabel(mActivity.getPackageManager());
             item.mChecked = activityInfo.mDisabled;
-            item.mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    String fullActivityName = activityInfo.mInfo.activityInfo.applicationInfo.packageName + "/" + activityInfo.mInfo.activityInfo.name;
-                    Logger.i((isChecked ? "Disabled" : "Enabled") + " share activity " + fullActivityName);
-
-                    activityInfo.mDisabled = isChecked;
-                    if (isChecked) {
-                        mMapDisabledInfos.put(fullActivityName, activityInfo);
-                        mMapEnabledInfos.remove(fullActivityName);
-                        mDisabledActivities.add(fullActivityName);
-                    } else {
-                        mMapDisabledInfos.remove(fullActivityName);
-                        mMapEnabledInfos.put(fullActivityName, activityInfo);
-                        mDisabledActivities.remove(fullActivityName);
-                    }
-                    mNeedReload = true;
-
-                    Prefs.instance().edit()
-                            .putStringSet(R.string.key_system_share_filter_activities, mDisabledActivities)
-                            .commit();
-                }
-            };
             return item;
         }
 
@@ -251,6 +229,29 @@ public class SystemPrefFragment extends BasePrefFragment {
             mEnabledInfos = new ArrayList<>(mMapEnabledInfos.values());
             Logger.d("mAllInfos " + mAllInfos.size() + ", mDisabledInfos " + mDisabledInfos.size() + ", mEnabledInfos " + mEnabledInfos.size());
             return true;
+        }
+
+        @Override
+        public void onCheckedChanged(ListItem item, boolean isChecked) {
+            ActivityInfo activityInfo = (ActivityInfo) item.mData;
+            String fullActivityName = activityInfo.mInfo.activityInfo.applicationInfo.packageName + "/" + activityInfo.mInfo.activityInfo.name;
+            Logger.i((isChecked ? "Disabled" : "Enabled") + " share activity " + fullActivityName);
+
+            activityInfo.mDisabled = isChecked;
+            if (isChecked) {
+                mMapDisabledInfos.put(fullActivityName, activityInfo);
+                mMapEnabledInfos.remove(fullActivityName);
+                mDisabledActivities.add(fullActivityName);
+            } else {
+                mMapDisabledInfos.remove(fullActivityName);
+                mMapEnabledInfos.put(fullActivityName, activityInfo);
+                mDisabledActivities.remove(fullActivityName);
+            }
+            mNeedReload = true;
+
+            Prefs.instance().edit()
+                    .putStringSet(R.string.key_system_share_filter_activities, mDisabledActivities)
+                    .commit();
         }
     }
 

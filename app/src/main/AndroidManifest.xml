@@ -185,6 +185,8 @@
             <meta-data android:name="android.service.trust.trustagent"
                 android:resource="@xml/trust_agent_wifi"/>
         </service>
+
+        <activity android:name=".activities.SolidExplorerUrlReplacerSettings" />
     </application>
 
 </manifest>

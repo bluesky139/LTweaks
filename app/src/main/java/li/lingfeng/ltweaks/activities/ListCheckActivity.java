@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -34,19 +35,32 @@ import li.lingfeng.ltweaks.utils.ViewUtils;
 
 public class ListCheckActivity extends AppCompatActivity {
 
-    public static abstract class DataProvider {
+    public interface OnItemClickListener {
+        void onItemClick(DataProvider.ListItem item);
+    }
+
+    public interface OnCheckedChangeListener {
+        void onCheckedChanged(DataProvider.ListItem item, boolean isChecked);
+    }
+
+    public static abstract class DataProvider implements OnItemClickListener, OnCheckedChangeListener {
 
         public class ListItem {
+            public Object mData;
             public Drawable mIcon;
             public CharSequence mTitle;
             public CharSequence mDescription;
             public boolean mChecked;
-            public CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
+
+            @Override
+            public String toString() {
+                return mData.toString();
+            }
         }
 
-        protected Activity mActivity;
+        protected ListCheckActivity mActivity;
 
-        public DataProvider(Activity activity) {
+        public DataProvider(ListCheckActivity activity) {
             mActivity = activity;
         }
 
@@ -55,9 +69,29 @@ public class ListCheckActivity extends AppCompatActivity {
         protected abstract int getListItemCount(int tab);
         protected abstract ListItem getListItem(int tab, int position);
         protected abstract boolean reload(); // reload to refresh data list for listview.
+
+        protected boolean hideCheckBox() {
+            return false;
+        }
+
+        protected boolean linkItemClickToCheckBox() {
+            return true;
+        }
+
+        @Override
+        public void onItemClick(ListItem item) {
+        }
+
+        @Override
+        public void onCheckedChanged(ListItem item, boolean isChecked) {
+        }
+
+        protected void notifyDataSetChanged() {
+            mActivity.notifyDataSetChanged();
+        }
     }
 
-    private DataProvider mDataProvider;
+    protected DataProvider mDataProvider;
     private ListFragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
     private PagerTabStrip mTabLayout;
@@ -73,7 +107,7 @@ public class ListCheckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         try {
-            Constructor constructor = getDataProviderClass().getConstructor(Activity.class);
+            Constructor constructor = getDataProviderClass().getConstructor(ListCheckActivity.class);
             mDataProvider = (DataProvider) constructor.newInstance(this);
         } catch (Exception e) {
             Toast.makeText(this, "No data provider", Toast.LENGTH_SHORT).show();
@@ -94,6 +128,16 @@ public class ListCheckActivity extends AppCompatActivity {
 
     protected Class<? extends DataProvider> getDataProviderClass() {
         return (Class<? extends DataProvider>) getIntent().getSerializableExtra("data_provider");
+    }
+
+    private void notifyDataSetChanged() {
+        for (int i = 0; i < mPagerAdapter.getCount(); ++i) {
+            ListFragment fragment = (ListFragment) ViewUtils.findFragmentByPosition(
+                    getSupportFragmentManager(), mViewPager, i);
+            if (fragment != null) {
+                fragment.notifyListChanged();
+            }
+        }
     }
 
     private class ListFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -128,13 +172,7 @@ public class ListCheckActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             if (mDataProvider.reload()) {
-                for (int i = 0; i < mPagerAdapter.getCount(); ++i) {
-                    ListFragment fragment = (ListFragment) ViewUtils.findFragmentByPosition(
-                            getSupportFragmentManager(), mViewPager, i);
-                    if (fragment != null) {
-                        fragment.notifyListChanged();
-                    }
-                }
+                notifyDataSetChanged();
             }
         }
 
@@ -194,21 +232,32 @@ public class ListCheckActivity extends AppCompatActivity {
                 holder.mIcon.setImageDrawable(data.mIcon);
                 holder.mTitle.setText(data.mTitle);
                 holder.mDescription.setText(data.mDescription);
-                holder.mEnabler.setOnCheckedChangeListener(null);
-                holder.mEnabler.setChecked(data.mChecked);
+
+                if (getDataProvider().hideCheckBox()) {
+                    holder.mEnabler.setVisibility(View.GONE);
+                } else {
+                    holder.mEnabler.setOnCheckedChangeListener(null);
+                    holder.mEnabler.setChecked(data.mChecked);
+                    holder.mEnabler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            getDataProvider().onCheckedChanged(data, isChecked);
+                        }
+                    });
+                }
+
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        holder.mEnabler.toggle();
+                        if (getDataProvider().linkItemClickToCheckBox()) {
+                            holder.mEnabler.toggle();
+                        } else {
+                            getDataProvider().onItemClick(data);
+                        }
                     }
                 });
-                holder.mEnabler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        data.mOnCheckedChangeListener.onCheckedChanged(buttonView, isChecked);
-                    }
-                });
+
             }
 
             @Override

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.widget.CompoundButton;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ import li.lingfeng.ltweaks.utils.Utils;
 public class TrustAgentWifiSettings extends ListCheckActivity {
 
     @Override
-    protected Class<? extends DataProvider> getDataProviderClass() {
+    protected Class<? extends ListCheckActivity.DataProvider> getDataProviderClass() {
         return DataProvider.class;
     }
 
@@ -35,7 +36,7 @@ public class TrustAgentWifiSettings extends ListCheckActivity {
         private Set<String> mTrustedAps;
         private List<ListItem> mListItems;
 
-        public DataProvider(Activity activity) {
+        public DataProvider(ListCheckActivity activity) {
             super(activity);
             mTrustedAps = new HashSet<>(
                     Prefs.instance().getStringSet(R.string.key_trust_agent_wifi_aps, new HashSet<String>())
@@ -58,26 +59,11 @@ public class TrustAgentWifiSettings extends ListCheckActivity {
 
         private ListItem createListItem(final String ssid, final String bssid, boolean isCurrent, boolean isChecked) {
             ListItem item = new ListItem();
+            item.mData = new Pair<>(ssid, bssid);
             item.mIcon = mActivity.getResources().getDrawable(R.drawable.ic_wifi);
             item.mTitle = ssid + (isCurrent ? (" (" + mActivity.getString(R.string.current) + ")") : "");
             item.mDescription = bssid;
             item.mChecked = isChecked;
-            item.mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    String ap = ssid + "," + bssid;
-                    if (isChecked) {
-                        Logger.i("Trust wifi " + ap);
-                        mTrustedAps.add(ap);
-                    } else {
-                        Logger.i("Revoke wifi " + ap);
-                        mTrustedAps.remove(ap);
-                    }
-                    Prefs.instance().edit()
-                            .putStringSet(R.string.key_trust_agent_wifi_aps, mTrustedAps)
-                            .commit();
-                }
-            };
             return item;
         }
 
@@ -104,6 +90,22 @@ public class TrustAgentWifiSettings extends ListCheckActivity {
         @Override
         protected boolean reload() {
             return false;
+        }
+
+        @Override
+        public void onCheckedChanged(ListItem item, boolean isChecked) {
+            Pair pair = (Pair) item.mData;
+            String ap = pair.first + "," + pair.second;
+            if (isChecked) {
+                Logger.i("Trust wifi " + ap);
+                mTrustedAps.add(ap);
+            } else {
+                Logger.i("Revoke wifi " + ap);
+                mTrustedAps.remove(ap);
+            }
+            Prefs.instance().edit()
+                    .putStringSet(R.string.key_trust_agent_wifi_aps, mTrustedAps)
+                    .commit();
         }
     }
 }
