@@ -128,8 +128,31 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
                 item = createItem(from, to);
                 mListItems.add(item);
             } else { // Modify
-                item.mData = Pair.create(from, to);
+                if (StringUtils.isAnyBlank(from, to)) {
+                    mListItems.remove(item);
+                } else {
+                    item.mData = Pair.create(from, to);
+                }
             }
+
+            if (mListItems.size() > 0) {
+                Set<String> storedItems = new HashSet<>(mListItems.size());
+                for (ListItem listItem : mListItems) {
+                    Pair<String, String> pair = (Pair) listItem.mData;
+                    JSONObject jReplacer = new JSONObject();
+                    jReplacer.put("from", pair.first);
+                    jReplacer.put("to", pair.second);
+                    storedItems.add(jReplacer.toJSONString());
+                }
+                Prefs.instance().edit()
+                        .putStringSet(R.string.key_solid_explorer_url_replacers, storedItems)
+                        .commit();
+            } else {
+                Prefs.instance().edit()
+                        .remove(R.string.key_solid_explorer_url_replacers)
+                        .commit();
+            }
+
             notifyDataSetChanged();
         }
 

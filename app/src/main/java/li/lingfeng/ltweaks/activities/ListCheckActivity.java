@@ -250,7 +250,7 @@ public class ListCheckActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        if (getDataProvider().linkItemClickToCheckBox()) {
+                        if (!getDataProvider().hideCheckBox() && getDataProvider().linkItemClickToCheckBox()) {
                             holder.mEnabler.toggle();
                         } else {
                             getDataProvider().onItemClick(data);

@@ -103,4 +103,12 @@
             android:title="@string/pref_trust_agent_wifi"
             android:summary="@string/pref_trust_agent_wifi_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_solid_explorer">
+        <Preference
+            android:key="@string/key_solid_explorer_url_replacers"
+            android:title="@string/pref_solid_explorer_replace_url"
+            android:summary="@string/pref_solid_explorer_replace_url_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

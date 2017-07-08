@@ -44,4 +44,5 @@ public class PackageNames {
     public static final String ANDROID_SYSTEM_UI = "com.android.systemui";
     public static final String ANDROID = "android";
     public static final String SHADOWSOCKS = "com.github.shadowsocks";
+    public static final String SOLID_EXPLORER = "pl.solidexplorer2";
 }

@@ -28,6 +28,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
 import li.lingfeng.ltweaks.activities.ListCheckActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
+import li.lingfeng.ltweaks.activities.SolidExplorerUrlReplacerSettings;
 import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
@@ -289,5 +290,10 @@ public class SystemPrefFragment extends BasePrefFragment {
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @PreferenceClick(prefs = R.string.key_solid_explorer_url_replacers)
+    private void setupSolidExplorerUrlReplacer(Preference preference) {
+        startActivity(new Intent(getActivity(), SolidExplorerUrlReplacerSettings.class));
     }
 }
