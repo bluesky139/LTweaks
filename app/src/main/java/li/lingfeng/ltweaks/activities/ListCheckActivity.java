@@ -52,6 +52,10 @@ public class ListCheckActivity extends AppCompatActivity {
             public CharSequence mDescription;
             public boolean mChecked;
 
+            public <T> T getData(Class<T> cls) {
+                return cls.cast(mData);
+            }
+
             @Override
             public String toString() {
                 return mData.toString();
@@ -110,7 +114,6 @@ public class ListCheckActivity extends AppCompatActivity {
             Constructor constructor = getDataProviderClass().getConstructor(ListCheckActivity.class);
             mDataProvider = (DataProvider) constructor.newInstance(this);
         } catch (Exception e) {
-            Toast.makeText(this, "No data provider", Toast.LENGTH_SHORT).show();
             Logger.e("No data provider, " + e);
             Logger.stackTrace(e);
             finish();

@@ -1,18 +1,26 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
+import android.content.ContentProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Binder;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +41,8 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedSolidExplorer extends XposedBase {
 
     private static final String OPEN_MANAGER = "pl.solidexplorer.files.opening.OpenManager";
+    private static final String FILE_PROVIDER = "pl.solidexplorer.files.FileProvider";
+    private static final String[] PROTOCOLS = { "smb", "dav", "ftp", "sftp" };
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -43,7 +53,9 @@ public class XposedSolidExplorer extends XposedBase {
                 Object fileSystem = param.args[1];
                 Intent intent = (Intent) param.args[2];
                 Logger.i("openInternal " + seFile + ", " + fileSystem);
-                if (!fileSystem.getClass().getName().equals("pl.solidexplorer.plugins.network.smb.SMBFileSystem")
+                String[] s = StringUtils.split(fileSystem.getClass().getName(), '.');
+                String protocol = s[s.length - 2];
+                if (!ArrayUtils.contains(PROTOCOLS, protocol)
                         || !Intent.ACTION_VIEW.equals(intent.getAction())
                         || !intent.getBooleanExtra("streaming", false)) {
                     return;
@@ -56,7 +68,7 @@ public class XposedSolidExplorer extends XposedBase {
                 String server = (String) XposedHelpers.callMethod(descriptor, "getServer");
                 int port = (int) XposedHelpers.callMethod(descriptor, "getPort");
                 String path = (String) XposedHelpers.callMethod(descriptor, "getPath");
-                String playingFrom = "smb://" + server + ":" + port + "/" + path;
+                String playingFrom = protocol + "://" + server + (port == 0 ? "" : (":" + port)) + "/" + path;
                 Logger.i(playingFrom);
 
                 Set<String> replacers = Prefs.instance().getStringSet(R.string.key_solid_explorer_url_replacers, new HashSet<String>());
@@ -67,7 +79,7 @@ public class XposedSolidExplorer extends XposedBase {
                     if (from.equals(playingFrom)) {
                         String filePath = (String) XposedHelpers.callMethod(seFile, "getPath");
                         filePath = StringUtils.stripStart(filePath, "/");
-                        String[] s = StringUtils.split(filePath, '/');
+                        s = StringUtils.split(filePath, '/');
                         for (int i = 0; i < s.length; ++i) {
                             s[i] = Uri.encode(s[i]);
                         }
@@ -90,6 +102,45 @@ public class XposedSolidExplorer extends XposedBase {
                     Logger.i("Replace url to " + url);
                     intent.setData(Uri.parse(url));
                     intent.removeExtra("url_replace_to");
+                }
+            }
+        });
+
+        findAndHookMethod(FILE_PROVIDER, "query", Uri.class, String[].class, String.class, String[].class, String.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                ContentProvider provider = (ContentProvider) param.thisObject;
+                int uid = Binder.getCallingUid();
+                ApplicationInfo appInfo = provider.getContext().getPackageManager().getApplicationInfo(PackageNames.L_TWEAKS, 0);
+                if (uid != appInfo.uid) {
+                    return;
+                }
+
+                Uri uri = (Uri) param.args[0];
+                if (!uri.getPathSegments().get(0).equals("db")) {
+                    return;
+                }
+
+                String dbName = uri.getPathSegments().get(1);
+                String dbPath = provider.getContext().getDatabasePath(dbName + ".db").getAbsolutePath();
+                String table = uri.getPathSegments().get(2);
+                String[] columns = (String[]) param.args[1];
+                String selection = (String) param.args[2];
+                String[] selectionArgs = (String[]) param.args[3];
+                String orderBy = (String) param.args[4];
+                Logger.i("Query db " + dbName + ", " + dbPath + ", table " + table);
+
+                SQLiteDatabase db = null;
+                try {
+                    db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+                    Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, orderBy);
+                    param.setResult(cursor);
+                } catch (Exception e) {
+                    Logger.e("Error to open db, " + e);
+                    if (db != null) {
+                        db.close();
+                    }
+                    param.setResult(null);
                 }
             }
         });
