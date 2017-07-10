@@ -60,6 +60,7 @@ public class PriceHistoryGrabber {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    Logger.e("onFailure " + e);
                     mGrabCallback.onResult(null);
                 }
 
@@ -70,6 +71,7 @@ public class PriceHistoryGrabber {
                         Result result = parseResponse(response.body().string());
                         mGrabCallback.onResult(result);
                     } else {
+                        Logger.e("onResponse " + response);
                         mGrabCallback.onResult(null);
                     }
                 }
