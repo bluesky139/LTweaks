@@ -87,6 +87,11 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
                 mTo = to;
                 mIsInDb = isInDb;
             }
+
+            @Override
+            public String toString() {
+                return "Data, from: " + mFrom + ", to: " + mTo  + ", isInDb: " + mIsInDb;
+            }
         }
 
         private static Map<String, String> sDbPackageNameToProtocol = new HashMap<String, String>() {{
@@ -95,7 +100,7 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
             put("pl.solidexplorer.plugins.network.ftp:1:0", "ftp");
             put("pl.solidexplorer.plugins.network.ftp:1:1", "sftp");
         }};
-        private List<ListItem> mListItems;
+        private List<Data> mDataList;
 
         public DataProvider(ListCheckActivity activity) {
             super(activity);
@@ -115,8 +120,12 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
                 storedReplacers.put(from, to);
             }
 
-            mListItems = new ArrayList<>(storedReplacers.size());
+            mDataList = new ArrayList<>();
             while (cursor.moveToNext()) {
+                if (cursor.getString(0) == null) {
+                    Toast.makeText(activity, R.string.solid_explorer_db_query_error, Toast.LENGTH_LONG).show();
+                    throw new RuntimeException("Cursor getString return null.");
+                }
                 String protocol = sDbPackageNameToProtocol.get(cursor.getString(0));
                 if (protocol == null) {
                     continue;
@@ -137,45 +146,37 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
                     to = "";
                 }
                 Logger.v("Replacer(Db): " + from + " -> " + to);
-                ListItem item = createItem(from, to, true);
-                mListItems.add(item);
+                mDataList.add(new Data(from, to, true));
             }
             cursor.close();
+            if (mDataList.isEmpty()) {
+                Toast.makeText(activity, R.string.solid_explorer_db_empty, Toast.LENGTH_LONG).show();
+                throw new RuntimeException("Empty db");
+            }
 
             for (Map.Entry<String, String> kv : storedReplacers.entrySet()) {
                 Logger.v("Replacer(Stored): " + kv.getKey() + " -> " + kv.getValue());
-                ListItem item = createItem(kv.getKey(), kv.getValue(), false);
-                mListItems.add(item);
+                mDataList.add(new Data(kv.getKey(), kv.getValue(), false));
             }
-        }
-
-        private ListItem createItem(String from, String to, boolean isInDb) {
-            ListItem item = new ListItem();
-            item.mData = new Data(from, to, isInDb);
-            item.mIcon = mActivity.getResources().getDrawable(R.drawable.ic_computer);
-            item.mTitle = from;
-            item.mDescription = to;
-            return item;
         }
 
         public void updateData(ListItem item, String to) {
             Logger.i("Url replacer update data, item: " + item + ", to: " + to);
             Data data = item.getData(Data.class);
             if (StringUtils.isBlank(to) && !data.mIsInDb) {
-                mListItems.remove(item);
+                mDataList.remove(data);
             } else {
                 data.mTo = StringUtils.isBlank(to) ? "" : to;
             }
 
-            Set<String> storedItems = new HashSet<>(mListItems.size());
-            for (ListItem listItem : mListItems) {
-                data = listItem.getData(Data.class);
-                if (StringUtils.isBlank(data.mTo)) {
+            Set<String> storedItems = new HashSet<>();
+            for (Data data_ : mDataList) {
+                if (StringUtils.isBlank(data_.mTo)) {
                     continue;
                 }
                 JSONObject jReplacer = new JSONObject();
-                jReplacer.put("from", data.mFrom);
-                jReplacer.put("to", data.mTo);
+                jReplacer.put("from", data_.mFrom);
+                jReplacer.put("to", data_.mTo);
                 storedItems.add(jReplacer.toJSONString());
             }
             if (storedItems.size() > 0) {
@@ -207,13 +208,18 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
 
         @Override
         protected int getListItemCount(int tab) {
-            return mListItems.size();
+            return mDataList.size();
         }
 
         @Override
         protected ListItem getListItem(int tab, int position) {
-            Logger.d("getListItem " + position);
-            return mListItems.get(position);
+            Data data = mDataList.get(position);
+            ListItem item = new ListItem();
+            item.mData = data;
+            item.mIcon = mActivity.getResources().getDrawable(R.drawable.ic_computer);
+            item.mTitle = data.mFrom;
+            item.mDescription = data.mTo;
+            return item;
         }
 
         @Override

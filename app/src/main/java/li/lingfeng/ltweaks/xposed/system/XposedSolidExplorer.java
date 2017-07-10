@@ -68,6 +68,10 @@ public class XposedSolidExplorer extends XposedBase {
                 String server = (String) XposedHelpers.callMethod(descriptor, "getServer");
                 int port = (int) XposedHelpers.callMethod(descriptor, "getPort");
                 String path = (String) XposedHelpers.callMethod(descriptor, "getPath");
+                if (path == null) {
+                    path = "";
+                }
+                path = StringUtils.stripStart(path, "/");
                 String playingFrom = protocol + "://" + server + (port == 0 ? "" : (":" + port)) + "/" + path;
                 Logger.i(playingFrom);
 

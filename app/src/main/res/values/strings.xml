@@ -188,6 +188,7 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
 
     <!-- Url Replacer -->
     <string name="solid_explorer_db_query_error">Can\'t connect to Solid Explorer.</string>
+    <string name="solid_explorer_db_empty">No supported network storage in Solid Explorer.</string>
     <string name="solid_explorer_url_replacer_dialog_title">Edit Url Replacer</string>
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
     <string name="solid_explorer_url_replacer_dialog_instruction_from">Server:</string>
