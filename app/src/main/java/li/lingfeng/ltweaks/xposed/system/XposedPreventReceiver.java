@@ -8,6 +8,8 @@ import android.net.ConnectivityManager;
 import android.net.Proxy;
 import android.net.wifi.WifiManager;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class XposedPreventReceiver extends XposedPreventRunning {
         ArrayList<String> actions = (ArrayList<String>) mFieldActions.get(filter);
         for (int i = actions.size() - 1; i >= 0; --i) {
             String action = actions.get(i);
-            if (IntentActions.sReceiverPrevented.contains(action)) {
+            if (ArrayUtils.contains(IntentActions.sReceiverPreventedArray, action)) {
                 Logger.i("Prevent receiver action " + action + " from " + packageName);
                 actions.remove(i);
             } else {

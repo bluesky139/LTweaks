@@ -42,6 +42,7 @@ public class Logger {
 
     public static void intent(Intent intent) {
         Logger.d(" intent action: " + intent.getAction());
+        Logger.d(" intent type: " + intent.getType());
         Logger.d(" intent data: " + intent.getData());
         if (intent.getExtras() != null) {
             for (String key : intent.getExtras().keySet()) {

@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class IntentActions {
 
-    public static final String[] sReceiverPreventedArray = new String[] {
+    public static final String[] sReceiverPreventedArray = {
             ConnectivityManager.CONNECTIVITY_ACTION,
             ConnectivityManager.ACTION_CAPTIVE_PORTAL_SIGN_IN,
             WifiManager.WIFI_STATE_CHANGED_ACTION,
@@ -52,11 +52,9 @@ public class IntentActions {
             Intent.ACTION_REBOOT,
             Intent.ACTION_SHUTDOWN
     };
-    public static final Set<String> sReceiverPrevented = new HashSet<>(Arrays.asList(sReceiverPreventedArray));
 
-    public static final String[] sSendActionArray = {
+    public static final String[] sSendActions = {
             Intent.ACTION_SEND,
             Intent.ACTION_SEND_MULTIPLE
     };
-    public static final Set<String> sSendActions = new HashSet<>(Arrays.asList(sSendActionArray));
 }

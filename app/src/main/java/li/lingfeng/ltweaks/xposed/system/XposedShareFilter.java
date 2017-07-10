@@ -1,19 +1,12 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageParser;
 import android.content.pm.ResolveInfo;
 import android.os.Binder;
-import android.os.Build;
-import android.os.ServiceManager;
-import android.support.annotation.RequiresApi;
-import android.util.ArrayMap;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -52,7 +45,7 @@ public class XposedShareFilter extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[0];
-                if (!IntentActions.sSendActions.contains(intent.getAction()) || mContext == null) {
+                if (!ArrayUtils.contains(IntentActions.sSendActions, intent.getAction()) || mContext == null) {
                     return;
                 }
                 int uid = Binder.getCallingUid();
