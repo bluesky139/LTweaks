@@ -42,6 +42,8 @@ public class XposedSolidExplorer extends XposedBase {
 
     private static final String OPEN_MANAGER = "pl.solidexplorer.files.opening.OpenManager";
     private static final String FILE_PROVIDER = "pl.solidexplorer.files.FileProvider";
+    private static final String FILE_SYSTEM = "pl.solidexplorer.filesystem.FileSystem";
+    private static final String STREAMING_SERVICE = "pl.solidexplorer.files.stream.MediaStreamingService";
     private static final String[] PROTOCOLS = { "smb", "dav", "ftp", "sftp" };
 
     @Override
@@ -62,7 +64,7 @@ public class XposedSolidExplorer extends XposedBase {
                 }
                 Logger.intent(intent);
 
-                Class clsFileSystem = findClass("pl.solidexplorer.filesystem.FileSystem");
+                Class clsFileSystem = findClass(FILE_SYSTEM);
                 Field fieldDescriptor = XposedHelpers.findField(clsFileSystem, "mDescriptor");
                 Object descriptor = fieldDescriptor.get(fileSystem);
                 String server = (String) XposedHelpers.callMethod(descriptor, "getServer");
@@ -101,11 +103,24 @@ public class XposedSolidExplorer extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Intent intent = (Intent) param.args[1];
+                Logger.d("openFile");
+                Logger.intent(intent);
+                if (intent.hasExtra("fsdescriptor")) {
+                    intent.removeExtra("url_replace_to");
+                    return;
+                }
+
                 String url = intent.getStringExtra("url_replace_to");
                 if (url != null) {
                     Logger.i("Replace url to " + url);
                     intent.setData(Uri.parse(url));
                     intent.removeExtra("url_replace_to");
+
+                    Class clsStreamingService = findClass(STREAMING_SERVICE);
+                    Context context = (Context) param.args[0];
+                    intent = new Intent(context, clsStreamingService);
+                    intent.putExtra("extra_id", 1);
+                    context.startService(intent);
                 }
             }
         });
