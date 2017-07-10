@@ -21,6 +21,8 @@ import java.util.Map;
 
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
+import li.lingfeng.ltweaks.prefs.Prefs;
+import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 
@@ -207,5 +209,15 @@ public class BasePrefFragment extends PreferenceFragment
     protected void listenPreferenceClick(@StringRes int key) {
         Preference preference = findPreference(key);
         preference.setOnPreferenceClickListener(this);
+    }
+
+    protected void uncheckPreferenceByDisabledComponent(@StringRes int key, Class componentCls) {
+        uncheckPreferenceByDisabledComponent(key, componentCls.getName());
+    }
+
+    protected void uncheckPreferenceByDisabledComponent(@StringRes int key, String componentCls) {
+        if (!ComponentUtils.isComponentEnabled(componentCls) && Prefs.instance().getBoolean(key, false)) {
+            findSwitchPreference(key).setChecked(false);
+        }
     }
 }

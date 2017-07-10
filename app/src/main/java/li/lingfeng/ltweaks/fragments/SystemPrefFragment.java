@@ -55,6 +55,9 @@ public class SystemPrefFragment extends BasePrefFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_system);
+
+        uncheckPreferenceByDisabledComponent(R.string.key_system_share_qrcode_scan, QrCodeActivity.class);
+        uncheckPreferenceByDisabledComponent(R.string.key_system_share_image_search, ImageSearchActivity.class);
     }
 
     @PreferenceChange(prefs = R.string.key_text_aide_open_youdao)

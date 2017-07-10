@@ -18,6 +18,11 @@ public class EntertainmentPrefFragment extends BasePrefFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_entertainment);
+
+        uncheckPreferenceByDisabledComponent(R.string.key_douban_movie_search,
+                ComponentUtils.getFullAliasName(ProcessTextActivity.class, "DoubanMovie"));
+        uncheckPreferenceByDisabledComponent(R.string.key_bilibili_search,
+                ComponentUtils.getFullAliasName(ProcessTextActivity.class, "Bilibili"));
     }
 
     @PreferenceChange(prefs = R.string.key_douban_movie_search)

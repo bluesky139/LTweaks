@@ -24,10 +24,14 @@ public class ComponentUtils {
         enableComponent(componentCls.getName(), enabled);
     }
 
-    public static boolean isComponentEnabled(Class<?> componentCls) {
+    public static boolean isComponentEnabled(String componentCls) {
         ComponentName componentName = new ComponentName(MyApplication.instance(), componentCls);
         return MyApplication.instance().getPackageManager().getComponentEnabledSetting(componentName)
                 == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+    }
+
+    public static boolean isComponentEnabled(Class<?> componentCls) {
+        return isComponentEnabled(componentCls.getName());
     }
 
     public static boolean isAlias(Activity activity) {

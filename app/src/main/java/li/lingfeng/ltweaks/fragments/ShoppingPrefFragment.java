@@ -9,7 +9,9 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.JDActivity;
 import li.lingfeng.ltweaks.activities.JDHistoryActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
+import li.lingfeng.ltweaks.utils.Logger;
 
 /**
  * Created by smallville on 2016/12/25.
@@ -21,6 +23,10 @@ public class ShoppingPrefFragment extends BasePrefFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_shopping);
+
+        uncheckPreferenceByDisabledComponent(R.string.key_jd_open_link_in_app, JDActivity.class);
+        uncheckPreferenceByDisabledComponent(R.string.key_jd_history, JDHistoryActivity.class);
+        uncheckPreferenceByDisabledComponent(R.string.key_suning_history, JDHistoryActivity.class);
     }
 
     @PreferenceChange(prefs = R.string.key_jd_open_link_in_app)
