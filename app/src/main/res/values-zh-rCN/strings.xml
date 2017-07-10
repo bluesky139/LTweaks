@@ -21,6 +21,7 @@ Open source on github: \n
     <string name="app_send_to">发送到...</string>
     <string name="app_ok">OK</string>
     <string name="app_close">关闭</string>
+    <string name="app_delete">删除</string>
     <string name="app_shortcut_is_created">快捷方式已创建.</string>
 
     <!--Common-->
@@ -169,6 +170,9 @@ Open source on github: \n
     <string name="pref_category_trust_agent">信任的环境</string>
     <string name="pref_trust_agent_wifi">在指定 WiFi 下自动解锁屏幕</string>
     <string name="pref_trust_agent_wifi_summary">在连接到指定 WiFi 后自动解锁屏幕, 类似 Google 提供的 Smart Lock.\n同时使用 SSID 和 BSSID 来确定 WiFi 是否可信.\n你需要到 \"设置 -> 安全 -> 信任的代理\" 启用此代理.\n点此设置可信的 WiFi 列表, 仅当前连上的 WiFi 才能加入到列表.\n仅 Android 5.0+</string>
+    <string name="pref_category_solid_explorer">Solid Explorer (非经典版本)</string>
+    <string name="pref_solid_explorer_replace_url">替换视频流地址</string>
+    <string name="pref_solid_explorer_replace_url_summary">当通过网络播放视频时, Solid Explorer 会中转视频流到本地 (比如: \"http://127.0.0.1:12345/public/a.mp4\"), 这会引起性能损失.\n把 \"127.0.0.1:12345\" 替换为服务器的地址，让播放器直连服务器 (如果服务器支持).\n支持 smb, dav, ftp, sftp.</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
@@ -181,4 +185,12 @@ Open source on github: \n
     <!-- Process Text -->
     <string name="process_text_douban_movie">豆瓣电影</string>
     <string name="process_text_bilibili">Bilibili</string>
+
+    <!-- Url Replacer -->
+    <string name="solid_explorer_db_query_error">无法连接到 Solid Explorer.</string>
+    <string name="solid_explorer_db_empty">Solid Explorer 里没有支持的网络存储设备.</string>
+    <string name="solid_explorer_url_replacer_dialog_title">编辑地址替换</string>
+    <string name="solid_explorer_url_replacer_dialog_instruction"></string>
+    <string name="solid_explorer_url_replacer_dialog_instruction_from">服务器:</string>
+    <string name="solid_explorer_url_replacer_dialog_instruction_to">替换为 (比如: http://10.0.0.4/download):</string>
 </resources>
