@@ -242,6 +242,7 @@ public class XposedGooglePlay extends XposedBase {
         new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Logger.e("getApkPureUrl onFailure " + e);
                 gotApkPureUrl(activity, null, callback);
             }
 
@@ -260,6 +261,8 @@ public class XposedGooglePlay extends XposedBase {
                             return;
                         }
                     }
+                } else {
+                    Logger.e("getApkPureUrl onResponse " + response);
                 }
                 gotApkPureUrl(activity, null, callback);
             }
