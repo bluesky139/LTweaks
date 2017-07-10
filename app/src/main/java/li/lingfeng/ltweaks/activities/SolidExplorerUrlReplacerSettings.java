@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -217,6 +219,9 @@ public class SolidExplorerUrlReplacerSettings extends ListCheckActivity {
             ListItem item = new ListItem();
             item.mData = data;
             item.mIcon = mActivity.getResources().getDrawable(R.drawable.ic_computer);
+            if (!data.mIsInDb) {
+                item.mIcon.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+            }
             item.mTitle = data.mFrom;
             item.mDescription = data.mTo;
             return item;
