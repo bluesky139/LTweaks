@@ -53,6 +53,8 @@ Open source on github: \n
     <string name="pref_google_plus_top_right_refresh">把\"新信息\"放到右上角菜单</string>
     <string name="pref_google_plus_hide_comment_edit">隐藏评论编辑框</string>
     <string name="pref_google_plus_hide_comment_edit_summary">被浮动按钮取代</string>
+    <string name="pref_google_plus_no_redirect">链接不跳转</string>
+    <string name="pref_google_plus_no_redirect_summary">去除 \"http://plus.url.google.com/url?q=\"</string>
     <string name="pref_category_google_photos">Google 相册</string>
     <string name="pref_google_photos_remove_bottom_bar">去底栏</string>
     <string name="pref_google_photos_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
