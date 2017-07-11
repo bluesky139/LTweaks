@@ -33,12 +33,13 @@ public class XposedDoubanMovieUrl extends XposedBase {
                 Field fieldInfo = PackageParser.Activity.class.getDeclaredField("info");
                 fieldInfo.setAccessible(true);
                 ActivityInfo info = (ActivityInfo) fieldInfo.get(activity);
-                if (!info.name.equals("com.douban.movie.activity.InnerFacadeActivity")) {
+                if (!info.name.equals(ClassNames.DOUBAN_MOVIE_INTENT_HANDLER_ACTIVITY)) {
                     return;
                 }
 
                 Logger.i("Set Douban Movie activity exported to true.");
                 info.exported = true;
+                info.launchMode = ActivityInfo.LAUNCH_MULTIPLE;
             }
         });
     }

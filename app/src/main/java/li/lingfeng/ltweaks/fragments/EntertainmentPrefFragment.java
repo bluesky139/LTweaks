@@ -5,6 +5,7 @@ import android.preference.Preference;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.BilibiliActivity;
+import li.lingfeng.ltweaks.activities.DoubanMovieActivity;
 import li.lingfeng.ltweaks.activities.ProcessTextActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
@@ -20,10 +21,16 @@ public class EntertainmentPrefFragment extends BasePrefFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_entertainment);
 
+        uncheckPreferenceByDisabledComponent(R.string.key_douban_movie_url, DoubanMovieActivity.class);
         uncheckPreferenceByDisabledComponent(R.string.key_douban_movie_search,
                 ComponentUtils.getFullAliasName(ProcessTextActivity.class, "DoubanMovie"));
         uncheckPreferenceByDisabledComponent(R.string.key_bilibili_search,
                 ComponentUtils.getFullAliasName(ProcessTextActivity.class, "Bilibili"));
+    }
+
+    @PreferenceChange(prefs = R.string.key_douban_movie_url)
+    private void enableDoubanMovieUrl(Preference preference, boolean enabled) {
+        ComponentUtils.enableComponent(DoubanMovieActivity.class, enabled);
     }
 
     @PreferenceChange(prefs = R.string.key_douban_movie_search)

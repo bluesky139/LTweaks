@@ -25,6 +25,7 @@ public class ClassNames {
 
     // Douban Movie
     public static final String DOUBAN_MOVIE_SEARCH_ACTIVITY = "com.douban.frodo.search.activity.SearchActivity";
+    public static final String DOUBAN_MOVIE_INTENT_HANDLER_ACTIVITY = "com.douban.movie.activity.InnerFacadeActivity";
 
     // Bilibili
     public static final String BILIBILI_SEARCH_ACTIVITY = "tv.danmaku.bili.ui.search.SearchActivity";

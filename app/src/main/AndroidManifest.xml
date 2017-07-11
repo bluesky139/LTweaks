@@ -51,6 +51,26 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activities.DoubanMovieActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/douban_movie_app"
+            android:allowTaskReparenting="false"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.DoubanMovieActivity"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="douban"/>
+                <data android:host="douban.com" android:scheme="douban"/>
+                <data android:host="m.douban.com" android:scheme="http"/>
+                <data android:host="m.douban.com" android:scheme="https"/>
+                <data android:host="movie.douban.com" android:scheme="http"/>
+                <data android:host="movie.douban.com" android:scheme="https"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.JDActivity" android:excludeFromRecents="true"
             android:label="@string/jd_app"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"

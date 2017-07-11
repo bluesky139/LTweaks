@@ -134,6 +134,9 @@ Open source on github: \n
     <string name="pref_steam_go_reviews">在商品页跳到评测栏</string>
     <string name="pref_steam_go_reviews_summary">在右上角添加一个菜单</string>
 
+    <!-- Douban Movie -->
+    <string name="douban_movie_app">豆瓣电影</string>
+
     <!--System-->
     <string name="pref_header_system">系统 / 工具</string>
     <string name="pref_category_text_aide">Text Aide</string>
