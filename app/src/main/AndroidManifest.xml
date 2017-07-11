@@ -54,6 +54,7 @@
         <activity android:name=".activities.JDActivity" android:excludeFromRecents="true"
             android:label="@string/jd_app"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.JDActivity"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -90,6 +91,7 @@
             android:icon="@mipmap/ic_price_history"
             android:screenOrientation="portrait"
             android:theme="@style/DialogActivityTheme"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.JDHistoryActivity"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -102,6 +104,7 @@
             android:label="@string/share_qrcode_scan"
             android:icon="@mipmap/ic_qrcode_scan"
             android:theme="@style/DialogActivityTheme"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.QrCodeActivity"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -114,6 +117,7 @@
             android:label="@string/share_image_search"
             android:icon="@mipmap/ic_image_search"
             android:theme="@style/DialogActivityTheme"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.ImageSearchActivity"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -152,7 +156,9 @@
             </intent-filter>
         </activity-alias>
 
-        <activity android:name=".activities.ProcessTextActivity">
+        <activity
+            android:name=".activities.ProcessTextActivity"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.ProcessTextActivity">
         </activity>
         <activity-alias
             android:name=".activities.DoubanMovieProcessTextActivity"
