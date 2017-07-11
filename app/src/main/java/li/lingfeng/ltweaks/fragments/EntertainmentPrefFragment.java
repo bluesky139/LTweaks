@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.activities.BilibiliActivity;
 import li.lingfeng.ltweaks.activities.ProcessTextActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
@@ -33,5 +34,10 @@ public class EntertainmentPrefFragment extends BasePrefFragment {
     @PreferenceChange(prefs = R.string.key_bilibili_search)
     private void enableBilibiliSearch(Preference preference, boolean enabled) {
         ComponentUtils.enableComponent(ComponentUtils.getFullAliasName(ProcessTextActivity.class, "Bilibili"), enabled);
+    }
+
+    @PreferenceChange(prefs = R.string.key_bilibili_open_link_in_app)
+    private void enableBilibiliOpenLinkInApp(Preference preference, boolean enabled) {
+        ComponentUtils.enableComponent(BilibiliActivity.class, enabled);
     }
 }

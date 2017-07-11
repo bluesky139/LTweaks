@@ -36,6 +36,21 @@
         </activity>
         <activity android:name=".activities.ListCheckActivity" />
 
+        <activity
+            android:name=".activities.BilibiliActivity"
+            android:excludeFromRecents="true"
+            android:label="Bilibili"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.BilibiliActivity"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="m.bilibili.com" android:pathPattern="/video/av.*\\.html" android:scheme="http"/>
+                <data android:host="m.bilibili.com" android:pathPattern="/video/av.*\\.html" android:scheme="https"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.JDActivity" android:excludeFromRecents="true"
             android:label="@string/jd_app"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"
