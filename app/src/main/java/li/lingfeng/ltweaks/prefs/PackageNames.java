@@ -30,6 +30,7 @@ public class PackageNames {
     public static final String QQ = "com.tencent.mobileqq";
     public static final String QQ_INTERNATIONAL = "com.tencent.mobileqqi";
     public static final String TIM = "com.tencent.tim";
+    public static final String JIAN_SHU = "com.jianshu.haruki";
 
     // Entertainment
     public static final String DOUBAN_MOVIE = "com.douban.movie";

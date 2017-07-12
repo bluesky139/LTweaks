@@ -110,6 +110,9 @@ Open source on github: \n
     <string name="pref_qq_dismiss_contacts_enabler_summary">Don\'t enable this if you are using contacts</string>
     <string name="pref_qq_remove_ads">Remove banner ads</string>
     <string name="pref_qq_outer_browser">Use outer browser</string>
+    <string name="pref_category_jianshu">Jian Shu</string>
+    <string name="pref_jianshu_finish">Directly exit if from external link</string>
+    <string name="pref_jianshu_finish_summary">Don\'t back to main activity</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>

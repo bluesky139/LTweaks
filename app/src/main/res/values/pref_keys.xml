@@ -29,6 +29,7 @@
     <string name="key_qq_dismiss_contacts_enabler">key_qq_dismiss_contacts_enabler</string>
     <string name="key_qq_remove_ads">key_qq_remove_ads</string>
     <string name="key_qq_outer_browser">key_qq_outer_browser</string>
+    <string name="key_jianshu_finish">key_jianshu_finish</string>
 
     <!--Entertainment-->
     <string name="key_douban_movie_url">key_douban_movie_url</string>
