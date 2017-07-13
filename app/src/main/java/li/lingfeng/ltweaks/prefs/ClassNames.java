@@ -7,6 +7,7 @@ package li.lingfeng.ltweaks.prefs;
 public class ClassNames {
 
     public static final String APP_COMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
+    public static final String FRAGMENT_ACTIVITY = "android.support.v4.app.FragmentActivity";
     public static final String TOOLBAR = "android.support.v7.widget.Toolbar";
     public static final String VIEW_PAGER = "android.support.v4.view.ViewPager";
     public static final String REBIND_REPORTING_HOLDER = "android.support.v7.widget.RebindReportingHolder";
@@ -29,4 +30,7 @@ public class ClassNames {
 
     // Bilibili
     public static final String BILIBILI_SEARCH_ACTIVITY = "tv.danmaku.bili.ui.search.SearchActivity";
+
+    // Zhi Hu
+    public static final String ZHI_HU_MAIN_ACTIVITY = "com.zhihu.android.app.ui.activity.MainActivity";
 }

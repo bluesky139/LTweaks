@@ -36,6 +36,7 @@ public abstract class XposedCommon extends XposedBase {
 
                 Logger.i("Set " + componentName + " exported to true.");
                 info.exported = true;
+                info.launchMode = ActivityInfo.LAUNCH_MULTIPLE;
             }
         });
     }

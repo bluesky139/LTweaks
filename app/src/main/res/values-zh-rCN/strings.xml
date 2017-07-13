@@ -113,6 +113,9 @@ Open source on github: \n
     <string name="pref_category_jianshu">简书</string>
     <string name="pref_jianshu_finish">退出的时候直接退出，如果是从外部链接进来</string>
     <string name="pref_jianshu_finish_summary">而不是退到主界面</string>
+    <string name="pref_category_zhihu">知乎</string>
+    <string name="pref_zhihu_finish">退出的时候直接退出，如果是从外部链接进来</string>
+    <string name="pref_zhihu_finish_summary">而不是退到主界面</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
@@ -139,6 +142,9 @@ Open source on github: \n
 
     <!-- Douban Movie -->
     <string name="douban_movie_app">豆瓣电影</string>
+
+    <!-- Zhi Hu -->
+    <string name="zhi_hu_app">知乎</string>
 
     <!--System-->
     <string name="pref_header_system">系统 / 工具</string>
