@@ -68,67 +68,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.ZhiHuActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/zhi_hu_app"
-            android:taskAffinity="li.lingfeng.ltweaks.activities.ZhiHuActivity"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/question/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/question/.*/answer/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/answer/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/collection/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/people/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/topic/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/roundtable/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/lives/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/org/.*" android:scheme="http"/>
-                <data android:host="zhuanlan.zhihu.com" android:pathPattern="/.*" android:scheme="http"/>
-                <data android:host="zhuanlan.zhihu.com" android:pathPattern="/.*/.*" android:scheme="http"/>
-                <data android:host="promotion.zhihu.com" android:pathPattern="/p/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/publications/.*/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub/zhihu" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub/collection/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub/book/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pin/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/links/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/coupon/.*" android:scheme="http"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/p/.*" android:scheme="http"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/people/.*" android:scheme="http"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/org/.*" android:scheme="http"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/question/.*" android:scheme="http"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/question/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/question/.*/answer/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/answer/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/collection/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/people/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/topic/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/roundtable/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/lives/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/org/.*" android:scheme="https"/>
-                <data android:host="zhuanlan.zhihu.com" android:pathPattern="/.*" android:scheme="https"/>
-                <data android:host="zhuanlan.zhihu.com" android:pathPattern="/.*/.*" android:scheme="https"/>
-                <data android:host="promotion.zhihu.com" android:pathPattern="/p/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/publications/.*/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub/zhihu" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub/collection/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pub/book/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/pin/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/links/.*" android:scheme="https"/>
-                <data android:host="www.zhihu.com" android:pathPattern="/coupon/.*" android:scheme="https"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/p/.*" android:scheme="https"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/people/.*" android:scheme="https"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/org/.*" android:scheme="https"/>
-                <data android:host="*.zhihu.dev" android:pathPattern="/question/.*" android:scheme="https"/>
-            </intent-filter>
-        </activity>
-
         <activity android:name=".activities.JDActivity" android:excludeFromRecents="true"
             android:label="@string/jd_app"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth"

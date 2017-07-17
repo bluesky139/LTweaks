@@ -9,7 +9,6 @@ import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 
 import li.lingfeng.ltweaks.R;
-import li.lingfeng.ltweaks.activities.ZhiHuActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
@@ -25,8 +24,6 @@ public class CommunicationPrefFragment extends BasePrefFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_communication);
-
-        uncheckPreferenceByDisabledComponent(R.string.key_zhihu_finish, ZhiHuActivity.class);
     }
 
     @PreferenceChange(prefs = R.string.key_wechat_use_incoming_ringtone, refreshAtStart = true)
@@ -50,10 +47,5 @@ public class CommunicationPrefFragment extends BasePrefFragment {
             Ringtone ring = RingtoneManager.getRingtone(getActivity(), uri);
             preference.setSummary(ring.getTitle(getActivity()));
         }
-    }
-
-    @PreferenceChange(prefs = R.string.key_zhihu_finish)
-    private void enableZhiHuFinish(Preference preference, boolean enabled) {
-        ComponentUtils.enableComponent(ZhiHuActivity.class, enabled);
     }
 }

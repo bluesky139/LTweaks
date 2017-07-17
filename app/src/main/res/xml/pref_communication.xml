@@ -42,12 +42,4 @@
             android:title="@string/pref_jianshu_finish"
             android:summary="@string/pref_jianshu_finish_summary" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_category_zhihu">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_zhihu_finish"
-            android:title="@string/pref_zhihu_finish"
-            android:summary="@string/pref_zhihu_finish_summary" />
-    </PreferenceCategory>
 </PreferenceScreen>

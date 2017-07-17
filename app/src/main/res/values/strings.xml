@@ -113,9 +113,6 @@ Open source on github: \n
     <string name="pref_category_jianshu">Jian Shu</string>
     <string name="pref_jianshu_finish">Directly exit if from external link</string>
     <string name="pref_jianshu_finish_summary">Don\'t back to main activity</string>
-    <string name="pref_category_zhihu">Zhi Hu</string>
-    <string name="pref_zhihu_finish">Directly exit if from external link</string>
-    <string name="pref_zhihu_finish_summary">Don\'t back to main activity</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>
@@ -142,9 +139,6 @@ Open source on github: \n
 
     <!-- Douban Movie -->
     <string name="douban_movie_app">Douban Movie</string>
-
-    <!-- Zhi Hu -->
-    <string name="zhi_hu_app">Zhi Hu</string>
 
     <!--System-->
     <string name="pref_header_system">System / Tools</string>
