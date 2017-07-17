@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -143,15 +144,54 @@ public class ContextUtils {
 
     public static int getColorFromTheme(Resources.Theme theme, String name) {
         int idColor = getAttrId(name);
-        if (idColor < 0)
-            return 0xFFFFFFFF;
+        if (idColor <= 0)
+            return Color.RED;
         return getColorFromTheme(theme, idColor);
     }
 
     public static int getColorFromTheme(Resources.Theme theme, int id) {
         TypedValue value = new TypedValue();
         theme.resolveAttribute(id, value, true);
+        if (value.type >= TypedValue.TYPE_FIRST_COLOR_INT && value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+            return value.data;
+        } else {
+            return Color.RED;
+        }
+    }
+
+    public static int getThemeValue(Resources.Theme theme, String name) {
+        int id = getAttrId(name);
+        if (id <= 0) {
+            return 0;
+        }
+        return getThemeValue(theme, id);
+    }
+
+    public static int getThemeValue(Resources.Theme theme, int id) {
+        TypedValue value = new TypedValue();
+        theme.resolveAttribute(id, value, true);
         return value.data;
+    }
+
+    public static int getColorFromStyle(int idStyle, String name) {
+        return getColorFromStyle(idStyle, name, MyApplication.instance());
+    }
+
+    public static int getColorFromStyle(int idStyle, String name, Context context) {
+        int id = getAttrId(name);
+        if (id <= 0) {
+            return Color.RED;
+        }
+        return getColorFromStyle(idStyle, id, context);
+    }
+
+    public static int getColorFromStyle(int idStyle, int id) {
+        return getColorFromStyle(idStyle, id, MyApplication.instance());
+    }
+
+    public static int getColorFromStyle(int idStyle, int id, Context context) {
+        TypedArray typedArray = context.obtainStyledAttributes(idStyle, new int[] { id });
+        return typedArray.getColor(0, Color.RED);
     }
 
     public static int dp2px(float dpValue){

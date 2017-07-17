@@ -33,59 +33,59 @@ public class ViewUtils {
         return findAllViewByName(rootView, name);
     }
 
-    public static ViewGroup findViewGroupByName(final ViewGroup rootView, String name) {
-        Queue<ViewGroup> views = new LinkedList<>();
-        views.add(rootView);
-        while (views.size() > 0) {
-            ViewGroup view = views.poll();
-            //Logger.v("findViewGroupByName " + view);
-            if (view.getId() > 0) {
-                String name_ = ContextUtils.getResNameById(view.getId());
-                if (name.equals(name_)) {
-                    return view;
+    public static ViewGroup findViewGroupByName(final ViewGroup rootView, final String name) {
+        List<View> views = traverseViews(rootView, true, new ViewTraverseCallback() {
+            @Override
+            public boolean onAddResult(View view) {
+                if (view instanceof ViewGroup && view.getId() > 0) {
+                    String name_ = ContextUtils.getResNameById(view.getId());
+                    return name.equals(name_);
                 }
+                return false;
             }
-
-            for (int i = 0; i < view.getChildCount(); ++i) {
-                View child = view.getChildAt(i);
-                if (child instanceof ViewGroup) {
-                    views.add((ViewGroup) child);
-                }
-            }
+        });
+        if (views.size() > 0) {
+            return (ViewGroup) views.get(0);
         }
         return null;
     }
 
-    public static List<View> findAllViewByName(ViewGroup rootView, String name) {
-        Queue<View> views = new LinkedList<>();
-        for (int i = 0; i < rootView.getChildCount(); ++i) {
-            View child = rootView.getChildAt(i);
-            views.add(child);
-        }
-
-        List<View> results = new ArrayList<>();
-        while (views.size() > 0) {
-            View view = views.poll();
-            //Logger.v("findAllViewByName " + view);
-            if (view.getId() > 0) {
-                String name_ = ContextUtils.getResNameById(view.getId());
-                if (name.equals(name_)) {
-                    results.add(view);
+    public static List<View> findAllViewByName(ViewGroup rootView, final String name) {
+        return traverseViews(rootView, false, new ViewTraverseCallback() {
+            @Override
+            public boolean onAddResult(View view) {
+                if (view.getId() > 0) {
+                    String name_ = ContextUtils.getResNameById(view.getId());
+                    return name.equals(name_);
                 }
+                return false;
             }
-
-            if (view instanceof ViewGroup) {
-                ViewGroup viewGroup = (ViewGroup) view;
-                for (int i = 0; i < viewGroup.getChildCount(); ++i) {
-                    View child = viewGroup.getChildAt(i);
-                    views.add(child);
-                }
-            }
-        }
-        return results;
+        });
     }
 
-    public static <T extends View> List<T> findAllViewByType(ViewGroup rootView, Class<T> type) {
+    public static <T extends View> List<T> findAllViewByType(ViewGroup rootView, final Class<? extends View> type) {
+        return traverseViews(rootView, false, new ViewTraverseCallback() {
+            @Override
+            public boolean onAddResult(View view) {
+                return type.isAssignableFrom(view.getClass());
+            }
+        });
+    }
+
+    public static <T extends View> View findViewByType(ViewGroup rootView, final Class<? extends View> type) {
+        List<View> views = traverseViews(rootView, true, new ViewTraverseCallback() {
+            @Override
+            public boolean onAddResult(View view) {
+                return type.isAssignableFrom(view.getClass());
+            }
+        });
+        if (views.size() > 0) {
+            return views.get(0);
+        }
+        return null;
+    }
+
+    private static <T extends View> List<T> traverseViews(ViewGroup rootView, boolean onlyOne, ViewTraverseCallback callback) {
         Queue<View> views = new LinkedList<>();
         for (int i = 0; i < rootView.getChildCount(); ++i) {
             View child = rootView.getChildAt(i);
@@ -95,9 +95,12 @@ public class ViewUtils {
         List<T> results = new ArrayList<>();
         while (views.size() > 0) {
             View view = views.poll();
-            //Logger.v("findAllViewByType " + view);
-            if (type.isAssignableFrom(view.getClass())) {
+            //Logger.v("traverseViews " + view);
+            if (callback.onAddResult(view)) {
                 results.add((T) view);
+                if (onlyOne) {
+                    return results;
+                }
             }
 
             if (view instanceof ViewGroup) {
@@ -109,6 +112,10 @@ public class ViewUtils {
             }
         }
         return results;
+    }
+
+    private interface ViewTraverseCallback {
+        boolean onAddResult(View view);
     }
 
     public static Fragment findFragmentByPosition(FragmentManager fragmentManager, ViewPager viewPager, int position) {
