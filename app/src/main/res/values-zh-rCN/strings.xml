@@ -110,9 +110,6 @@ Open source on github: \n
     <string name="pref_qq_dismiss_contacts_enabler_summary">如果你要使用通信录请不要勾这个</string>
     <string name="pref_qq_remove_ads">去横幅广告</string>
     <string name="pref_qq_outer_browser">使用外部浏览器</string>
-    <string name="pref_category_jianshu">简书</string>
-    <string name="pref_jianshu_finish">退出的时候直接退出，如果是从外部链接进来</string>
-    <string name="pref_jianshu_finish_summary">而不是退到主界面</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
