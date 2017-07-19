@@ -47,13 +47,16 @@ public class ChromeIncognitoActivity extends Activity {
             return;
         }
 
+        boolean isFromLTweaksExternal = getIntent().getBooleanExtra("from_ltweaks_external", true);
+        Logger.d("isFromLTweaksExternal " + isFromLTweaksExternal);
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         intent.setPackage(PackageNames.CHROME);
         intent.putExtra("com.google.android.apps.chrome.EXTRA_OPEN_NEW_INCOGNITO_TAB", true);
         intent.putExtra("com.android.browser.application_id", PackageNames.CHROME);
         intent.putExtra("from_ltweaks", true);
-        intent.putExtra("from_ltweaks_external", getIntent().getBooleanExtra("from_ltweaks_external", true));
+        intent.putExtra("from_ltweaks_external", isFromLTweaksExternal);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();

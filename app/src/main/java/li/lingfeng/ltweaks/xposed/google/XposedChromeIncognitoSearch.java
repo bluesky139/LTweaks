@@ -28,7 +28,9 @@ public class XposedChromeIncognitoSearch extends XposedBase {
     private static final String TAB_LAUNCH_TYPE = "org.chromium.chrome.browser.tabmodel.TabModel$TabLaunchType";
     private static final String TAB = "org.chromium.chrome.browser.tab.Tab";
     private static final String MENU_PROPERTIES_DELEGATE = "org.chromium.chrome.browser.appmenu.AppMenuPropertiesDelegate";
+    private static final String CUSTOM_MENU_PROPERTIES_DELEGATE = "org.chromium.chrome.browser.customtabs.CustomTabAppMenuPropertiesDelegate";
     private static final String TABBED_ACTIVITY = "org.chromium.chrome.browser.ChromeTabbedActivity";
+    private static final String CUSTOM_ACTIVITY = "org.chromium.chrome.browser.customtabs.CustomTabActivity";
     private static final String MENU_INCOGNITO = "Open in incognito";
 
     @Override
@@ -62,47 +64,70 @@ public class XposedChromeIncognitoSearch extends XposedBase {
         });
 
 
-        // Menu "Open in incognito" in Chrome.
+        // Menu "Open in incognito" in Chrome and CustomTab.
         findAndHookMethod(MENU_PROPERTIES_DELEGATE, "prepareMenu", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Menu menu = (Menu) param.args[0];
-                if (getIncognitoMenu(menu) == null) {
-                    Logger.i("Add menu \"" + MENU_INCOGNITO + "\"");
-                    menu.add(MENU_INCOGNITO);
-                }
+                prepareMenu(param);
+            }
+        });
 
-                Activity activity = (Activity) XposedHelpers.getObjectField(param.thisObject, "mActivity");
-                Object activityTab = XposedHelpers.callMethod(activity, "getActivityTab");
-                String url = (String) XposedHelpers.callMethod(activityTab, "getUrl");
-                if (Patterns.WEB_URL.matcher(url).matches()) {
-                    Logger.i("Set \"" + MENU_INCOGNITO + "\" visible.");
-                    getIncognitoMenu(menu).setVisible(true);
-                } else {
-                    Logger.i("Set \"" + MENU_INCOGNITO + "\" invisible.");
-                    getIncognitoMenu(menu).setVisible(false);
-                }
+        findAndHookMethod(CUSTOM_MENU_PROPERTIES_DELEGATE, "prepareMenu", Menu.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                prepareMenu(param);
             }
         });
 
         findAndHookActivity(TABBED_ACTIVITY, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                MenuItem item = (MenuItem) param.args[0];
-                if (MENU_INCOGNITO.equals(item.getTitle())) {
-                    Activity activity = (Activity) param.thisObject;
-                    Object activityTab = XposedHelpers.callMethod(activity, "getActivityTab");
-                    String url = (String) XposedHelpers.callMethod(activityTab, "getUrl");
-                    Logger.i("Open in incognito: " + url);
-
-                    Intent intent = new Intent(IntentActions.ACTION_CHROME_INCOGNITO);
-                    intent.setData(Uri.parse(url));
-                    intent.putExtra("from_ltweaks_external", false);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    activity.startActivity(intent);
-                }
+                onOptionsItemSelected(param, false);
             }
         });
+
+        findAndHookActivity(CUSTOM_ACTIVITY, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                onOptionsItemSelected(param, true);
+            }
+        });
+    }
+
+    private void prepareMenu(XC_MethodHook.MethodHookParam param) {
+        Menu menu = (Menu) param.args[0];
+        if (getIncognitoMenu(menu) == null) {
+            Logger.i("Add menu \"" + MENU_INCOGNITO + "\"");
+            menu.add(MENU_INCOGNITO);
+        }
+
+        Activity activity = (Activity) XposedHelpers.getObjectField(param.thisObject, "mActivity");
+        Object activityTab = XposedHelpers.callMethod(activity, "getActivityTab");
+        String url = (String) XposedHelpers.callMethod(activityTab, "getUrl");
+        if (Patterns.WEB_URL.matcher(url).matches()) {
+            Logger.i("Set \"" + MENU_INCOGNITO + "\" visible.");
+            getIncognitoMenu(menu).setVisible(true);
+        } else {
+            Logger.i("Set \"" + MENU_INCOGNITO + "\" invisible.");
+            getIncognitoMenu(menu).setVisible(false);
+        }
+    }
+
+    private void onOptionsItemSelected(XC_MethodHook.MethodHookParam param, boolean isFromLTweaksExternal) {
+        MenuItem item = (MenuItem) param.args[0];
+        if (MENU_INCOGNITO.equals(item.getTitle())) {
+            Activity activity = (Activity) param.thisObject;
+            Object activityTab = XposedHelpers.callMethod(activity, "getActivityTab");
+            String url = (String) XposedHelpers.callMethod(activityTab, "getUrl");
+            Logger.i("Open in incognito: " + url);
+
+            Intent intent = new Intent(IntentActions.ACTION_CHROME_INCOGNITO);
+            intent.setData(Uri.parse(url));
+            intent.putExtra("from_ltweaks_external", isFromLTweaksExternal);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            activity.startActivity(intent);
+            param.setResult(true);
+        }
     }
 
     private MenuItem getIncognitoMenu(Menu menu) {
