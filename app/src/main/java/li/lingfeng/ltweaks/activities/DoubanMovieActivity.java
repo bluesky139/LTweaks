@@ -20,6 +20,7 @@ public class DoubanMovieActivity extends Activity {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClassName(PackageNames.DOUBAN_MOVIE, ClassNames.DOUBAN_MOVIE_INTENT_HANDLER_ACTIVITY);
         intent.setData(getIntent().getData());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
     }

@@ -70,8 +70,8 @@ Open source on github: \n
     <string name="pref_google_messenger_disable_direct_share">Disable direct share</string>
     <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
     <string name="pref_category_chrome">Chrome</string>
-    <string name="pref_chrome_incognito_search">Search in incognito with selected text</string>
-    <string name="pref_chrome_incognito_search_summary">Use floating menu with text selection\nFor Android 6.0+</string>
+    <string name="pref_chrome_incognito_search">Search / Open in incognito</string>
+    <string name="pref_chrome_incognito_search_summary">Search in incognito with selected text, use floating menu with text selection, for Android 6.0+\nMenu \"Open in incognito\" in Chrome</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>

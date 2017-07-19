@@ -33,6 +33,10 @@ public class Logger {
         Log.e(TAG, msg);
     }
 
+    public static void stackTrace() {
+        stackTrace(new Exception("print stack"));
+    }
+
     public static void stackTrace(Throwable e) {
         if (e instanceof InvocationTargetException) {
             e = ((InvocationTargetException) e).getTargetException();

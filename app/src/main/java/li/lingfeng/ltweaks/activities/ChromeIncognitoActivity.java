@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 
@@ -23,8 +24,9 @@ public class ChromeIncognitoActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String action = getIntent().getAction();
         String url = null;
-        if (getIntent().getAction().equals(Intent.ACTION_PROCESS_TEXT)) {
+        if (Intent.ACTION_PROCESS_TEXT.equals(action)) {
             String text = getIntent().getStringExtra(Intent.EXTRA_PROCESS_TEXT);
             if (Patterns.WEB_URL.matcher(text).matches()) {
                 Logger.i("Incognito url: " + text);
@@ -33,7 +35,8 @@ public class ChromeIncognitoActivity extends Activity {
                 Logger.i("Incognito text search: " + text);
                 url = "https://www.google.com/search?gws_rd=cr&q=" + Uri.encode(text);
             }
-        } else if (getIntent().getAction().equals(Intent.ACTION_VIEW)) {
+        } else if (Intent.ACTION_VIEW.equals(action)
+                || IntentActions.ACTION_CHROME_INCOGNITO.equals(action)) {
             url = getIntent().getDataString();
             Logger.i("Incognito url: " + url);
         }
@@ -50,6 +53,8 @@ public class ChromeIncognitoActivity extends Activity {
         intent.putExtra("com.google.android.apps.chrome.EXTRA_OPEN_NEW_INCOGNITO_TAB", true);
         intent.putExtra("com.android.browser.application_id", PackageNames.CHROME);
         intent.putExtra("from_ltweaks", true);
+        intent.putExtra("from_ltweaks_external", getIntent().getBooleanExtra("from_ltweaks_external", true));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
     }

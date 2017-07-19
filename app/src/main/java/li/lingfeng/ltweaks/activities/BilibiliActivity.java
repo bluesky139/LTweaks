@@ -32,6 +32,7 @@ public class BilibiliActivity extends Activity {
             Logger.i("Got video id " + matcher.group(1));
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("bilibili://video/" + matcher.group(1)));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         } else {
             Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();

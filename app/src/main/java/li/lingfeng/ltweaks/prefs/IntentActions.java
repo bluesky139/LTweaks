@@ -57,4 +57,6 @@ public class IntentActions {
             Intent.ACTION_SEND,
             Intent.ACTION_SEND_MULTIPLE
     };
+
+    public static final String ACTION_CHROME_INCOGNITO = "li.lingfeng.ltweaks.ACTION_CHROME_INCOGNITO";
 }
