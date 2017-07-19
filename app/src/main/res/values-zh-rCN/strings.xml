@@ -71,7 +71,7 @@ Open source on github: \n
     <string name="pref_google_messenger_disable_direct_share_summary">仅 Android 6.0+</string>
     <string name="pref_category_chrome">Chrome</string>
     <string name="pref_chrome_incognito_search">用\"隐身模式\"搜索/打开</string>
-    <string name="pref_chrome_incognito_search_summary">选中文本后到\"隐身模式\"中搜索，使用选中文本后的浮动菜单，仅 Android 6.0+\n在 Chrome 和 Custom Tab 中添加\"在隐身模式中打开\"菜单</string>
+    <string name="pref_chrome_incognito_search_summary">选中文本后到\"隐身模式\"中搜索，使用选中文本后的浮动菜单，仅 Android 6.0+\n在 Chrome 和 Custom Tab 中添加\"在隐身模式中打开\"菜单\n在 Custom Tab 中添加\"在隐身模式中打开\"长按链接菜单</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>

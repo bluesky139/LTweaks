@@ -37,6 +37,10 @@ public class Logger {
         stackTrace(new Exception("print stack"));
     }
 
+    public static void stackTrace(String message) {
+        stackTrace(new Exception(message));
+    }
+
     public static void stackTrace(Throwable e) {
         if (e instanceof InvocationTargetException) {
             e = ((InvocationTargetException) e).getTargetException();
