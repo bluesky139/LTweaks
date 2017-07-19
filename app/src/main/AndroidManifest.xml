@@ -175,7 +175,8 @@
 
         <activity
             android:name=".activities.ProcessTextActivity"
-            android:taskAffinity="li.lingfeng.ltweaks.activities.ProcessTextActivity">
+            android:taskAffinity="li.lingfeng.ltweaks.activities.ProcessTextActivity"
+            android:excludeFromRecents="true">
         </activity>
         <activity-alias
             android:name=".activities.DoubanMovieProcessTextActivity"
@@ -199,6 +200,18 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity-alias>
+
+        <activity android:name=".activities.ChromeIncognitoActivity"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.ChromeIncognitoActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/process_text_incognito_search"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".activities.TrustAgentWifiSettings"

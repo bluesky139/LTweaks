@@ -50,4 +50,10 @@ public class Logger {
             }
         }
     }
+
+    public static void paramArgs(Object[] args) {
+        for (Object arg : args) {
+            Logger.d(" param arg: " + arg);
+        }
+    }
 }

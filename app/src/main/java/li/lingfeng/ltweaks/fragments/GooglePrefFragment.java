@@ -7,7 +7,9 @@ import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.activities.ChromeIncognitoActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
+import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.UninstallUtils;
 
@@ -21,6 +23,8 @@ public class GooglePrefFragment extends BasePrefFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_google);
+
+        uncheckPreferenceByDisabledComponent(R.string.key_chrome_incognito_search, ChromeIncognitoActivity.class);
     }
 
     @PreferenceChange(prefs = {
@@ -60,5 +64,10 @@ public class GooglePrefFragment extends BasePrefFragment {
         } else {
             newPostsPreference.setEnabled(true);
         }
+    }
+
+    @PreferenceChange(prefs = R.string.key_chrome_incognito_search)
+    private void enableChromeIncognitoSearch(Preference preference, boolean enabled) {
+        ComponentUtils.enableComponent(ChromeIncognitoActivity.class, enabled);
     }
 }

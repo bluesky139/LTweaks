@@ -69,6 +69,9 @@ Open source on github: \n
     <string name="pref_category_google_messenger">Google Messenger</string>
     <string name="pref_google_messenger_disable_direct_share">Disable direct share</string>
     <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
+    <string name="pref_category_chrome">Chrome</string>
+    <string name="pref_chrome_incognito_search">Search in incognito with selected text</string>
+    <string name="pref_chrome_incognito_search_summary">Use floating menu with text selection\nFor Android 6.0+</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>
@@ -194,6 +197,7 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <!-- Process Text -->
     <string name="process_text_douban_movie">Douban Movie</string>
     <string name="process_text_bilibili">Bilibili</string>
+    <string name="process_text_incognito_search">Incognito Search</string>
 
     <!-- Url Replacer -->
     <string name="solid_explorer_db_query_error">Can\'t connect to Solid Explorer.</string>

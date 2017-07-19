@@ -80,4 +80,13 @@
             android:title="@string/pref_google_messenger_disable_direct_share"
             android:summary="@string/pref_google_messenger_disable_direct_share_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_chrome">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_chrome_incognito_search"
+            android:title="@string/pref_chrome_incognito_search"
+            android:summary="@string/pref_chrome_incognito_search_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

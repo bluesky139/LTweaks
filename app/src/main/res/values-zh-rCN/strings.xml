@@ -69,6 +69,9 @@ Open source on github: \n
     <string name="pref_category_google_messenger">Google Messenger</string>
     <string name="pref_google_messenger_disable_direct_share">禁用 direct share</string>
     <string name="pref_google_messenger_disable_direct_share_summary">仅 Android 6.0+</string>
+    <string name="pref_category_chrome">Chrome</string>
+    <string name="pref_chrome_incognito_search">选中文本后去\"隐身模式\"搜索</string>
+    <string name="pref_chrome_incognito_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>
@@ -194,6 +197,7 @@ Open source on github: \n
     <!-- Process Text -->
     <string name="process_text_douban_movie">豆瓣电影</string>
     <string name="process_text_bilibili">Bilibili</string>
+    <string name="process_text_incognito_search">隐身搜索</string>
 
     <!-- Url Replacer -->
     <string name="solid_explorer_db_query_error">无法连接到 Solid Explorer.</string>

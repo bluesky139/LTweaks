@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Binder;
 import android.util.TypedValue;
 
 import li.lingfeng.ltweaks.MyApplication;
@@ -225,6 +226,17 @@ public class ContextUtils {
             Logger.stackTrace(e);
             return "";
         }
+    }
+
+    public static boolean isCallingFromLTweaks() {
+        try {
+            int uid = Binder.getCallingUid();
+            ApplicationInfo appInfo = MyApplication.instance().getPackageManager().getApplicationInfo(PackageNames.L_TWEAKS, 0);
+            if (uid != appInfo.uid) {
+                return true;
+            }
+        } catch (Exception e) {}
+        return false;
     }
 
     public static void startBrowser(Context context, String url) {
