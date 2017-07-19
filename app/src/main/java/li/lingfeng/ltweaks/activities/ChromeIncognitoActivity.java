@@ -31,7 +31,7 @@ public class ChromeIncognitoActivity extends Activity {
                 url = text;
             } else {
                 Logger.i("Incognito text search: " + text);
-                url = "https://www.google.com/search?q=" + Uri.encode(text);
+                url = "https://www.google.com/search?gws_rd=cr&q=" + Uri.encode(text);
             }
         } else if (getIntent().getAction().equals(Intent.ACTION_VIEW)) {
             url = getIntent().getDataString();
