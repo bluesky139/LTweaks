@@ -20,7 +20,6 @@ public abstract class XposedSteam extends XposedBase {
 
     protected static final String MAIN_ACTIVITY = "com.valvesoftware.android.steam.community.activity.MainActivity";
     protected Activity mActivity;
-    private MenuItem mMenuShare;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -28,15 +27,16 @@ public abstract class XposedSteam extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Menu menu = (Menu) param.args[0];
-                mMenuShare = menu.add(Menu.NONE, Menu.NONE, newMenuPriority(), newMenuName());
-                mMenuShare.setShowAsAction(newMenuShowAsAction());
+                MenuItem item = menu.add(Menu.NONE, Menu.NONE, newMenuPriority(), newMenuName());
+                item.setShowAsAction(newMenuShowAsAction());
             }
         });
 
         findAndHookActivity(MAIN_ACTIVITY, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (mMenuShare != (MenuItem) param.args[0]) {
+                MenuItem item = (MenuItem) param.args[0];
+                if (!newMenuName().equals(item.getTitle())) {
                     return;
                 }
                 mActivity = (Activity) param.thisObject;
