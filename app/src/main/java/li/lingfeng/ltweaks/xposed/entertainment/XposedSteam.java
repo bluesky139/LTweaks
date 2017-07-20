@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import de.robv.android.xposed.XC_MethodHook;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
@@ -23,9 +24,9 @@ public abstract class XposedSteam extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookActivity(MAIN_ACTIVITY, "onPrepareOptionsMenu", Menu.class, new XC_MethodHook() {
+        findAndHookMethod(ClassNames.FRAGMENT_MANAGER_IMPL, "dispatchPrepareOptionsMenu", Menu.class, new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Menu menu = (Menu) param.args[0];
                 mMenuShare = menu.add(Menu.NONE, Menu.NONE, newMenuPriority(), newMenuName());
                 mMenuShare.setShowAsAction(newMenuShowAsAction());

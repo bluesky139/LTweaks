@@ -6,6 +6,8 @@ package li.lingfeng.ltweaks.prefs;
 
 public class ClassNames {
 
+    public static final String FRAGMENT_MANAGER_IMPL = "android.app.FragmentManagerImpl";
+
     public static final String APP_COMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
     public static final String FRAGMENT_ACTIVITY = "android.support.v4.app.FragmentActivity";
     public static final String TOOLBAR = "android.support.v7.widget.Toolbar";
