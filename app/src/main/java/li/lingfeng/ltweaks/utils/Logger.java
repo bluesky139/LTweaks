@@ -34,11 +34,11 @@ public class Logger {
     }
 
     public static void stackTrace() {
-        stackTrace(new Exception("print stack"));
+        stackTrace(new Exception("[print stack]"));
     }
 
     public static void stackTrace(String message) {
-        stackTrace(new Exception(message));
+        stackTrace(new Exception("[print stack] " + message));
     }
 
     public static void stackTrace(Throwable e) {

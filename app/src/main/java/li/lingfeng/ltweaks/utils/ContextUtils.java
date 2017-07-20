@@ -33,6 +33,10 @@ public class ContextUtils {
         }
     }
 
+    public static Context createLTweaksContext() {
+        return createPackageContext(PackageNames.L_TWEAKS);
+    }
+
     public static String getResNameById(int id) {
         return getResNameById(id, MyApplication.instance());
     }
@@ -237,6 +241,14 @@ public class ContextUtils {
             }
         } catch (Exception e) {}
         return false;
+    }
+
+    public static String getCallingPackage() {
+        try {
+            int uid = Binder.getCallingUid();
+            return MyApplication.instance().getPackageManager().getNameForUid(uid);
+        } catch (Exception e) {}
+        return null;
     }
 
     public static void startBrowser(Context context, String url) {

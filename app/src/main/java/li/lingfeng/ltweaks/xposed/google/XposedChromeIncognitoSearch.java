@@ -2,13 +2,17 @@ package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Patterns;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.lang.ref.WeakReference;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -17,6 +21,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -38,6 +43,7 @@ public class XposedChromeIncognitoSearch extends XposedBase {
     private static final String CONTEXT_MENU_HELPER = "org.chromium.chrome.browser.contextmenu.ContextMenuHelper";
     private static final String CONTEXT_MENU_POPULATOR = "org.chromium.chrome.browser.contextmenu.ChromeContextMenuPopulator";
     private static final String CONTEXT_MENU_PARAMS = "org.chromium.chrome.browser.contextmenu.ContextMenuParams";
+    private static final String SELECTION_POPUP_CONTROLLER = "org.chromium.content.browser.SelectionPopupController";
     private static final String MENU_INCOGNITO = "Open in incognito";
 
     @Override
@@ -115,6 +121,25 @@ public class XposedChromeIncognitoSearch extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 onMenuItemClick(param);
+            }
+        });
+
+
+        // Stay in Chrome if "Incognito Search" with selected text from Chrome.
+        findAndHookMethod(SELECTION_POPUP_CONTROLLER, "onActionItemClicked", ActionMode.class, MenuItem.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                MenuItem item = (MenuItem) param.args[1];
+                if (ContextUtils.createLTweaksContext().getString(R.string.process_text_incognito_search)
+                        .equals(item.getTitle())) {
+                    boolean isFromLTweaksExternal = true;
+                    Object windowAndroid = XposedHelpers.getObjectField(param.thisObject, "mWindowAndroid");
+                    WeakReference weakReference = (WeakReference) XposedHelpers.callMethod(windowAndroid, "getActivity");
+                    if (weakReference.get().getClass().getName().equals(TABBED_ACTIVITY)) {
+                        isFromLTweaksExternal = false;
+                    }
+                    item.getIntent().putExtra("from_ltweaks_external", isFromLTweaksExternal);
+                }
             }
         });
     }
