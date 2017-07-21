@@ -185,6 +185,9 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="pref_category_solid_explorer">Solid Explorer (Not Classic)</string>
     <string name="pref_solid_explorer_replace_url">Replace Streaming Url</string>
     <string name="pref_solid_explorer_replace_url_summary">When playing video from network, Solid Explorer will streaming video to local url (eg: \"http://127.0.0.1:12345/public/a.mp4\"), it has performance loss.\nReplace \"127.0.0.1:12345\" to server url for accessing video directly (If server supports it).\nSupport smb, dav, ftp, sftp.</string>
+    <string name="pref_category_selection_action_mode">Selection Floating Menu</string>
+    <string name="pref_selection_action_mode_original">Show all menu items</string>
+    <string name="pref_selection_action_mode_original_summary">Some items may be hidden by app itself\nFor Android 6.0+</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
