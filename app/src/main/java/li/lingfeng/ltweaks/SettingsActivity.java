@@ -155,8 +155,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private void sendLogWithMail(File file) {
         try {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("vnd.android.cursor.dir/email");
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:"));
             intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "bluesky139+play@gmail.com" });
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + "] v" +
