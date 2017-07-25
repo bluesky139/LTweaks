@@ -23,6 +23,7 @@ Open source on github: \n
     <string name="app_close">关闭</string>
     <string name="app_delete">删除</string>
     <string name="app_shortcut_is_created">快捷方式已创建.</string>
+    <string name="app_submit_issue">提交问题</string>
 
     <!--Common-->
     <string name="uninstall_message">检测到已安装 \"%s\", 它已经成为了 \"L Tweaks\" 的一部分, 最好删除它.</string>

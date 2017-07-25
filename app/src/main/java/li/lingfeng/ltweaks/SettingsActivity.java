@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.List;
 
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.PermissionUtils;
 import li.lingfeng.ltweaks.utils.ViewUtils;
@@ -130,6 +131,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 if (file != null) {
                     sendLogTo(file);
                 }
+                return true;
+            }
+            case R.id.menu_submit_issue:
+            {
+                ContextUtils.startBrowser(this, "https://github.com/bluesky139/LTweaks/issues");
                 return true;
             }
         }

@@ -13,6 +13,8 @@
                 android:id="@+id/menu_send_to" />
         </menu>
     </item>
+    <item android:title="@string/app_submit_issue"
+        android:id="@+id/menu_submit_issue" />
     <item android:title="@string/app_about"
         android:id="@+id/menu_about" />
 </menu>
