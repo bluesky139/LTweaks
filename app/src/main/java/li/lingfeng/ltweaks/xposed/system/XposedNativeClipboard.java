@@ -27,7 +27,12 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by lilingfeng on 2017/6/29.
  */
-@XposedLoad(packages = PackageNames.CHROME, prefs = R.string.key_native_clipboard_fix_chrome)
+@XposedLoad(packages = {
+        PackageNames.CHROME,
+        PackageNames.CHROME_BETA,
+        PackageNames.CHROME_CANARY,
+        PackageNames.CHROME_DEV
+}, prefs = R.string.key_native_clipboard_fix_chrome)
 public class XposedNativeClipboard extends XposedBase {
 
     private static final String SELECTION_POPUP_CONTROLLER = "org.chromium.content.browser.SelectionPopupController";
