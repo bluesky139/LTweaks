@@ -1,14 +1,19 @@
 package li.lingfeng.ltweaks.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +40,7 @@ public class ImageSearchActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
     private static final String ACTION_IMAGE_SEARCH = PackageNames.L_TWEAKS + ".ACTION_IMAGE_SEARCH";
+    private static final int MAX_WIDTH = 400;
 
     private static final Map<String, String> sEngines = new HashMap<String, String>() {{
         put("Google", "https://www.google.com/searchbyimage?image_url=%s");
@@ -89,7 +95,36 @@ public class ImageSearchActivity extends AppCompatActivity {
         @Override
         protected byte[] doInBackground(Uri... params) {
             Uri uri = params[0];
-            return IOUtils.uri2bytes(uri);
+            byte[] bytes = IOUtils.uri2bytes(uri);
+
+            // resize to smaller for faster uploading.
+            try {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                if (bitmap.getWidth() > MAX_WIDTH && bitmap.getHeight() > MAX_WIDTH) {
+                    float scale = Math.max((float) MAX_WIDTH / bitmap.getWidth(), (float) MAX_WIDTH / bitmap.getHeight());
+                    int width = (int) (bitmap.getWidth() * scale);
+                    int height = (int) (bitmap.getHeight() * scale);
+                    Logger.d("Resize image " + bitmap.getWidth() + "x" + bitmap.getHeight() + " -> " + width + "x" + height);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+                    Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
+                    String mimeType = ImageSearchActivity.this.getContentResolver().getType(uri);
+                    if ("image/jpeg".equals(mimeType)) {
+                        compressFormat = Bitmap.CompressFormat.JPEG;
+                    } else if ("image/webp".equals(mimeType)) {
+                        compressFormat = Bitmap.CompressFormat.WEBP;
+                    }
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    if (scaledBitmap.compress(compressFormat, 100, outputStream)) {
+                        bytes = outputStream.toByteArray();
+                        Logger.d("Resized image " + compressFormat);
+                    }
+                }
+            } catch (Exception e) {
+                Logger.w("Can't resize image, " + e);
+                Logger.stackTrace(e);
+            }
+            return bytes;
         }
 
         @Override
