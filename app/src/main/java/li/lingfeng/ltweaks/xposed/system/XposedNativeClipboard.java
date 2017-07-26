@@ -22,6 +22,7 @@ import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.Utils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -38,8 +39,6 @@ public class XposedNativeClipboard extends XposedBase {
     private static final String SELECTION_POPUP_CONTROLLER = "org.chromium.content.browser.SelectionPopupController";
     private static final String ACTION_MODE_CALLBACK = "org.chromium.content.browser.input.FloatingPastePopupMenu$ActionModeCallback";
     private static final String CLIPBOARD_STR = "Clipboard";
-    private MenuItem mPasteItem;
-    private MenuItem mClipboardItem;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -75,29 +74,22 @@ public class XposedNativeClipboard extends XposedBase {
     private void hookOnCreateActionMode(final XC_MethodHook.MethodHookParam param) {
         Menu menu = (Menu) param.args[1];
         final int idMenuPaste = ContextUtils.getIdId("select_action_menu_paste");
-        boolean hasPaste = false;
-        for (int i = 0; i < menu.size(); ++i) {
-            MenuItem menuItem = menu.getItem(i);
-            if (menuItem.getItemId() == idMenuPaste) {
-                mPasteItem = menuItem;
-                hasPaste = true;
-                break;
-            }
-        }
-        if (hasPaste) {
+        if (Utils.findMenuItemById(menu, idMenuPaste) != null) {
             Logger.i("Create menu " + CLIPBOARD_STR);
-            mClipboardItem = menu.add(CLIPBOARD_STR);
-        } else {
-            mClipboardItem = null;
-            mPasteItem= null;
+            menu.add(CLIPBOARD_STR);
         }
     }
 
     private void hookOnActionItemClicked(final XC_MethodHook.MethodHookParam param) {
-        if (mClipboardItem == null || mClipboardItem != param.args[1]) {
+        MenuItem item = (MenuItem) param.args[1];
+        if (!CLIPBOARD_STR.equals(item.getTitle())) {
             return;
         }
+
         Logger.i(CLIPBOARD_STR + " is clicked.");
+        ActionMode mode = (ActionMode) param.args[0];
+        final int idMenuPaste = ContextUtils.getIdId("select_action_menu_paste");
+        final MenuItem pasteItem = Utils.findMenuItemById(mode.getMenu(), idMenuPaste);
 
         Intent intent = new Intent();
         intent.setClassName("com.dhm47.nativeclipboard", "com.dhm47.nativeclipboard.ClipBoardA");
@@ -117,10 +109,9 @@ public class XposedNativeClipboard extends XposedBase {
                         actionMode.finish();
                     } else {
                         Logger.i("Paste from native clipboard.");
-                        param.args[1] = mPasteItem;
+                        param.args[1] = pasteItem;
                         XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     }
-                    mPasteItem = null;
                 } catch (Throwable e) {
                     Logger.e("Paste from native clipboard error, " + e);
                     Toast.makeText(MyApplication.instance(), "Paste from native clipboard error.", Toast.LENGTH_SHORT).show();
