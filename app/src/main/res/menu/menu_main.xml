@@ -7,6 +7,8 @@
         <menu>
             <item android:title="@string/app_save_log"
                 android:id="@+id/menu_save_log" />
+            <item android:title="@string/app_open_log"
+                android:id="@+id/menu_open_log" />
             <item android:title="@string/app_send_mail"
                 android:id="@+id/menu_send_mail" />
             <item android:title="@string/app_send_to"

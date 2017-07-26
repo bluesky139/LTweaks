@@ -16,6 +16,7 @@ Open source on github: \n
     <string name="app_save_log">Save Log</string>
     <string name="app_save_log_ok">Log is saved to %s</string>
     <string name="app_save_log_error">Save log error.</string>
+    <string name="app_open_log">Open Log</string>
     <string name="app_send_mail">Send Mail</string>
     <string name="app_send_mail_description">Please describe what you did, and what happened.\nAlso attach some screenshot if possible.</string>
     <string name="app_send_to">Send To...</string>

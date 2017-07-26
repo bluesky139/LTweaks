@@ -114,6 +114,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 File file = saveLog();
                 if (file != null) {
                     ViewUtils.showDialog(this, getString(R.string.app_save_log_ok, file.getAbsolutePath()));
+                } else {
+                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+            case R.id.menu_open_log:
+            {
+                File file = saveLog();
+                if (file != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file), "text/plain");
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
@@ -122,6 +136,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 File file = saveLog();
                 if (file != null) {
                     sendLogWithMail(file);
+                } else {
+                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
@@ -130,6 +146,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 File file = saveLog();
                 if (file != null) {
                     sendLogTo(file);
+                } else {
+                    Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }

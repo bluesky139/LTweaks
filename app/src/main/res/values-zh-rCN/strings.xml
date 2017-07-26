@@ -14,6 +14,7 @@ Open source on github: \n
     <string name="app_send_log_error">发送日志出错.</string>
     <string name="app_retry_after_permission_granted">授权后再重试.</string>
     <string name="app_save_log">保存</string>
+    <string name="app_open_log">打开</string>
     <string name="app_save_log_ok">日志被保存到 %s</string>
     <string name="app_save_log_error">保存日志出错.</string>
     <string name="app_send_mail">发邮件</string>
