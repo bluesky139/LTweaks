@@ -23,6 +23,7 @@ import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.Utils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -42,6 +43,7 @@ public class XposedChromeIncognitoSearch extends XposedBase {
     private static final String CUSTOM_ACTIVITY = "org.chromium.chrome.browser.customtabs.CustomTabActivity";
     private static final String CONTEXT_MENU_HELPER = "org.chromium.chrome.browser.contextmenu.ContextMenuHelper";
     private static final String CONTEXT_MENU_POPULATOR = "org.chromium.chrome.browser.contextmenu.ChromeContextMenuPopulator";
+    private static final String TAB_CONTEXT_MENU_POPULATOR = "org.chromium.chrome.browser.tab.TabContextMenuPopulator";
     private static final String CONTEXT_MENU_PARAMS = "org.chromium.chrome.browser.contextmenu.ContextMenuParams";
     private static final String SELECTION_POPUP_CONTROLLER = "org.chromium.content.browser.SelectionPopupController";
     private static final String MENU_INCOGNITO = "Open in incognito";
@@ -117,13 +119,6 @@ public class XposedChromeIncognitoSearch extends XposedBase {
             }
         });
 
-        findAndHookMethod(CONTEXT_MENU_HELPER, "onMenuItemClick", MenuItem.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                onMenuItemClick(param);
-            }
-        });
-
 
         // Stay in Chrome if "Incognito Search" with selected text from Chrome.
         findAndHookMethod(SELECTION_POPUP_CONTROLLER, "onActionItemClicked", ActionMode.class, MenuItem.class, new XC_MethodHook() {
@@ -159,22 +154,35 @@ public class XposedChromeIncognitoSearch extends XposedBase {
         }
         ContextMenu menu = (ContextMenu) param.args[0];
         Object menuParams = param.args[2];
-        String linkUrl = (String) XposedHelpers.getObjectField(menuParams, "mLinkUrl");
-        addMenu(menu, linkUrl);
+        final String linkUrl = (String) XposedHelpers.getObjectField(menuParams, "mLinkUrl");
+        MenuItem item = addMenu(menu, linkUrl);
+        if (item != null) {
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    XposedChromeIncognitoSearch.this.onMenuItemClick(linkUrl);
+                    return true;
+                }
+            });
+        }
     }
 
-    private void addMenu(Menu menu,  String url) {
+    private MenuItem addMenu(Menu menu, String url) {
+        MenuItem item = getIncognitoMenu(menu);
         if (Patterns.WEB_URL.matcher(url).matches()) {
-            if (getIncognitoMenu(menu) == null) {
+            if (item == null) {
                 Logger.i("Add menu \"" + MENU_INCOGNITO + "\"");
-                menu.add(MENU_INCOGNITO);
+                item = menu.add(MENU_INCOGNITO);
             }
             Logger.i("Set \"" + MENU_INCOGNITO + "\" visible.");
-            getIncognitoMenu(menu).setVisible(true);
+            item.setVisible(true);
         } else {
-            Logger.i("Set \"" + MENU_INCOGNITO + "\" invisible.");
-            getIncognitoMenu(menu).setVisible(false);
+            if (item != null) {
+                Logger.i("Set \"" + MENU_INCOGNITO + "\" invisible.");
+                item.setVisible(false);
+            }
         }
+        return item;
     }
 
     private void onOptionsItemSelected(XC_MethodHook.MethodHookParam param, boolean isFromLTweaksExternal) {
@@ -199,24 +207,21 @@ public class XposedChromeIncognitoSearch extends XposedBase {
         if (MENU_INCOGNITO.equals(item.getTitle())) {
             Object menuParams = XposedHelpers.getObjectField(param.thisObject, "mCurrentContextMenuParams");
             String linkUrl = (String) XposedHelpers.getObjectField(menuParams, "mLinkUrl");
-            Logger.i("Open link in incognito: " + linkUrl);
-
-            Intent intent = new Intent(IntentActions.ACTION_CHROME_INCOGNITO);
-            intent.setData(Uri.parse(linkUrl));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MyApplication.instance().startActivity(intent);
+            onMenuItemClick(linkUrl);
             param.setResult(true);
         }
     }
 
+    private void onMenuItemClick(String linkUrl) {
+        Logger.i("Open link in incognito: " + linkUrl);
+        Intent intent = new Intent(IntentActions.ACTION_CHROME_INCOGNITO);
+        intent.setData(Uri.parse(linkUrl));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MyApplication.instance().startActivity(intent);
+    }
+
     private MenuItem getIncognitoMenu(Menu menu) {
-        for (int i = 0; i < menu.size(); ++i) {
-            MenuItem item = menu.getItem(i);
-            if (MENU_INCOGNITO.equals(item.getTitle())) {
-                return item;
-            }
-        }
-        return null;
+        return Utils.findMenuItemByTitle(menu, MENU_INCOGNITO);
     }
 }
