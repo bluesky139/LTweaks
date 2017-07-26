@@ -64,9 +64,11 @@ public class ImageSearchActivity extends AppCompatActivity {
 
         if (!ComponentUtils.isAlias(this)) {
             Logger.i("Choose image engine.");
+            grantUriPermission(getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Intent intent = new Intent(ACTION_IMAGE_SEARCH);
             intent.setType(getIntent().getType());
             intent.putExtra(Intent.EXTRA_STREAM, uri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(Intent.createChooser(intent, "Choose image engine..."));
             finish();
         } else {
