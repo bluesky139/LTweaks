@@ -51,6 +51,7 @@ Open source on github: \n
     <string name="pref_google_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_google_com_domain">在 google.com 搜索</string>
     <string name="pref_google_com_domain_summary">而不是本地域, 比如: google.com.hk</string>
+    <string name="pref_google_keyboard_suggestion">允许在搜索框中使用键盘的建议字词</string>
     <string name="pref_category_google_plus">Google+</string>
     <string name="pref_google_plus_remove_bottom_bar">去底栏</string>
     <string name="pref_google_plus_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>

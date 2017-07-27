@@ -51,6 +51,7 @@ Open source on github: \n
     <string name="pref_google_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_google_com_domain">Use google.com to search</string>
     <string name="pref_google_com_domain_summary">Not local domain, eg: google.com.hk</string>
+    <string name="pref_google_keyboard_suggestion">Allow keyboard suggestions in search box</string>
     <string name="pref_category_google_plus">Google+</string>
     <string name="pref_google_plus_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_plus_remove_bottom_bar_summary">Put them into drawer menu</string>
