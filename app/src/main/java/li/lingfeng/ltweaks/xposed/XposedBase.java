@@ -156,4 +156,18 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
             throw new IllegalArgumentException("no callback defined");
         }
     }
+
+    protected Method findMethodStartsWith(String clsName, String methodNameStarts) {
+        return findMethodStartsWith(findClass(clsName), methodNameStarts);
+    }
+
+    protected Method findMethodStartsWith(Class cls, String methodNameStarts) {
+        Method[] methods = cls.getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getName().startsWith(methodNameStarts)) {
+                return method;
+            }
+        }
+        return null;
+    }
 }

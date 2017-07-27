@@ -1,11 +1,8 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.app.Activity;
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +35,9 @@ public class XposedNativeClipboard extends XposedBase {
 
     private static final String SELECTION_POPUP_CONTROLLER = "org.chromium.content.browser.SelectionPopupController";
     private static final String ACTION_MODE_CALLBACK = "org.chromium.content.browser.input.FloatingPastePopupMenu$ActionModeCallback";
+    private static final String CONTENT_VIEW_CORE = "org.chromium.content.browser.ContentViewCore";
     private static final String CLIPBOARD_STR = "Clipboard";
+    private boolean mIsPreventingFocusChange = false;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -52,7 +51,7 @@ public class XposedNativeClipboard extends XposedBase {
         findAndHookMethod(SELECTION_POPUP_CONTROLLER, "onActionItemClicked", ActionMode.class, MenuItem.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                hookOnActionItemClicked(param);
+                hookOnActionItemClicked(param, true);
             }
         });
 
@@ -66,7 +65,21 @@ public class XposedNativeClipboard extends XposedBase {
         findAndHookMethod(ACTION_MODE_CALLBACK, "onActionItemClicked", ActionMode.class, MenuItem.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-                hookOnActionItemClicked(param);
+                hookOnActionItemClicked(param, false);
+            }
+        });
+
+        // Focus loss will cause floating menu disappear.
+        Method methodOnFocusChanged = findMethodStartsWith(CONTENT_VIEW_CORE, "onFocusChanged");
+        findAndHookMethod(CONTENT_VIEW_CORE, methodOnFocusChanged.getName(), boolean.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                boolean isFocus = (boolean) param.args[0];
+                if (!isFocus && mIsPreventingFocusChange) {
+                    Logger.d("Prevent focus change.");
+                    param.setResult(null);
+                    mIsPreventingFocusChange = false;
+                }
             }
         });
     }
@@ -80,7 +93,7 @@ public class XposedNativeClipboard extends XposedBase {
         }
     }
 
-    private void hookOnActionItemClicked(final XC_MethodHook.MethodHookParam param) {
+    private void hookOnActionItemClicked(final XC_MethodHook.MethodHookParam param, boolean isPreventingFocusChange) {
         MenuItem item = (MenuItem) param.args[1];
         if (!CLIPBOARD_STR.equals(item.getTitle())) {
             return;
@@ -91,6 +104,7 @@ public class XposedNativeClipboard extends XposedBase {
         final int idMenuPaste = ContextUtils.getIdId("select_action_menu_paste");
         final MenuItem pasteItem = Utils.findMenuItemById(mode.getMenu(), idMenuPaste);
 
+        mIsPreventingFocusChange = isPreventingFocusChange;
         Intent intent = new Intent();
         intent.setClassName("com.dhm47.nativeclipboard", "com.dhm47.nativeclipboard.ClipBoardA");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -116,6 +130,7 @@ public class XposedNativeClipboard extends XposedBase {
                     Logger.e("Paste from native clipboard error, " + e);
                     Toast.makeText(MyApplication.instance(), "Paste from native clipboard error.", Toast.LENGTH_SHORT).show();
                 }
+                mIsPreventingFocusChange = false;
             }
         });
         param.setResult(true);
