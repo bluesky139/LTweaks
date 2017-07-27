@@ -122,8 +122,6 @@ Open source on github: \n
     <string name="pref_header_entertainment">娱乐</string>
     <string name="pref_category_douban_movie">豆瓣电影</string>
     <string name="pref_douban_movie_url">豆瓣电影的链接直接由客户端打开</string>
-    <string name="pref_douban_movie_skip_splash">跳过启动屏</string>
-    <string name="pref_douban_movie_skip_splash_summary">针对 2.x 的老版本</string>
     <string name="pref_douban_movie_search">选中文本后去豆瓣电影搜索</string>
     <string name="pref_douban_movie_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
     <string name="pref_douban_movie_remove_bottom_bar">去底栏</string>
