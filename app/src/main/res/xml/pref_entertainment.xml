@@ -15,6 +15,11 @@
             android:key="@string/key_douban_movie_search"
             android:title="@string/pref_douban_movie_search"
             android:summary="@string/pref_douban_movie_search_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_douban_movie_remove_bottom_bar"
+            android:title="@string/pref_douban_movie_remove_bottom_bar"
+            android:summary="@string/pref_douban_movie_remove_bottom_bar_summary" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_bilibili">

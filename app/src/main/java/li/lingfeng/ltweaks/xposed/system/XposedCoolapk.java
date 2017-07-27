@@ -264,12 +264,7 @@ public class XposedCoolapk extends XposedBase {
             SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(icon, text, listener);
 
             // create drawer
-            FrameLayout allView = new FrameLayout(mActivity);
-            while (mRootView.getChildCount() > 0) {
-                View view = mRootView.getChildAt(0);
-                mRootView.removeView(view);
-                allView.addView(view);
-            }
+            FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(mActivity);
             SimpleDrawer.NavItem[] navItemArray = new SimpleDrawer.NavItem[navItems.size()];
             mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems.toArray(navItemArray),
                     headerItem);

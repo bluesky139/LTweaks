@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class ViewUtils {
         });
     }
 
-    public static <T extends View> View findViewByType(ViewGroup rootView, final Class<? extends View> type) {
+    public static <T extends View> T findViewByType(ViewGroup rootView, final Class<? extends View> type) {
         List<View> views = traverseViews(rootView, true, new ViewTraverseCallback() {
             @Override
             public boolean onAddResult(View view) {
@@ -80,7 +82,7 @@ public class ViewUtils {
             }
         });
         if (views.size() > 0) {
-            return views.get(0);
+            return (T) views.get(0);
         }
         return null;
     }
@@ -128,6 +130,18 @@ public class ViewUtils {
             Logger.e("findFragmentByPosition error, " + e);
             return null;
         }
+    }
+
+    // Views will be detached from activity.
+    public static FrameLayout rootChildsIntoOneLayout(Activity activity) {
+        ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+        FrameLayout allView = new FrameLayout(activity);
+        while (rootView.getChildCount() > 0) {
+            View view = rootView.getChildAt(0);
+            rootView.removeView(view);
+            allView.addView(view);
+        }
+        return allView;
     }
 
     public static void showDialog(Context context, String message) {

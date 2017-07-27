@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
@@ -85,7 +86,7 @@ public class SimpleDrawer extends DrawerLayout {
                 mHeaderItem.onClick(v);
             }
         });
-        mHeaderLayout.addView(mHeaderImage, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        mHeaderLayout.addView(mHeaderImage, new LinearLayout.LayoutParams(dp2px(64), dp2px(64)));
 
         mHeaderText = new TextView(getContext());
         mHeaderText.setPadding(0, padding, 0, 0);
@@ -126,10 +127,10 @@ public class SimpleDrawer extends DrawerLayout {
 
     public static class NavItem {
         Drawable mIcon;
-        String mText;
+        CharSequence mText;
         Object mClickObj;
 
-        public NavItem(Drawable icon, String text, Object clickObj) {
+        public NavItem(Drawable icon, CharSequence text, Object clickObj) {
             mIcon = icon;
             mText = text;
             mClickObj = clickObj;

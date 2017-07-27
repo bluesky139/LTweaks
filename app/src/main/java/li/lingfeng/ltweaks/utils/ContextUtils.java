@@ -199,9 +199,13 @@ public class ContextUtils {
         return typedArray.getColor(0, Color.RED);
     }
 
-    public static int dp2px(float dpValue){
+    public static int dp2px(float dpValue) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,
                 MyApplication.instance().getResources().getDisplayMetrics());
+    }
+
+    public static int px2dp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     public static Drawable getAppIcon() {

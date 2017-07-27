@@ -126,6 +126,8 @@ Open source on github: \n
     <string name="pref_douban_movie_skip_splash_summary">For 2.x old version</string>
     <string name="pref_douban_movie_search">Search in Douban Movie with selected text</string>
     <string name="pref_douban_movie_search_summary">Use floating menu with text selection\nFor Android 6.0+</string>
+    <string name="pref_douban_movie_remove_bottom_bar">Remove bottom bar</string>
+    <string name="pref_douban_movie_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_bilibili">Bilibili</string>
     <string name="pref_bilibili_search">Search in Bilibili with selected text</string>
     <string name="pref_bilibili_search_summary">Use floating menu with text selection\nFor Android 6.0+</string>
