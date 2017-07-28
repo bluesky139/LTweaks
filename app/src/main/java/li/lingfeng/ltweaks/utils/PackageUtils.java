@@ -14,11 +14,11 @@ import li.lingfeng.ltweaks.R;
  * Created by smallville on 2017/1/12.
  */
 
-public class UninstallUtils {
+public class PackageUtils {
 
-    public static boolean isPakcageInstalled(String packageName) {
+    public static boolean isPackageInstalled(String packageName) {
         try {
-            MyApplication.instance().getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
+            MyApplication.instance().getPackageManager().getPackageInfo(packageName, 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
         }
@@ -33,7 +33,7 @@ public class UninstallUtils {
     }
 
     public static void tryUninstallPackage(final String packageName, String appName, Activity activity) {
-        if (!isPakcageInstalled(packageName)) {
+        if (!isPackageInstalled(packageName)) {
             return;
         }
         new AlertDialog.Builder(activity)

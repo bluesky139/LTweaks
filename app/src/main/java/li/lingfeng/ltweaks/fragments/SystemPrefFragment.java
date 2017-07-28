@@ -7,15 +7,11 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
-import android.widget.CompoundButton;
 import android.widget.Toast;
-
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,10 +36,8 @@ import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.utils.NetUtils;
 import li.lingfeng.ltweaks.utils.PermissionUtils;
-import li.lingfeng.ltweaks.utils.UninstallUtils;
-import li.lingfeng.ltweaks.utils.Utils;
+import li.lingfeng.ltweaks.utils.PackageUtils;
 
 /**
  * Created by smallville on 2017/1/4.
@@ -63,7 +57,7 @@ public class SystemPrefFragment extends BasePrefFragment {
     @PreferenceChange(prefs = R.string.key_text_aide_open_youdao)
     private void uninstallOldApp(Preference preference, boolean enabled) {
         if (enabled) {
-            UninstallUtils.tryUninstallPackage("li.lingfeng.textaide.youdao", "Text Aide with Youdao", getActivity());
+            PackageUtils.tryUninstallPackage("li.lingfeng.textaide.youdao", "Text Aide with Youdao", getActivity());
         }
     }
 

@@ -14,6 +14,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PackageUtils;
 
 /**
  * Created by lilingfeng on 2017/7/18.
@@ -50,11 +51,38 @@ public class ChromeIncognitoActivity extends Activity {
         boolean isFromLTweaksExternal = getIntent().getBooleanExtra("from_ltweaks_external", true);
         Logger.d("isFromLTweaksExternal " + isFromLTweaksExternal);
 
+        String chromePackage = getIntent().getStringExtra("chrome_package_for_ltweaks");
+        if (StringUtils.isEmpty(chromePackage)) {
+            chromePackage = PackageNames.CHROME;
+        }
+        if (!PackageUtils.isPackageInstalled(chromePackage)) {
+            String[] chromePackages = {
+                    PackageNames.CHROME,
+                    PackageNames.CHROME_BETA,
+                    PackageNames.CHROME_DEV,
+                    PackageNames.CHROME_CANARY
+            };
+            boolean isChromeInstalled = false;
+            for (String packageName : chromePackages) {
+                if (PackageUtils.isPackageInstalled(packageName)) {
+                    chromePackage = packageName;
+                    isChromeInstalled = true;
+                    break;
+                }
+            }
+            if (!isChromeInstalled) {
+                Toast.makeText(this, R.string.not_supported, Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+        }
+        Logger.d("chrome_package " + chromePackage);
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
-        intent.setPackage(PackageNames.CHROME);
+        intent.setPackage(chromePackage);
         intent.putExtra("com.google.android.apps.chrome.EXTRA_OPEN_NEW_INCOGNITO_TAB", true);
-        intent.putExtra("com.android.browser.application_id", PackageNames.CHROME);
+        intent.putExtra("com.android.browser.application_id", chromePackage);
         intent.putExtra("from_ltweaks", true);
         intent.putExtra("from_ltweaks_external", isFromLTweaksExternal);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

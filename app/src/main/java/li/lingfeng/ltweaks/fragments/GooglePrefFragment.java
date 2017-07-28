@@ -1,17 +1,15 @@
 package li.lingfeng.ltweaks.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
-import android.support.v7.app.AlertDialog;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ChromeIncognitoActivity;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.utils.UninstallUtils;
+import li.lingfeng.ltweaks.utils.PackageUtils;
 
 /**
  * Created by smallville on 2016/12/24.
@@ -52,7 +50,7 @@ public class GooglePrefFragment extends BasePrefFragment {
             Logger.e("Unknown pref for app uninstall, " + preference.getKey());
             return;
         }
-        UninstallUtils.tryUninstallPackage(packageName, appName, getActivity());
+        PackageUtils.tryUninstallPackage(packageName, appName, getActivity());
     }
 
     @PreferenceChange(prefs = R.string.key_google_plus_remove_bottom_bar)

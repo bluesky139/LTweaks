@@ -29,7 +29,12 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by lilingfeng on 2017/7/18.
  */
-@XposedLoad(packages = PackageNames.CHROME, prefs = R.string.key_chrome_incognito_search)
+@XposedLoad(packages = {
+        PackageNames.CHROME,
+        PackageNames.CHROME_BETA,
+        PackageNames.CHROME_DEV,
+        PackageNames.CHROME_CANARY
+}, prefs = R.string.key_chrome_incognito_search)
 public class XposedChromeIncognitoSearch extends XposedBase {
 
     private static final String INTENT_HANDLER = "org.chromium.chrome.browser.IntentHandler";
@@ -196,6 +201,7 @@ public class XposedChromeIncognitoSearch extends XposedBase {
             Intent intent = new Intent(IntentActions.ACTION_CHROME_INCOGNITO);
             intent.setData(Uri.parse(url));
             intent.putExtra("from_ltweaks_external", isFromLTweaksExternal);
+            intent.putExtra("chrome_package_for_ltweaks", lpparam.packageName);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             activity.startActivity(intent);
             param.setResult(true);
@@ -216,6 +222,7 @@ public class XposedChromeIncognitoSearch extends XposedBase {
         Logger.i("Open link in incognito: " + linkUrl);
         Intent intent = new Intent(IntentActions.ACTION_CHROME_INCOGNITO);
         intent.setData(Uri.parse(linkUrl));
+        intent.putExtra("chrome_package_for_ltweaks", lpparam.packageName);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MyApplication.instance().startActivity(intent);
