@@ -75,8 +75,10 @@ Open source on github: \n
     <string name="pref_category_chrome">Chrome</string>
     <string name="pref_chrome_incognito_search">Search / Open in incognito</string>
     <string name="pref_chrome_incognito_search_summary">Search in incognito with selected text, use floating menu with text selection, for Android 6.0+\nMenu \"Open in incognito\" in Chrome and Custom Tab\nLong click link menu \"Open in incognito\" in Custom Tab</string>
-    <string name="pref_chrome_google_cache">View Google cached</string>
+    <string name="pref_chrome_google_cache">View Google cached webpage</string>
     <string name="pref_chrome_google_cache_summary">Menu \"View Google cached\" in Chrome and Custom Tab</string>
+    <string name="pref_chrome_wayback">Wayback Machine</string>
+    <string name="pref_chrome_wayback_summary">Menu \"Wayback Machine\" in Chrome and Custom Tab</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>

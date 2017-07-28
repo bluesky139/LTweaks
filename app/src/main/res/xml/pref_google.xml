@@ -97,5 +97,10 @@
             android:key="@string/key_chrome_google_cache"
             android:title="@string/pref_chrome_google_cache"
             android:summary="@string/pref_chrome_google_cache_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_chrome_wayback"
+            android:title="@string/pref_chrome_wayback"
+            android:summary="@string/pref_chrome_wayback_summary" />
     </PreferenceCategory>
 </PreferenceScreen>
