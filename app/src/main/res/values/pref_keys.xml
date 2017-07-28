@@ -15,6 +15,7 @@
     <string name="key_google_play_view_in_coolapk">key_google_play_view_in_coolapk</string>
     <string name="key_google_messenger_disable_direct_share">key_google_messenger_disable_direct_share</string>
     <string name="key_chrome_incognito_search">key_chrome_incognito_search</string>
+    <string name="key_chrome_google_cache">key_chrome_google_cache</string>
 
     <!--Shopping-->
     <string name="key_jd_open_link_in_app">key_jd_open_link_in_app</string>

@@ -92,5 +92,10 @@
             android:key="@string/key_chrome_incognito_search"
             android:title="@string/pref_chrome_incognito_search"
             android:summary="@string/pref_chrome_incognito_search_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_chrome_google_cache"
+            android:title="@string/pref_chrome_google_cache"
+            android:summary="@string/pref_chrome_google_cache_summary" />
     </PreferenceCategory>
 </PreferenceScreen>
