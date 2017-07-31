@@ -1,0 +1,130 @@
+package li.lingfeng.ltweaks.xposed.communication;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
+import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ContextUtils;
+import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
+import li.lingfeng.ltweaks.xposed.XposedBase;
+
+import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
+
+/**
+ * Created by lilingfeng on 2017/7/31.
+ */
+@XposedLoad(packages = {
+        PackageNames.QQ_LITE,
+        PackageNames.QQ,
+        PackageNames.QQ_INTERNATIONAL,
+        PackageNames.TIM
+}, prefs = R.string.key_qq_collapse_chat_buttons)
+public class XposedQQCollaseChatButtons extends XposedBase {
+
+    private static final String CHAT_ACTIVITY = "com.tencent.mobileqq.activity.ChatActivity";
+
+    @Override
+    protected void handleLoadPackage() throws Throwable {
+        findAndHookActivity(CHAT_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                final Activity activity = (Activity) param.thisObject;
+                new OneActivity(activity);
+            }
+        });
+    }
+
+    private class OneActivity {
+        private int mHeight = 0;
+
+        OneActivity(final Activity activity) {
+            final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (mHeight > 0) {
+                        return;
+                    }
+                    handleOnCreate(activity);
+                    if (mHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            });
+        }
+
+        private void handleOnCreate(final Activity activity) {
+            int idInputBar = ContextUtils.getIdId("inputBar");
+            final LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
+            ViewUtils.traverseViews((ViewGroup) inputBar.getRootView(), new ViewUtils.ViewTraverseCallback2() {
+                @Override
+                public boolean onView(View view) {
+                    if (view instanceof ImageView) {
+                        ImageView imageView = (ImageView) view;
+                        if ("表情".equals(imageView.getContentDescription())) {
+                            handleButtons(activity, inputBar, (LinearLayout) imageView.getParent());
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
+
+        private void handleButtons(Activity activity, LinearLayout inputBar, final ViewGroup buttons) {
+            if (mHeight <= 0) {
+                mHeight = buttons.getMeasuredHeight();
+                Logger.d("check height " + mHeight);
+                if (mHeight <= 0) {
+                    return;
+                }
+            }
+            Logger.i("handleButtons, height " + mHeight);
+
+            ImageView toggleView = new ImageView(activity);
+            toggleView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            int padding = dp2px(4);
+            toggleView.setPadding(padding, padding, 0, padding);
+
+            Drawable drawable = ContextUtils.createLTweaksContext().getResources().getDrawable(R.drawable.ic_add);
+            drawable.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+            toggleView.setImageDrawable(drawable);
+
+            int idSend = ContextUtils.getIdId("fun_btn");
+            View sendView = inputBar.findViewById(idSend);
+            int sendViewHeight = sendView.getMeasuredHeight();
+            Logger.d("sendViewHeight " + sendViewHeight);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(sendViewHeight, sendViewHeight);
+            layoutParams.gravity = Gravity.CENTER;
+            inputBar.addView(toggleView, inputBar.indexOfChild(sendView), layoutParams);
+
+            XposedHelpers.callMethod(buttons, "setCustomHeight", 0);
+            toggleView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int height = buttons.getMeasuredHeight();
+                    Logger.i("toggle buttons, height " + height);
+                    XposedHelpers.callMethod(buttons, "setCustomHeight", height == 0 ? mHeight : 0);
+                }
+            });
+        }
+    }
+}

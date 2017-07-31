@@ -33,5 +33,10 @@
             android:defaultValue="false"
             android:key="@string/key_qq_outer_browser"
             android:title="@string/pref_qq_outer_browser" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_qq_collapse_chat_buttons"
+            android:title="@string/pref_qq_collapse_chat_buttons"
+            android:summary="@string/pref_qq_collapse_chat_buttons_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

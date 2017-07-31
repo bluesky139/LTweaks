@@ -87,22 +87,44 @@ public class ViewUtils {
         return null;
     }
 
-    private static <T extends View> List<T> traverseViews(ViewGroup rootView, boolean onlyOne, ViewTraverseCallback callback) {
+    public static void printChilds(ViewGroup rootView) {
+        traverseViews(rootView, false, new ViewTraverseCallback() {
+            @Override
+            public boolean onAddResult(View view) {
+                Logger.v(" child " + view);
+                return false;
+            }
+        });
+    }
+
+    public static <T extends View> List<T> traverseViews(ViewGroup rootView, final boolean onlyOne, final ViewTraverseCallback callback) {
+        final List<T> results = new ArrayList<>();
+        traverseViews(rootView, new ViewTraverseCallback2() {
+            @Override
+            public boolean onView(View view) {
+                if (callback.onAddResult(view)) {
+                    results.add((T) view);
+                    if (onlyOne) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        return results;
+    }
+
+    public static void traverseViews(ViewGroup rootView, ViewTraverseCallback2 callback) {
         Queue<View> views = new LinkedList<>();
         for (int i = 0; i < rootView.getChildCount(); ++i) {
             View child = rootView.getChildAt(i);
             views.add(child);
         }
 
-        List<T> results = new ArrayList<>();
         while (views.size() > 0) {
             View view = views.poll();
-            //Logger.v("traverseViews " + view);
-            if (callback.onAddResult(view)) {
-                results.add((T) view);
-                if (onlyOne) {
-                    return results;
-                }
+            if (callback.onView(view)) {
+                return;
             }
 
             if (view instanceof ViewGroup) {
@@ -113,11 +135,14 @@ public class ViewUtils {
                 }
             }
         }
-        return results;
     }
 
-    private interface ViewTraverseCallback {
+    public interface ViewTraverseCallback {
         boolean onAddResult(View view);
+    }
+
+    public interface ViewTraverseCallback2 {
+        boolean onView(View view);
     }
 
     public static Fragment findFragmentByPosition(FragmentManager fragmentManager, ViewPager viewPager, int position) {
@@ -142,6 +167,11 @@ public class ViewUtils {
             allView.addView(view);
         }
         return allView;
+    }
+
+    public static View nextView(View view) {
+        ViewGroup parent = (ViewGroup) view.getParent();
+        return parent.getChildAt(parent.indexOfChild(view) + 1);
     }
 
     public static void showDialog(Context context, String message) {

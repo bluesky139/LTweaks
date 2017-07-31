@@ -122,6 +122,8 @@ Open source on github: \n
     <string name="pref_qq_dismiss_contacts_enabler_summary">如果你要使用通信录请不要勾这个</string>
     <string name="pref_qq_remove_ads">去横幅广告</string>
     <string name="pref_qq_outer_browser">使用外部浏览器</string>
+    <string name="pref_qq_collapse_chat_buttons">在聊天界面先隐藏底部按钮栏</string>
+    <string name="pref_qq_collapse_chat_buttons_summary">有个\"加号\"来显示它们</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
