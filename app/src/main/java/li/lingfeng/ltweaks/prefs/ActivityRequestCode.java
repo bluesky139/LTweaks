@@ -7,4 +7,5 @@ package li.lingfeng.ltweaks.prefs;
 public class ActivityRequestCode {
 
     public static final int KEYGUARD = 111;
+    public static final int QQ_CLEAR_IMAGE_CHOOSER = 112;
 }

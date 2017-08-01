@@ -75,7 +75,22 @@ public class BasePrefFragment extends PreferenceFragment
                 if (preferenceChange.refreshAtStart()) {
                     try {
                         method.setAccessible(true);
-                        method.invoke(this, findPreference(pref), null);
+                        Preference preference = findPreference(pref);
+                        if (method.getParameterTypes().length == 2) {
+                            Class secondType = method.getParameterTypes()[1];
+                            if (secondType == boolean.class) {
+                                method.invoke(this, preference, ((SwitchPreference) preference).isChecked());
+                            } else if (secondType == String.class) {
+                                String path = Prefs.instance().getString(pref, "");
+                                method.invoke(this, preference, path);
+                            } else {
+                                throw new Exception("Not implemented.");
+                            }
+                        } else if (method.getParameterTypes().length == 1) {
+                            method.invoke(this, preference);
+                        } else {
+                            throw new Exception("Not implemented.");
+                        }
                     } catch (Exception e) {
                         Logger.e("Can't invoke preference change method " + method + " at start, " + e.getMessage());
                         Logger.stackTrace(e);

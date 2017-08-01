@@ -20,6 +20,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -39,11 +40,9 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
 }, prefs = R.string.key_qq_collapse_chat_buttons)
 public class XposedQQCollaseChatButtons extends XposedBase {
 
-    private static final String CHAT_ACTIVITY = "com.tencent.mobileqq.activity.ChatActivity";
-
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookActivity(CHAT_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
+        findAndHookActivity(ClassNames.QQ_CHAT_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 final Activity activity = (Activity) param.thisObject;
@@ -63,7 +62,12 @@ public class XposedQQCollaseChatButtons extends XposedBase {
                     if (mHeight > 0) {
                         return;
                     }
-                    handleOnCreate(activity);
+                    try {
+                        handleLayoutChanged(activity);
+                    } catch (Throwable e) {
+                        Logger.e("Error to handleLayoutChanged, " + e);
+                        Logger.stackTrace(e);
+                    }
                     if (mHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
@@ -71,7 +75,7 @@ public class XposedQQCollaseChatButtons extends XposedBase {
             });
         }
 
-        private void handleOnCreate(final Activity activity) {
+        private void handleLayoutChanged(final Activity activity) {
             int idInputBar = ContextUtils.getIdId("inputBar");
             final LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
             ViewUtils.traverseViews((ViewGroup) inputBar.getRootView(), new ViewUtils.ViewTraverseCallback2() {

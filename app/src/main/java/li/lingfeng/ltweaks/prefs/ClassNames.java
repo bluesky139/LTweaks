@@ -36,4 +36,7 @@ public class ClassNames {
 
     // Zhi Hu
     public static final String ZHI_HU_MAIN_ACTIVITY = "com.zhihu.android.app.ui.activity.MainActivity";
+
+    // QQ
+    public static final String QQ_CHAT_ACTIVITY = "com.tencent.mobileqq.activity.ChatActivity";
 }

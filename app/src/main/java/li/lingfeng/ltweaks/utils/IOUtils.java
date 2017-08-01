@@ -32,7 +32,7 @@ public class IOUtils {
             }
             bytes = outputStream.toByteArray();
         } catch (Exception e) {
-            Logger.e("uri2bytes error, " + e.getMessage());
+            Logger.e("uri2bytes error, " + e);
             Logger.stackTrace(e);
         } finally {
             try {
@@ -41,6 +41,21 @@ public class IOUtils {
             } catch (Exception e) {}
         }
         return bytes;
+    }
+
+    public static boolean saveUriToFile(Uri uri, String filePath) {
+        Logger.d("Save uri " + uri + " to " + filePath);
+        byte[] bytes = uri2bytes(uri);
+        if (bytes != null) {
+            try {
+                File file = new File(filePath);
+                FileUtils.writeByteArrayToFile(file, bytes);
+                return true;
+            } catch (Exception e) {
+                Logger.e("saveUriToFile error, " + e);
+            }
+        }
+        return false;
     }
 
     public static List<String> readLines(String path) {

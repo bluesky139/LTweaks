@@ -117,13 +117,17 @@ Open source on github: \n
     <string name="pref_wechat_use_incoming_ringtone">Customize incoming ringtone</string>
     <string name="pref_wechat_use_incoming_ringtone_summary">Set ringtone below</string>
     <string name="pref_wechat_set_incoming_ringtone">Set incoming ringtone</string>
-    <string name="pref_category_qq">QQ</string>
+    <string name="pref_category_qq">QQ (Only tested on lite version)</string>
     <string name="pref_qq_dismiss_contacts_enabler">Dismiss contacts enabler</string>
     <string name="pref_qq_dismiss_contacts_enabler_summary">Don\'t enable this if you are using contacts</string>
     <string name="pref_qq_remove_ads">Remove banner ads</string>
     <string name="pref_qq_outer_browser">Use outer browser</string>
     <string name="pref_qq_collapse_chat_buttons">Hide bottom buttons first in chat activity</string>
     <string name="pref_qq_collapse_chat_buttons_summary">Until you press an \"Add\" button</string>
+    <string name="pref_qq_clear_background">Set a clear and undistorted chat background</string>
+    <string name="pref_qq_clear_background_summary">May not work on very high definition device, no problem on 1080x1920 (Nexus 5)\nSet path below</string>
+    <string name="pref_qq_clear_background_path">Set chat background path</string>
+    <string name="pref_qq_clear_background_path_summary">File is copied to %s</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>

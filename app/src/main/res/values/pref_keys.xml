@@ -35,6 +35,8 @@
     <string name="key_qq_remove_ads">key_qq_remove_ads</string>
     <string name="key_qq_outer_browser">key_qq_outer_browser</string>
     <string name="key_qq_collapse_chat_buttons">key_qq_collapse_chat_buttons</string>
+    <string name="key_qq_clear_background">key_qq_clear_background</string>
+    <string name="key_qq_clear_background_path">key_qq_clear_background_path</string>
 
     <!--Entertainment-->
     <string name="key_douban_movie_url">key_douban_movie_url</string>

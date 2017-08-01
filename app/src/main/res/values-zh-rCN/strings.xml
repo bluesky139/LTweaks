@@ -117,13 +117,17 @@ Open source on github: \n
     <string name="pref_wechat_use_incoming_ringtone">自定义来电铃声</string>
     <string name="pref_wechat_use_incoming_ringtone_summary">在下面设置铃声</string>
     <string name="pref_wechat_set_incoming_ringtone">设置铃声</string>
-    <string name="pref_category_qq">QQ</string>
+    <string name="pref_category_qq">QQ (仅在轻聊版上测试过)</string>
     <string name="pref_qq_dismiss_contacts_enabler">不再弹出\"启用通信录\"</string>
     <string name="pref_qq_dismiss_contacts_enabler_summary">如果你要使用通信录请不要勾这个</string>
     <string name="pref_qq_remove_ads">去横幅广告</string>
     <string name="pref_qq_outer_browser">使用外部浏览器</string>
     <string name="pref_qq_collapse_chat_buttons">在聊天界面先隐藏底部按钮栏</string>
     <string name="pref_qq_collapse_chat_buttons_summary">有个\"加号\"来显示它们</string>
+    <string name="pref_qq_clear_background">设置一张清晰不变形的聊天背景</string>
+    <string name="pref_qq_clear_background_summary">也许在分辨率非常高的设备上不工作, 在 1080x1920 (Nexus 5) 上没有问题\n在下面设置路径</string>
+    <string name="pref_qq_clear_background_path">设置聊天背景路径</string>
+    <string name="pref_qq_clear_background_path_summary">文件被复制到了 %s</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
