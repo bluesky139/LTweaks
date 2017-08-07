@@ -12,12 +12,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.LruCache;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
@@ -40,8 +43,10 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 }, prefs = R.string.key_qq_clear_background)
 public class XposedQQChatBackground extends XposedBase {
 
-    private SparseArray<BitmapDrawable> mBackgroundDrawables; // height -> drawable, consider width is fixed.
+    private BitmapDrawable mLargestDrawable;
+    private LruCache<Integer, BitmapDrawable> mBackgroundDrawables; // height -> drawable, consider width is fixed.
     private long mLastModified = 0;
+    private WeakReference<ViewGroup> mBackgroundViewRef;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -55,11 +60,21 @@ public class XposedQQChatBackground extends XposedBase {
                 }
 
                 if (mBackgroundDrawables == null) {
-                    mBackgroundDrawables = new SparseArray<>(2);
+                    mBackgroundDrawables = new LruCache<Integer, BitmapDrawable>(5) {
+                        @Override
+                        protected void entryRemoved(boolean evicted, Integer key, BitmapDrawable oldValue, BitmapDrawable newValue) {
+                            Logger.d("entryRemoved " + key);
+                            removeBackgroundDrawable(oldValue);
+                        }
+                    };
                 }
                 if (mLastModified != file.lastModified()) {
                     mLastModified = file.lastModified();
-                    mBackgroundDrawables.clear();
+                    if (mLargestDrawable != null) {
+                        removeBackgroundDrawable(mLargestDrawable);
+                        mLargestDrawable = null;
+                    }
+                    mBackgroundDrawables.evictAll();
                 }
 
                 final Activity activity = (Activity) param.thisObject;
@@ -89,21 +104,27 @@ public class XposedQQChatBackground extends XposedBase {
             return;
         }
 
-        BitmapDrawable drawable = mBackgroundDrawables.get(height);
+        BitmapDrawable drawable = null;
+        if (mLargestDrawable != null && mLargestDrawable.getBitmap().getHeight() == height) {
+            drawable = mLargestDrawable;
+        }
         if (drawable == null) {
-            for (int i = 0; i < mBackgroundDrawables.size(); ++i) {
-                int tmpHeight = mBackgroundDrawables.keyAt(i);
-                if (tmpHeight < height) {
-                    continue;
-                }
-                BitmapDrawable tmpDrawable = mBackgroundDrawables.get(tmpHeight);
-                Bitmap bitmap = Utils.bitmapCopy(tmpDrawable.getBitmap(), 0, 0, width, height);
+            drawable = mBackgroundDrawables.get(height);
+        }
+
+        if (drawable == null) {
+            if (mLargestDrawable != null && mLargestDrawable.getBitmap().getHeight() > height) {
+                Bitmap bitmap = Utils.bitmapCopy(mLargestDrawable.getBitmap(), 0, 0, width, height);
                 drawable = new BitmapDrawable(bitmap);
-                break;
+                mBackgroundDrawables.put(height, drawable);
             }
 
             if (drawable == null) {
-                mBackgroundDrawables.clear();
+                mBackgroundDrawables.evictAll();
+                if (mLargestDrawable != null) {
+                    removeBackgroundDrawable(mLargestDrawable);
+                    mLargestDrawable = null;
+                }
                 String filepath = getImagePath();
                 if (!new File(filepath).exists()) {
                     Logger.e("Can't access file " + filepath);
@@ -114,14 +135,25 @@ public class XposedQQChatBackground extends XposedBase {
                     return;
                 }
                 drawable = new BitmapDrawable(dest);
+                mLargestDrawable = drawable;
             }
-            mBackgroundDrawables.put(height, drawable);
         }
 
         if (viewGroup.getBackground() != drawable) {
             Logger.i("Set chat activity background, " + width + "x" + height);
             viewGroup.setBackgroundDrawable(drawable);
+            mBackgroundViewRef = new WeakReference<>(viewGroup);
         }
+    }
+
+    private void removeBackgroundDrawable(BitmapDrawable drawable) {
+        if (mBackgroundViewRef != null) {
+            ViewGroup backgroundView = mBackgroundViewRef.get();
+            if (backgroundView != null && backgroundView.getBackground() == drawable) {
+                backgroundView.setBackgroundColor(Color.TRANSPARENT);
+            }
+        }
+        drawable.getBitmap().recycle();
     }
 
     private String getImagePath() {

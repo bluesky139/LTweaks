@@ -58,7 +58,9 @@ public class Utils {
     public static Bitmap createCenterCropBitmapFromFile(String filePath, int newWidth, int newHeight) {
         try {
             Logger.d("createCenterCropBitmapFromFile " + filePath + ", new " + newWidth + "x" + newHeight);
-            Bitmap source = BitmapFactory.decodeFile(filePath);
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap source = BitmapFactory.decodeFile(filePath, opt);
             int sourceWidth = source.getWidth();
             int sourceHeight = source.getHeight();
 
@@ -88,6 +90,7 @@ public class Utils {
             Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
             Canvas canvas = new Canvas(dest);
             canvas.drawBitmap(source, null, targetRect, null);
+            source.recycle();
             return dest;
         } catch (Exception e) {
             Logger.e("Failed to createCenterCropBitmapFromFile, " + e);
