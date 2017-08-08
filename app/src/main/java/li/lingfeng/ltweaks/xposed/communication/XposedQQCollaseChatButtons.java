@@ -12,9 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import java.util.HashMap;
-import java.util.Map;
+import android.widget.RelativeLayout;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -39,6 +37,8 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
         PackageNames.TIM
 }, prefs = R.string.key_qq_collapse_chat_buttons)
 public class XposedQQCollaseChatButtons extends XposedBase {
+
+    private static final String CHAT_LIST_VIEW = "com.tencent.mobileqq.bubble.ChatXListView";
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -93,7 +93,7 @@ public class XposedQQCollaseChatButtons extends XposedBase {
             });
         }
 
-        private void handleButtons(Activity activity, LinearLayout inputBar, final ViewGroup buttons) {
+        private void handleButtons(Activity activity, final LinearLayout inputBar, final ViewGroup buttons) {
             if (mHeight <= 0) {
                 mHeight = buttons.getMeasuredHeight();
                 Logger.d("check height " + mHeight);
@@ -120,15 +120,29 @@ public class XposedQQCollaseChatButtons extends XposedBase {
             layoutParams.gravity = Gravity.CENTER;
             inputBar.addView(toggleView, inputBar.indexOfChild(sendView), layoutParams);
 
+            toggleButtonsVisibility(false, inputBar, buttons);
             XposedHelpers.callMethod(buttons, "setCustomHeight", 0);
             toggleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int height = buttons.getMeasuredHeight();
                     Logger.i("toggle buttons, height " + height);
-                    XposedHelpers.callMethod(buttons, "setCustomHeight", height == 0 ? mHeight : 0);
+                    try {
+                        toggleButtonsVisibility(height == 0, inputBar, buttons);
+                    } catch (Throwable e) {
+                        Logger.e("Error to toggleButtonsVisibility, " + e);
+                        Logger.stackTrace(e);
+                    }
                 }
             });
+        }
+
+        private void toggleButtonsVisibility(boolean visible, final LinearLayout inputBar, final ViewGroup buttons) {
+            XposedHelpers.callMethod(buttons, "setCustomHeight", visible ? mHeight : 0);
+            Class clsChatListView = findClass(CHAT_LIST_VIEW);
+            View listView = ViewUtils.findViewByType((ViewGroup) inputBar.getParent(), clsChatListView);
+            RelativeLayout.LayoutParams listLayoutParams = (RelativeLayout.LayoutParams) listView.getLayoutParams();
+            listLayoutParams.bottomMargin = visible ? dp2px(90) : dp2px(50);
         }
     }
 }
