@@ -128,6 +128,8 @@ Open source on github: \n
     <string name="pref_qq_clear_background_summary">也许在分辨率非常高的设备上不工作, 在 1080x1920 (Nexus 5) 上没有问题\n在下面设置路径</string>
     <string name="pref_qq_clear_background_path">设置聊天背景路径</string>
     <string name="pref_qq_clear_background_path_summary">文件被复制到了 %s</string>
+    <string name="pref_qq_exit_directly_by_sharing">分享后直接退出</string>
+    <string name="pref_qq_exit_directly_by_sharing_summary">在使用分享后, 按返回键时不退到主界面</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>

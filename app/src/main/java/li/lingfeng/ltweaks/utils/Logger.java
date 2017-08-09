@@ -53,7 +53,7 @@ public class Logger {
         Logger.d(" intent action: " + intent.getAction());
         Logger.d(" intent component: " + (intent.getComponent() != null ? intent.getComponent().toShortString() : ""));
         Logger.d(" intent type: " + intent.getType());
-        Logger.d(" intent flag: " + Integer.toHexString(intent.getFlags()));
+        Logger.d(" intent flag: 0x" + Integer.toHexString(intent.getFlags()));
         Logger.d(" intent data: " + intent.getData());
         if (intent.getExtras() != null) {
             for (String key : intent.getExtras().keySet()) {

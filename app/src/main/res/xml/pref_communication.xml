@@ -46,5 +46,10 @@
         <Preference
             android:key="@string/key_qq_clear_background_path"
             android:title="@string/pref_qq_clear_background_path" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_qq_exit_directly_by_sharing"
+            android:title="@string/pref_qq_exit_directly_by_sharing"
+            android:summary="@string/pref_qq_exit_directly_by_sharing_summary" />
     </PreferenceCategory>
 </PreferenceScreen>
