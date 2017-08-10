@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -38,7 +39,7 @@ public class ViewUtils {
     public static ViewGroup findViewGroupByName(final ViewGroup rootView, final String name) {
         List<View> views = traverseViews(rootView, true, new ViewTraverseCallback() {
             @Override
-            public boolean onAddResult(View view) {
+            public boolean onAddResult(View view, int deep) {
                 if (view instanceof ViewGroup && view.getId() > 0) {
                     String name_ = ContextUtils.getResNameById(view.getId());
                     return name.equals(name_);
@@ -55,7 +56,7 @@ public class ViewUtils {
     public static List<View> findAllViewByName(ViewGroup rootView, final String name) {
         return traverseViews(rootView, false, new ViewTraverseCallback() {
             @Override
-            public boolean onAddResult(View view) {
+            public boolean onAddResult(View view, int deep) {
                 if (view.getId() > 0) {
                     String name_ = ContextUtils.getResNameById(view.getId());
                     return name.equals(name_);
@@ -65,19 +66,47 @@ public class ViewUtils {
         });
     }
 
-    public static <T extends View> List<T> findAllViewByType(ViewGroup rootView, final Class<? extends View> type) {
+    public static <T extends View> List<T> findAllViewByType(ViewGroup rootView, final Class<T> type) {
         return traverseViews(rootView, false, new ViewTraverseCallback() {
             @Override
-            public boolean onAddResult(View view) {
+            public boolean onAddResult(View view, int deep) {
                 return type.isAssignableFrom(view.getClass());
             }
         });
     }
 
+    public static <T extends View> List<T> findAllViewByTypeInSameHierarchy(ViewGroup rootView,
+                                                                            final Class<T> type,
+                                                                            final int minCount) {
+        final List<T> results = new ArrayList<>();
+        traverseViews(rootView, new ViewTraverseCallback2() {
+
+            private int mDeep = 0;
+
+            @Override
+            public boolean onView(View view, int deep) {
+                if (!type.isAssignableFrom(view.getClass())) {
+                    return false;
+                }
+
+                if (mDeep != deep) {
+                    if (results.size() >= minCount) {
+                        return true;
+                    }
+                    mDeep = deep;
+                    results.clear();
+                }
+                results.add((T) view);
+                return false;
+            }
+        });
+        return results.size() >= minCount ? results : new ArrayList<T>();
+    }
+
     public static <T extends View> T findViewByType(ViewGroup rootView, final Class<? extends View> type) {
         List<View> views = traverseViews(rootView, true, new ViewTraverseCallback() {
             @Override
-            public boolean onAddResult(View view) {
+            public boolean onAddResult(View view, int deep) {
                 return type.isAssignableFrom(view.getClass());
             }
         });
@@ -90,8 +119,8 @@ public class ViewUtils {
     public static void printChilds(ViewGroup rootView) {
         traverseViews(rootView, false, new ViewTraverseCallback() {
             @Override
-            public boolean onAddResult(View view) {
-                Logger.v(" child " + view);
+            public boolean onAddResult(View view, int deep) {
+                Logger.v(" child[" + deep + "] " + view);
                 return false;
             }
         });
@@ -101,8 +130,8 @@ public class ViewUtils {
         final List<T> results = new ArrayList<>();
         traverseViews(rootView, new ViewTraverseCallback2() {
             @Override
-            public boolean onView(View view) {
-                if (callback.onAddResult(view)) {
+            public boolean onView(View view, int deep) {
+                if (callback.onAddResult(view, deep)) {
                     results.add((T) view);
                     if (onlyOne) {
                         return true;
@@ -115,15 +144,17 @@ public class ViewUtils {
     }
 
     public static void traverseViews(ViewGroup rootView, ViewTraverseCallback2 callback) {
-        Queue<View> views = new LinkedList<>();
+        Queue<Pair<View, Integer>> views = new LinkedList<>();
         for (int i = 0; i < rootView.getChildCount(); ++i) {
             View child = rootView.getChildAt(i);
-            views.add(child);
+            views.add(Pair.create(child, 0));
         }
 
         while (views.size() > 0) {
-            View view = views.poll();
-            if (callback.onView(view)) {
+            Pair<View, Integer> pair = views.poll();
+            View view = pair.first;
+            int deep = pair.second;
+            if (callback.onView(view, deep)) {
                 return;
             }
 
@@ -131,18 +162,18 @@ public class ViewUtils {
                 ViewGroup viewGroup = (ViewGroup) view;
                 for (int i = 0; i < viewGroup.getChildCount(); ++i) {
                     View child = viewGroup.getChildAt(i);
-                    views.add(child);
+                    views.add(Pair.create(child, deep + 1));
                 }
             }
         }
     }
 
     public interface ViewTraverseCallback {
-        boolean onAddResult(View view);
+        boolean onAddResult(View view, int deep); // Return true to abort.
     }
 
     public interface ViewTraverseCallback2 {
-        boolean onView(View view);
+        boolean onView(View view, int deep); // Return true to abort.
     }
 
     public static Fragment findFragmentByPosition(FragmentManager fragmentManager, ViewPager viewPager, int position) {
@@ -172,6 +203,11 @@ public class ViewUtils {
     public static View nextView(View view) {
         ViewGroup parent = (ViewGroup) view.getParent();
         return parent.getChildAt(parent.indexOfChild(view) + 1);
+    }
+
+    public static void removeView(View view) {
+        ViewGroup parent = (ViewGroup) view.getParent();
+        parent.removeView(view);
     }
 
     public static void showDialog(Context context, String message) {

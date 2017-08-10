@@ -20,6 +20,7 @@ public class PackageNames {
     public static final String CHROME_BETA = "com.chrome.beta";
     public static final String CHROME_CANARY = "com.chrome.canary";
     public static final String CHROME_DEV = "com.chrome.dev";
+    public static final String YOUTUBE = "com.google.android.youtube";
 
     // Shopping
     public static final String SMZDM = "com.smzdm.client.android";

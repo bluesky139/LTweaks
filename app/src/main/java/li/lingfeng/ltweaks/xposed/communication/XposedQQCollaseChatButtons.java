@@ -80,7 +80,7 @@ public class XposedQQCollaseChatButtons extends XposedBase {
             final LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
             ViewUtils.traverseViews((ViewGroup) inputBar.getRootView(), new ViewUtils.ViewTraverseCallback2() {
                 @Override
-                public boolean onView(View view) {
+                public boolean onView(View view, int deep) {
                     if (view instanceof ImageView) {
                         ImageView imageView = (ImageView) view;
                         if ("表情".equals(imageView.getContentDescription())) {

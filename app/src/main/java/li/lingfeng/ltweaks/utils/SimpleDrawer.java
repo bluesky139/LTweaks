@@ -109,6 +109,10 @@ public class SimpleDrawer extends DrawerLayout {
         mNavLayout.addView(mNavList, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
+    public void updateDrawerColor(@ColorInt int color) {
+        mHeaderLayout.setBackgroundColor(color);
+    }
+
     public void updateDrawerColor(@ColorInt int color, @ColorInt int listColor, @ColorInt int textColor) {
         mHeaderLayout.setBackgroundColor(color);
         mNavList.setBackgroundColor(listColor);
