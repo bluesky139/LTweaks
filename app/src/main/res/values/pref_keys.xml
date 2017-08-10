@@ -45,6 +45,7 @@
     <!-- Removed "key_douban_movie_skip_splash" -->
     <string name="key_douban_movie_search">key_douban_movie_search</string>
     <string name="key_douban_movie_remove_bottom_bar">key_douban_movie_remove_bottom_bar</string>
+    <string name="key_douban_movie_remove_ads">key_douban_movie_remove_ads</string>
     <!-- Removed "key_bilibili_subscriptions_goto_top" -->
     <string name="key_bilibili_search">key_bilibili_search</string>
     <string name="key_bilibili_open_link_in_app">key_bilibili_open_link_in_app</string>

@@ -142,6 +142,7 @@ Open source on github: \n
     <string name="pref_douban_movie_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
     <string name="pref_douban_movie_remove_bottom_bar">去底栏</string>
     <string name="pref_douban_movie_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_douban_movie_remove_ads">移除全屏广告</string>
     <string name="pref_category_bilibili">Bilibili</string>
     <string name="pref_bilibili_search">选中文本后去 Bilibili 搜索</string>
     <string name="pref_bilibili_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
