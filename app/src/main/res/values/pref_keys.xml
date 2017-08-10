@@ -17,6 +17,7 @@
     <string name="key_chrome_incognito_search">key_chrome_incognito_search</string>
     <string name="key_chrome_google_cache">key_chrome_google_cache</string>
     <string name="key_chrome_wayback">key_chrome_wayback</string>
+    <string name="key_chrome_go_top_or_bottom">key_chrome_go_top_or_bottom</string>
     <string name="key_youtube_remove_bottom_bar">key_youtube_remove_bottom_bar</string>
 
     <!--Shopping-->

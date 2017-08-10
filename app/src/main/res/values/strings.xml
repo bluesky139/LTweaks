@@ -79,6 +79,8 @@ Open source on github: \n
     <string name="pref_chrome_google_cache_summary">Menu \"View Google cached\" in Chrome and Custom Tab</string>
     <string name="pref_chrome_wayback">Wayback Machine</string>
     <string name="pref_chrome_wayback_summary">Menu \"Wayback Machine\" in Chrome and Custom Tab</string>
+    <string name="pref_chrome_go_top_or_bottom">Go top or bottom</string>
+    <string name="pref_chrome_go_top_or_bottom_summary">Menu \"Go Top\" and \"Go Bottom\" in Chrome and Custom Tab</string>
     <string name="pref_category_youtube">Youtube</string>
     <string name="pref_youtube_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_youtube_remove_bottom_bar_summary">Put them into drawer menu</string>

@@ -102,6 +102,11 @@
             android:key="@string/key_chrome_wayback"
             android:title="@string/pref_chrome_wayback"
             android:summary="@string/pref_chrome_wayback_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_chrome_go_top_or_bottom"
+            android:title="@string/pref_chrome_go_top_or_bottom"
+            android:summary="@string/pref_chrome_go_top_or_bottom_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
