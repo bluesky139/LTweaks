@@ -135,6 +135,8 @@ Open source on github: \n
     <string name="pref_qq_clear_background_path_summary">文件被复制到了 %s</string>
     <string name="pref_qq_exit_directly_by_sharing">分享后直接退出</string>
     <string name="pref_qq_exit_directly_by_sharing_summary">在使用分享后, 按返回键时不退到主界面</string>
+    <string name="pref_qq_fix_image_sharing">修复某些情况下的图片分享</string>
+    <string name="pref_qq_fix_image_sharing_summary">比如: 从 Google+ 分享</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>

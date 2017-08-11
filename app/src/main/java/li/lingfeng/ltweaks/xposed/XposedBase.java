@@ -61,6 +61,29 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
         return XposedHelpers.findAndHookMethod(className, lpparam.classLoader, methodName, parameterTypesAndCallback);
     }
 
+    protected XC_MethodHook.Unhook findAndHookMethodByParameterAndReturnTypes(String cls, Class<?> returnType, Object... parameterTypesAndCallback) {
+        return findAndHookMethodByParameterAndReturnTypes(findClass(cls), returnType, parameterTypesAndCallback);
+    }
+
+    protected XC_MethodHook.Unhook findAndHookMethodByParameterAndReturnTypes(Class<?> cls, Class<?> returnType, Object... parameterTypesAndCallback) {
+        if(parameterTypesAndCallback.length != 0 && parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof XC_MethodHook) {
+            Class<?>[] parameterTypes = new Class<?>[parameterTypesAndCallback.length - 1];
+            System.arraycopy(parameterTypesAndCallback, 0, parameterTypes, 0, parameterTypes.length);
+            Method[] methods = XposedHelpers.findMethodsByExactParameters(cls, returnType, parameterTypes);
+            if (methods.length == 1) {
+                Logger.v("Hook P&R method " + methods[0]);
+                return XposedBridge.hookMethod(methods[0], (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1]);
+            } else {
+                for (Method method : methods) {
+                    Logger.e("P&R method " + method);
+                }
+                throw new AssertionError("Can't hook P&R method in cls " + cls + ", " + methods.length + " methods.");
+            }
+        } else {
+            throw new IllegalArgumentException("no callback defined");
+        }
+    }
+
     protected XC_MethodHook.Unhook findAndHookConstructor(String className, Object... parameterTypesAndCallback) {
         return XposedHelpers.findAndHookConstructor(className, lpparam.classLoader, parameterTypesAndCallback);
     }
@@ -94,35 +117,55 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
     }
 
     protected XC_MethodHook.Unhook findAndHookWithParent(final String className, final Class clsBase, String methodName, Object... parameterTypesAndCallback) {
+        if (clsBase == null) {
+            throw new AssertionError("clsBase is null.");
+        }
+
         if(parameterTypesAndCallback.length != 0 && parameterTypesAndCallback[parameterTypesAndCallback.length - 1] instanceof XC_MethodHook) {
             Class<?>[] parameterTypes = new Class<?>[parameterTypesAndCallback.length - 1];
             System.arraycopy(parameterTypesAndCallback, 0, parameterTypes, 0, parameterTypes.length);
 
             // If method is overridden by extended class, then hook it directly.
-            Class<?> clsExtended = null;
+            Class<?> cls = null;
+            Method method = null;
             try {
-                clsExtended = XposedHelpers.findClass(className, lpparam.classLoader);
-                clsExtended.getDeclaredMethod(methodName, parameterTypes);
+                cls = findClass(className);
+                if (!clsBase.isAssignableFrom(cls)) {
+                    throw new AssertionError("Parent of cls " + cls + " is not " + clsBase);
+                }
+                method = XposedHelpers.findMethodExact(cls, methodName, parameterTypes);
                 Logger.v("Hook " + className + " " + methodName);
-                return findAndHookMethod(clsExtended, methodName, parameterTypesAndCallback);
-            } catch (Throwable e) {}
+                return XposedBridge.hookMethod(method, (XC_MethodHook) parameterTypesAndCallback[parameterTypes.length - 1]);
+            } catch (AssertionError e) {
+                throw e;
+            } catch (Throwable e) {
+                method = null;
+            }
 
             // Try find from parent class.
-            while (clsExtended != null && clsExtended != Object.class) {
-                clsExtended = clsExtended.getSuperclass();
-                if (clsExtended == clsBase) {
-                    break;
-                }
-                if (Modifier.isAbstract(clsExtended.getModifiers())) {
-                    continue;
+            if (cls == null) {
+                cls = clsBase;
+            }
+            while (true) {
+                if (cls != clsBase) {
+                    cls = cls.getSuperclass();
                 }
                 try {
-                    clsExtended.getDeclaredMethod(methodName, parameterTypes);
+                    method = XposedHelpers.findMethodExact(cls, methodName, parameterTypes);
+                    if (Modifier.isAbstract(method.getModifiers()) || cls.isInterface()) {
+                        throw new Exception();
+                    }
                     break;
-                } catch (NoSuchMethodException e) {}
+                } catch (Throwable e) {
+                    method = null;
+                }
+                if (cls == clsBase) {
+                    break;
+                }
             }
-            if (clsExtended == null || clsExtended == Object.class) {
-                clsExtended = clsBase;
+            if (method == null) {
+                throw new AssertionError("Method " + methodName + " even can't be found in clsBase " + clsBase
+                        + ", or it's abstract.");
             }
 
             // Hook parent class or clsBase.
@@ -149,9 +192,8 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                     }
                 }
             };
-            parameterTypesAndCallback[parameterTypesAndCallback.length - 1] = middleHook;
-            Logger.v("Hook " + clsExtended.getName() + " " + methodName + " for " + className);
-            return findAndHookMethod(clsExtended, methodName, parameterTypesAndCallback);
+            Logger.v("Hook " + cls.getName() + " " + methodName + " for " + className);
+            return XposedBridge.hookMethod(method, middleHook);
         } else {
             throw new IllegalArgumentException("no callback defined");
         }

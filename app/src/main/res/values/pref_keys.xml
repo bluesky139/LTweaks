@@ -40,6 +40,7 @@
     <string name="key_qq_clear_background">key_qq_clear_background</string>
     <string name="key_qq_clear_background_path">key_qq_clear_background_path</string>
     <string name="key_qq_exit_directly_by_sharing">key_qq_exit_directly_by_sharing</string>
+    <string name="key_qq_fix_image_sharing">key_qq_fix_image_sharing</string>
 
     <!--Entertainment-->
     <string name="key_douban_movie_url">key_douban_movie_url</string>

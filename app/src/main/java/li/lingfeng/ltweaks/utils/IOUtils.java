@@ -25,7 +25,7 @@ public class IOUtils {
         try {
             stream = MyApplication.instance().getContentResolver().openInputStream(uri);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[15360];
+            byte[] buffer = new byte[524288];
             int read;
             while ((read = stream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, read);
