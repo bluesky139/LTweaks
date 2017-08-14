@@ -135,7 +135,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                 }
                 method = XposedHelpers.findMethodExact(cls, methodName, parameterTypes);
                 Logger.v("Hook " + className + " " + methodName);
-                return XposedBridge.hookMethod(method, (XC_MethodHook) parameterTypesAndCallback[parameterTypes.length - 1]);
+                return XposedBridge.hookMethod(method, (XC_MethodHook) parameterTypesAndCallback[parameterTypes.length]);
             } catch (AssertionError e) {
                 throw e;
             } catch (Throwable e) {
@@ -169,7 +169,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
             }
 
             // Hook parent class or clsBase.
-            final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypesAndCallback.length - 1];
+            final XC_MethodHook hook = (XC_MethodHook) parameterTypesAndCallback[parameterTypes.length];
             XC_MethodHook middleHook = new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

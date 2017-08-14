@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.xposed.entertainment;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,18 @@ public class XposedDoubanMovieRemoveBottomBar extends XposedBase {
         findAndHookActivity(MAIN_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Activity activity = (Activity) param.thisObject;
-                hookBottomBar(activity);
+                final Activity activity = (Activity) param.thisObject;
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            hookBottomBar(activity);
+                        } catch (Throwable e) {
+                            Logger.e("Can't hookBottomBar.");
+                            Logger.stackTrace(e);
+                        }
+                    }
+                });
             }
         });
 
