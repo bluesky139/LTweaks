@@ -15,6 +15,7 @@ import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PackageUtils;
 
 /**
  * Created by lilingfeng on 2017/6/30.
@@ -63,7 +64,8 @@ public class ProcessTextActivity extends Activity {
 
     private void bilibili(String text) {
         Intent intent = new Intent(Intent.ACTION_SEARCH);
-        intent.setClassName(PackageNames.BILIBILI, ClassNames.BILIBILI_SEARCH_ACTIVITY);
+        intent.setClassName(PackageUtils.isPackageInstalled(PackageNames.BILIBILI_IN)
+                ? PackageNames.BILIBILI_IN : PackageNames.BILIBILI, ClassNames.BILIBILI_SEARCH_ACTIVITY);
         intent.putExtra("query", text);
         startActivity(intent);
     }

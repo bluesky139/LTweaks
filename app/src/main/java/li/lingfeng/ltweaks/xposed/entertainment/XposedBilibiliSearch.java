@@ -20,6 +20,7 @@ import li.lingfeng.ltweaks.xposed.XposedCommon;
 public class XposedBilibiliSearch extends XposedCommon {
     @Override
     protected void handleLoadPackage() throws Throwable {
+        hookAndSetComponentExported(PackageNames.BILIBILI_IN, ClassNames.BILIBILI_SEARCH_ACTIVITY);
         hookAndSetComponentExported(PackageNames.BILIBILI, ClassNames.BILIBILI_SEARCH_ACTIVITY);
     }
 }
