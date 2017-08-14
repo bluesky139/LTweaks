@@ -152,6 +152,8 @@ Open source on github: \n
     <string name="pref_bilibili_search_summary">Use floating menu with text selection\nFor Android 6.0+</string>
     <string name="pref_bilibili_open_link_in_app">Open link in app</string>
     <string name="pref_bilibili_open_link_in_app_summary">eg. http://m.bilibili.com/video/av123.html</string>
+    <string name="pref_bilibili_expand_following">Expand all videos in following page</string>
+    <string name="pref_bilibili_expand_following_summary">By click on \"There\'s more videos are collapsed\" automatically</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">Share url</string>
     <string name="pref_steam_share_url_summary">Add a top right menu to use system share</string>

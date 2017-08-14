@@ -32,6 +32,11 @@
             android:key="@string/key_bilibili_open_link_in_app"
             android:title="@string/pref_bilibili_open_link_in_app"
             android:summary="@string/pref_bilibili_open_link_in_app_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_bilibili_expand_following"
+            android:title="@string/pref_bilibili_expand_following"
+            android:summary="@string/pref_bilibili_expand_following_summary" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_steam">
