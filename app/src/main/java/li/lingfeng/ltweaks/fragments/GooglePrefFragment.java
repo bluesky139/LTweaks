@@ -53,7 +53,7 @@ public class GooglePrefFragment extends BasePrefFragment {
         PackageUtils.tryUninstallPackage(packageName, appName, getActivity());
     }
 
-    @PreferenceChange(prefs = R.string.key_google_plus_remove_bottom_bar)
+    @PreferenceChange(prefs = R.string.key_google_plus_remove_bottom_bar, refreshAtStart = true)
     private void setGooglePlusNewPostsPosition(Preference preference, boolean enabled) {
         SwitchPreference newPostsPreference = findSwitchPreference(R.string.key_google_plus_top_right_refresh);
         if (!enabled) {
