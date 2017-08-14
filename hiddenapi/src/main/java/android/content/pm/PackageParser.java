@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class PackageParser {
     public final static class Package {
         public String packageName;
+        public ApplicationInfo applicationInfo;
     }
 
     public final static class Activity extends Component<ActivityIntentInfo> {

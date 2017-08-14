@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed;
 
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageParser;
 
 import java.lang.reflect.Field;
@@ -37,6 +38,22 @@ public abstract class XposedCommon extends XposedBase {
                 Logger.i("Set " + componentName + " exported to true.");
                 info.exported = true;
                 info.launchMode = ActivityInfo.LAUNCH_MULTIPLE;
+            }
+        });
+    }
+
+    protected void hookAndSetAppDebuggable(final String packageName) {
+        hookAllMethods(ClassNames.PACKAGE_PARSER, "parseBaseApplication", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                PackageParser.Package owner = (PackageParser.Package) param.args[0];
+                if (!owner.packageName.equals(packageName)) {
+                    return;
+                }
+
+                Logger.i("Set " + packageName + " debuggable.");
+                ApplicationInfo appInfo = owner.applicationInfo;
+                appInfo.flags |= ApplicationInfo.FLAG_DEBUGGABLE;
             }
         });
     }
