@@ -120,4 +120,13 @@
             android:title="@string/pref_selection_action_mode_original"
             android:summary="@string/pref_selection_action_mode_original_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_app_info">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_app_info_open_app_data_folder"
+            android:title="@string/pref_app_info_open_app_data_folder"
+            android:summary="@string/pref_app_info_open_app_data_folder_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

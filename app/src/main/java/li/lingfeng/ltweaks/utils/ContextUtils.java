@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Binder;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.prefs.PackageNames;
@@ -256,9 +257,21 @@ public class ContextUtils {
     }
 
     public static void startBrowser(Context context, String url) {
-        Logger.i("startBrowser " + url);
+        Logger.v("startBrowser " + url);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    public static void openFolder(Context context, String path) {
+        Logger.v("openFolder " + path);
+        Uri uri = Uri.parse(path);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "resource/folder");
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "Error.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

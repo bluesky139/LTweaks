@@ -76,4 +76,5 @@
     <string name="key_trust_agent_wifi_aps">key_google_smart_lock_with_wifi_aps</string>
     <string name="key_solid_explorer_url_replacers">key_solid_explorer_url_replacers</string>
     <string name="key_selection_action_mode_original">key_selection_action_mode_original</string>
+    <string name="key_app_info_open_app_data_folder">key_app_info_open_app_data_folder</string>
 </resources>

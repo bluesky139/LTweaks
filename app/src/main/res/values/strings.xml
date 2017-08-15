@@ -213,6 +213,9 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="pref_category_selection_action_mode">Selection Floating Menu</string>
     <string name="pref_selection_action_mode_original">Show all menu items</string>
     <string name="pref_selection_action_mode_original_summary">Some items may be hidden by app itself\nFor Android 6.0+</string>
+    <string name="pref_category_app_info">App Info</string>
+    <string name="pref_app_info_open_app_data_folder">Open App Data Folder</string>
+    <string name="pref_app_info_open_app_data_folder_summary">Generally, it will open \"/data/data/[package_name]\", you need a file explorer which supports root access, tested with Solid Explorer\nAdd as menu</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
