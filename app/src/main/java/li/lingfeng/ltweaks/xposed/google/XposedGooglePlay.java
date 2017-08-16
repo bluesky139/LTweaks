@@ -93,8 +93,7 @@ public class XposedGooglePlay extends XposedBase {
                         if (title.isEmpty()) {
                             throw new Exception("Title is empty.");
                         }
-                        String url = "https://forum.mobilism.org/search.php?keywords=" + title + "&sr=topics&sf=titleonly&fid%5B%5D=398";
-                        ContextUtils.startBrowser(activity, url);
+                        ContextUtils.searchInMobilism(activity, title);
                     } else {
                         Logger.i("Menu is clicked .");
                         Object navigationMgr = fNavigationMgr.get(param.thisObject);
@@ -139,7 +138,7 @@ public class XposedGooglePlay extends XposedBase {
                             }
                         }
                         Logger.i("Got package name " + maxStr);
-                        openAppInMarket(activity, maxStr, markets.get(item));
+                        ContextUtils.openAppInMarket(activity, maxStr, markets.get(item));
                     }
                 } catch (Exception e) {
                     Logger.e("Can't view in other market, " + e);
@@ -198,84 +197,5 @@ public class XposedGooglePlay extends XposedBase {
                 break;
             }
         }
-    }
-
-    private void openAppInMarket(Activity activity, String app, String market) throws Throwable {
-        boolean hasMarket = false;
-        try {
-            ApplicationInfo info = activity.getPackageManager().getApplicationInfo(market, 0);
-            hasMarket = info.enabled;
-        } catch (PackageManager.NameNotFoundException e) {
-        }
-        if (hasMarket) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setPackage(market);
-            intent.setData(Uri.parse("market://details?id=" + app));
-            activity.startActivity(intent);
-        } else {
-            openAppInWebMarket(activity, app, market);
-        }
-    }
-
-    private void openAppInWebMarket(final Activity activity, String app, String market) throws Throwable {
-        if (market.equals(PackageNames.COOLAPK)) {
-            ContextUtils.startBrowser(activity, "http://coolapk.com/apk/" + app);
-        } else if (market.equals(PackageNames.APKPURE)) {
-            getApkPureUrl(activity, app, new Callback.C1<String>() {
-                @Override
-                public void onResult(String url) {
-                    if (url != null) {
-                        ContextUtils.startBrowser(activity, url);
-                    } else {
-                        Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } else {
-            throw new Exception("Unknown market in openAppInWebMarket().");
-        }
-    }
-
-    private void getApkPureUrl(final Activity activity, final String app, final Callback.C1<String> callback) {
-        LoadingDialog.show(activity);
-        Request request = new Request.Builder().url("https://m.apkpure.com/search?q=" + app).build();
-        new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Logger.e("getApkPureUrl onFailure " + e);
-                gotApkPureUrl(activity, null, callback);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.code() == 200) {
-                    String content = response.body().string();
-                    Pattern pattern = Pattern.compile("<a class=\"dd\" href=\"(/.+/(.+))\">");
-                    Matcher matcher = pattern.matcher(content);
-                    while (matcher.find()) {
-                        String href = matcher.group(1);
-                        String packageName = matcher.group(2);
-                        if (packageName.equals(app)) {
-                            Logger.i("Got " + href);
-                            gotApkPureUrl(activity, "https://m.apkpure.com" + href, callback);
-                            return;
-                        }
-                    }
-                } else {
-                    Logger.e("getApkPureUrl onResponse " + response);
-                }
-                gotApkPureUrl(activity, null, callback);
-            }
-        });
-    }
-
-    private void gotApkPureUrl(Activity activity, final String url, final Callback.C1<String> callback) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                callback.onResult(url);
-                LoadingDialog.dismiss();
-            }
-        });
     }
 }

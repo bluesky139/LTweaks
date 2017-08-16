@@ -128,5 +128,10 @@
             android:key="@string/key_app_info_open_app_data_folder"
             android:title="@string/pref_app_info_open_app_data_folder"
             android:summary="@string/pref_app_info_open_app_data_folder_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_app_info_go_market"
+            android:title="@string/pref_app_info_go_market"
+            android:summary="@string/pref_app_info_go_market_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

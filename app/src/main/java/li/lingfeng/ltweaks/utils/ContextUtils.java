@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -15,8 +16,17 @@ import android.os.Binder;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import li.lingfeng.ltweaks.MyApplication;
+import li.lingfeng.ltweaks.activities.LoadingDialog;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by smallville on 2017/1/25.
@@ -273,5 +283,90 @@ public class ContextUtils {
         } else {
             Toast.makeText(context, "Error.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void openAppInMarket(Activity activity,
+                                       String app, // app package name
+                                       String market // market package name
+    ) throws Throwable {
+        if (PackageUtils.isPackageInstalled(market)) {
+            Logger.v("Open app in native market " + app + ", " + market);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setPackage(market);
+            intent.setData(Uri.parse("market://details?id=" + app));
+            activity.startActivity(intent);
+        } else {
+            openAppInWebMarket(activity, app, market);
+        }
+    }
+
+    private static void openAppInWebMarket(final Activity activity, String app, String market) throws Throwable {
+        Logger.v("Open app in web market " + app + ", " + market);
+        if (market.equals(PackageNames.GOOGLE_PLAY)) {
+            startBrowser(activity, "https://play.google.com/store/apps/details?id=" + app);
+        } else if (market.equals(PackageNames.COOLAPK)) {
+            startBrowser(activity, "http://coolapk.com/apk/" + app);
+        } else if (market.equals(PackageNames.APKPURE)) {
+            getApkPureUrl(activity, app, new Callback.C1<String>() {
+                @Override
+                public void onResult(String url) {
+                    if (url != null) {
+                        startBrowser(activity, url);
+                    } else {
+                        Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            throw new Exception("Unknown market in openAppInWebMarket().");
+        }
+    }
+
+    private static void getApkPureUrl(final Activity activity, final String app, final Callback.C1<String> callback) {
+        LoadingDialog.show(activity);
+        Request request = new Request.Builder().url("https://m.apkpure.com/search?q=" + app).build();
+        new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Logger.e("getApkPureUrl onFailure " + e);
+                gotApkPureUrl(activity, null, callback);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String content = response.body().string();
+                    Pattern pattern = Pattern.compile("<a class=\"dd\" href=\"(/.+/(.+))\">");
+                    Matcher matcher = pattern.matcher(content);
+                    while (matcher.find()) {
+                        String href = matcher.group(1);
+                        String packageName = matcher.group(2);
+                        if (packageName.equals(app)) {
+                            Logger.i("Got " + href);
+                            gotApkPureUrl(activity, "https://m.apkpure.com" + href, callback);
+                            return;
+                        }
+                    }
+                } else {
+                    Logger.e("getApkPureUrl onResponse " + response);
+                }
+                gotApkPureUrl(activity, null, callback);
+            }
+        });
+    }
+
+    private static void gotApkPureUrl(Activity activity, final String url, final Callback.C1<String> callback) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.onResult(url);
+                LoadingDialog.dismiss();
+            }
+        });
+    }
+
+    public static void searchInMobilism(Activity activity, CharSequence keywords) {
+        String url = "https://forum.mobilism.org/search.php?keywords=" + keywords + "&sr=topics&sf=titleonly&fid%5B%5D=398";
+        startBrowser(activity, url);
     }
 }

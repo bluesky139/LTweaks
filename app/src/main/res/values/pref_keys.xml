@@ -77,4 +77,5 @@
     <string name="key_solid_explorer_url_replacers">key_solid_explorer_url_replacers</string>
     <string name="key_selection_action_mode_original">key_selection_action_mode_original</string>
     <string name="key_app_info_open_app_data_folder">key_app_info_open_app_data_folder</string>
+    <string name="key_app_info_go_market">key_app_info_go_market</string>
 </resources>

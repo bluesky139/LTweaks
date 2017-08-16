@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +21,15 @@ public class Utils {
     public static String[] splitByLastChar(String str, char ch) {
         int pos = str.lastIndexOf(ch);
         return new String[] { str.substring(0, pos), str.substring(pos + 1) };
+    }
+
+    public static boolean pairContains(Pair[] pairs, Object o, boolean isFirst) {
+        for (Pair pair : pairs) {
+            if (isFirst ? pair.first.equals(o) : pair.second.equals(o)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static MenuItem findMenuItemByTitle(Menu menu, final String title) {

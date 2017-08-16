@@ -41,13 +41,13 @@ public class PackageNames {
     public static final String DOUBAN_MOVIE = "com.douban.movie";
     public static final String BILIBILI = "tv.danmaku.bili";
     public static final String BILIBILI_IN = "com.bilibili.app.in";
-    public static final String COOLAPK = "com.coolapk.market";
-    public static final String APKPURE = "com.apkpure.aegon";
     public static final String STEAM = "com.valvesoftware.android.steam.community";
 
-    // System
+    // System / Tool
     public static final String TEXT_AIDE = "com.arjerine.textxposed";
     public static final String YOUDAO_DICT = "com.youdao.dict";
+    public static final String COOLAPK = "com.coolapk.market";
+    public static final String APKPURE = "com.apkpure.aegon";
     public static final String ANDROID_SYSTEM_UI = "com.android.systemui";
     public static final String ANDROID = "android";
     public static final String ANDROID_SETTINGS = "com.android.settings";
