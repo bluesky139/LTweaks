@@ -15,6 +15,7 @@ import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.PackageUtils;
+import li.lingfeng.ltweaks.utils.Utils;
 
 /**
  * Created by lilingfeng on 2017/7/18.
@@ -29,7 +30,7 @@ public class ChromeIncognitoActivity extends Activity {
         String url = null;
         if (Intent.ACTION_PROCESS_TEXT.equals(action)) {
             String text = getIntent().getStringExtra(Intent.EXTRA_PROCESS_TEXT);
-            if (Patterns.WEB_URL.matcher(text).matches()) {
+            if (Utils.isUrl(text)) {
                 Logger.i("Incognito url: " + text);
                 url = text;
             } else {

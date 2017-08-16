@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,6 +31,12 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static boolean isUrl(String str) {
+        return Patterns.WEB_URL.matcher(str).matches()
+                && (str.toLowerCase().startsWith("http://")
+                || str.toLowerCase().startsWith("https://"));
     }
 
     public static MenuItem findMenuItemByTitle(Menu menu, final String title) {

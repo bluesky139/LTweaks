@@ -75,7 +75,7 @@ public class XposedChromeBase extends XposedBase {
 
     protected MenuItem addMenu(Menu menu, String url, String title, int order) {
         MenuItem item = Utils.findMenuItemByTitle(menu, title);
-        if (Patterns.WEB_URL.matcher(url).matches()) {
+        if (Utils.isUrl(url)) {
             if (item == null) {
                 Logger.i("Add menu \"" + title + "\"");
                 item = menu.add(Menu.NONE, Menu.NONE, order, title);

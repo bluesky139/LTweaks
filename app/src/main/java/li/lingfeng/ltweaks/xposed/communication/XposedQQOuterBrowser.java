@@ -11,6 +11,7 @@ import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.Utils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -39,7 +40,7 @@ public class XposedQQOuterBrowser extends XposedBase {
 
                 Activity activity = (Activity) param.thisObject;
                 String url = intent.getStringExtra("url");
-                if (Patterns.WEB_URL.matcher(url).matches()) {
+                if (Utils.isUrl(url)) {
                     Logger.i("QQ url " + url);
                     ContextUtils.startBrowser(activity, url);
                     param.setResult(null);
