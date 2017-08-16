@@ -1,6 +1,11 @@
 package li.lingfeng.ltweaks.xposed;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
+
+import com.crossbowffs.remotepreferences.RemotePreferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
@@ -66,13 +73,31 @@ public abstract class Xposed implements IXposedHookLoadPackage {
     protected abstract void addModulePrefs();
 
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (isEmptyModules()) {
             addModulesForAll();
             addModules();
             addModulePrefs();
         }
 
+        // Use remote preferences for com.android.settings, to fix reading preference denied by SELinux
+        if (lpparam.packageName.equals(PackageNames.ANDROID_SETTINGS)) {
+            XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    Application app = (Application) param.thisObject;
+                    RemotePreferences pref = new RemotePreferences(app,
+                            "li.lingfeng.ltweaks.mainpreferences", "li.lingfeng.ltweaks_preferences");
+                    handleLoadPackageByPrefs(lpparam, pref);
+                }
+            });
+        } else {
+            handleLoadPackageByPrefs(lpparam, Prefs.instance());
+        }
+    }
+
+    private void handleLoadPackageByPrefs(XC_LoadPackage.LoadPackageParam lpparam,
+                                          SharedPreferences sharedPreferences) {
         Set<Class<? extends XposedBase>> modules = getModules(lpparam.packageName);
         if (modules == null) {
             return;
@@ -84,7 +109,7 @@ public abstract class Xposed implements IXposedHookLoadPackage {
                 Set<String> prefs = getModulePrefs(cls);
                 if (prefs != null) {
                     for (String pref : prefs) {
-                        if (Prefs.instance().getBoolean(pref, false)) {
+                        if (sharedPreferences.getBoolean(pref, false)) {
                             enabledPrefs.add(pref);
                         }
                     }

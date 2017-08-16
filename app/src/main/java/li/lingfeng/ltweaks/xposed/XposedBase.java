@@ -31,7 +31,8 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         this.lpparam = lpparam;
-        if (!lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)) {
+        if (!lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)
+                && !lpparam.packageName.equals(PackageNames.ANDROID)) {
             findAndHookMethod(getApplicationClass(), "onCreate", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
