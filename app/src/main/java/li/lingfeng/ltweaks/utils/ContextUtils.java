@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -271,6 +272,20 @@ public class ContextUtils {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    public static void selectPicture(final Activity activity, final int requestCode) {
+        Logger.v("selectPicture with requestCode " + requestCode);
+        PermissionUtils.requestPermissions(activity, new PermissionUtils.ResultCallback() {
+            @Override
+            public void onResult(boolean ok) {
+                if (ok) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    activity.startActivityForResult(intent, requestCode);
+                }
+            }
+        }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     public static void openFolder(Context context, String path) {

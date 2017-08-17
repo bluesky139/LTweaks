@@ -1,10 +1,18 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -17,22 +25,25 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ActivityRequestCode;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
+import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.ReflectedGlide;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
@@ -136,6 +147,45 @@ public class XposedCoolapk extends XposedBase {
                 if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
                     Logger.i("Back is pressed for closing drawer.");
                     mDrawerLayout.closeDrawers();
+                    param.setResult(null);
+                }
+            }
+        });
+
+        findAndHookActivity(MAIN_ACTIVITY, "onActivityResult", int.class, int.class, Intent.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                int requestCode = (int) param.args[0];
+                int resultCode = (int) param.args[1];
+                Intent data = (Intent) param.args[2];
+                if (requestCode == ActivityRequestCode.COOLAPK_SELECT_HEADER_BACKGROUND) {
+                    if (resultCode == Activity.RESULT_OK) {
+                        Uri uri = data.getData();
+                        String filepath = getDrawerHeaderBackgroundPath();
+                        File file = new File(filepath);
+                        Logger.i("Crop and save image " + uri + " to " + filepath);
+                        try {
+                            Bitmap oldBitmap = null;
+                            if (mDrawerLayout.getHeaderLayout().getBackground() instanceof BitmapDrawable) {
+                                oldBitmap = ((BitmapDrawable) mDrawerLayout.getHeaderLayout().getBackground()).getBitmap();
+                            }
+                            Bitmap bitmap = IOUtils.createCenterCropBitmapFromUri(uri,
+                                    mDrawerLayout.getHeaderLayout().getWidth(),
+                                    mDrawerLayout.getHeaderLayout().getHeight());
+                            byte[] bytes = IOUtils.bitmap2bytes(bitmap, Bitmap.CompressFormat.JPEG);
+                            FileUtils.writeByteArrayToFile(file, bytes);
+                            BitmapDrawable drawable = new BitmapDrawable(mActivity.getResources(), bitmap);
+                            mDrawerLayout.updateHeaderBackground(drawable);
+                            updateHeaderFilter();
+                            if (oldBitmap != null) {
+                                oldBitmap.recycle();
+                            }
+                        } catch (Throwable e) {
+                            Logger.e("Error to crop and save image, " + e);
+                            Logger.stackTrace(e);
+                            Toast.makeText(mActivity, "Error.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     param.setResult(null);
                 }
             }
@@ -263,11 +313,44 @@ public class XposedCoolapk extends XposedBase {
             };
             SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(icon, text, listener);
 
+            // drawer header background click
+            View.OnClickListener headerBackgroundClick = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(mActivity)
+                            .setItems(new String[]{"Use default background", "Select a custom background"},
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (which == 0) {
+                                                Bitmap oldBitmap = null;
+                                                if (mDrawerLayout.getHeaderLayout().getBackground() instanceof BitmapDrawable) {
+                                                    oldBitmap = ((BitmapDrawable) mDrawerLayout.getHeaderLayout().getBackground()).getBitmap();
+                                                }
+                                                int color = ContextUtils.getColorFromTheme(mActivity.getTheme(), "colorPrimary");
+                                                mDrawerLayout.updateHeaderBackground(color);
+                                                if (oldBitmap != null) {
+                                                    oldBitmap.recycle();
+                                                }
+                                                File file = new File(getDrawerHeaderBackgroundPath());
+                                                if (file.exists()) {
+                                                    file.delete();
+                                                }
+                                            } else {
+                                                ContextUtils.selectPicture(mActivity, ActivityRequestCode.COOLAPK_SELECT_HEADER_BACKGROUND);
+                                            }
+                                        }
+                                    })
+                            .create()
+                            .show();
+                }
+            };
+
             // create drawer
             FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(mActivity);
             SimpleDrawer.NavItem[] navItemArray = new SimpleDrawer.NavItem[navItems.size()];
             mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems.toArray(navItemArray),
-                    headerItem, true);
+                    headerItem, true, headerBackgroundClick);
             updateDrawerColor(mActivity.getTheme());
             mRootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
@@ -289,10 +372,23 @@ public class XposedCoolapk extends XposedBase {
                     Logger.stackTrace(e);
                 }
             }
+
+            // drawer header background
+            String headerBackgroundPath = getDrawerHeaderBackgroundPath();
+            if (new File(headerBackgroundPath).exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(headerBackgroundPath);
+                BitmapDrawable drawable = new BitmapDrawable(mActivity.getResources(), bitmap);
+                mDrawerLayout.updateHeaderBackground(drawable);
+            }
+            updateHeaderFilter();
         } else {
             mDrawerLayout.updateClickObjs(tabViews.toArray());
             Logger.i("drawer click views are updated.");
         }
+    }
+
+    private String getDrawerHeaderBackgroundPath() {
+        return mActivity.getFilesDir() + "/ltweaks_drawer_header_background";
     }
 
     private void updateDrawerColor(Resources.Theme theme) {
@@ -300,8 +396,27 @@ public class XposedCoolapk extends XposedBase {
             int color = ContextUtils.getColorFromTheme(theme, "colorPrimary");
             int listColor = ContextUtils.getColorFromTheme(theme, "mainBackgroundColor");
             int textColor = ContextUtils.getColorFromTheme(theme, android.R.attr.textColorPrimary);
-            mDrawerLayout.updateDrawerColor(color, listColor, textColor);
+            if (!(mDrawerLayout.getHeaderLayout().getBackground() instanceof BitmapDrawable)) {
+                mDrawerLayout.updateHeaderBackground(color);
+            }
+            mDrawerLayout.updateNavListBackground(listColor);
+            mDrawerLayout.updateNavListTextColor(textColor);
             Logger.i("Drawer color is updated, " + String.format("%08X", color));
+
+            updateHeaderFilter();
+        }
+    }
+
+    private void updateHeaderFilter() {
+        SharedPreferences pref = mActivity.getSharedPreferences("coolapk_preferences_v7", 0);
+        String themeName = pref.getString("theme_name", "green");
+        boolean isNight = themeName.equals("night");
+        if (isNight) {
+            mDrawerLayout.getHeaderLayout().getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+            mDrawerLayout.getHeaderImage().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        } else {
+            mDrawerLayout.getHeaderLayout().getBackground().clearColorFilter();
+            mDrawerLayout.getHeaderImage().clearColorFilter();
         }
     }
 

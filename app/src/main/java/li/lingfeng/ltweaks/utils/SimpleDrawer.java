@@ -46,11 +46,11 @@ public class SimpleDrawer extends DrawerLayout {
     protected NavItem mHeaderItem;
 
     public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem) {
-        this(context, mainView, navItems, headerItem, false);
+        this(context, mainView, navItems, headerItem, false, null);
     }
 
     public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem,
-                        boolean useCircleHeaderImage) {
+                        boolean useCircleHeaderImage, Object headerBackgroundClick) {
         super(context);
         mNavItems = navItems;
         mHeaderItem = headerItem;
@@ -60,7 +60,7 @@ public class SimpleDrawer extends DrawerLayout {
         mNavLayout.setOrientation(LinearLayout.VERTICAL);
         mNavLayout.setBackgroundColor(Color.WHITE);
 
-        createHeaderView(useCircleHeaderImage);
+        createHeaderView(useCircleHeaderImage, headerBackgroundClick);
         createListView();
 
         LayoutParams params = new LayoutParams(dp2px(280), LayoutParams.MATCH_PARENT);
@@ -68,19 +68,13 @@ public class SimpleDrawer extends DrawerLayout {
         addView(mNavLayout, params);
     }
 
-    protected void createHeaderView(boolean useCircleHeaderImage) {
+    protected void createHeaderView(boolean useCircleHeaderImage, final Object headerBackgroundClick) {
         mHeaderLayout = new LinearLayout(getContext());
         mHeaderLayout.setBackgroundColor(Color.parseColor("#4CAF50"));
         mHeaderLayout.setGravity(Gravity.BOTTOM);
         mHeaderLayout.setOrientation(LinearLayout.VERTICAL);
         int padding = dp2px(16);
         mHeaderLayout.setPadding(padding, padding, padding, padding);
-        mHeaderLayout.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
 
         mHeaderImage = useCircleHeaderImage ? new CircleImageView(getContext()) : new ImageView(getContext());
         mHeaderImage.setPadding(0, padding, 0, 0);
@@ -99,6 +93,22 @@ public class SimpleDrawer extends DrawerLayout {
         mHeaderText.setTextSize(14);
         mHeaderText.setTextColor(Color.WHITE);
         mHeaderLayout.addView(mHeaderText, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        mHeaderLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.i("Drawer header background is clicked.");
+                if (headerBackgroundClick == null) {
+                    return;
+                }
+                if (headerBackgroundClick instanceof View) {
+                    ((View) headerBackgroundClick).performClick();
+                } else if (headerBackgroundClick instanceof View.OnClickListener) {
+                    ((View.OnClickListener) headerBackgroundClick).onClick(v);
+                } else {
+                    Logger.e("Unknown type of click obj on drawer header background.");
+                }
+            }
+        });
 
         mNavLayout.addView(mHeaderLayout, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, dp2px(160)));
     }
@@ -114,14 +124,20 @@ public class SimpleDrawer extends DrawerLayout {
         mNavLayout.addView(mNavList, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
-    public void updateDrawerColor(@ColorInt int color) {
+    public void updateHeaderBackground(Drawable drawable) {
+        mHeaderLayout.setBackgroundDrawable(drawable);
+    }
+
+    public void updateHeaderBackground(@ColorInt int color) {
         mHeaderLayout.setBackgroundColor(color);
     }
 
-    public void updateDrawerColor(@ColorInt int color, @ColorInt int listColor, @ColorInt int textColor) {
-        mHeaderLayout.setBackgroundColor(color);
-        mNavList.setBackgroundColor(listColor);
-        mNavListAdapter.setTextColor(textColor);
+    public void updateNavListBackground(@ColorInt int color) {
+        mNavList.setBackgroundColor(color);
+    }
+
+    public void updateNavListTextColor(@ColorInt int color) {
+        mNavListAdapter.setTextColor(color);
     }
 
     public void updateClickObjs(Object[] clickObjs) {
@@ -132,6 +148,10 @@ public class SimpleDrawer extends DrawerLayout {
 
     public ImageView getHeaderImage() {
         return mHeaderImage;
+    }
+
+    public LinearLayout getHeaderLayout() {
+        return mHeaderLayout;
     }
 
     public static class NavItem {

@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -20,6 +21,7 @@ import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.prefs.ActivityRequestCode;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.PermissionUtils;
@@ -69,7 +71,7 @@ public class CommunicationPrefFragment extends BasePrefFragment {
                     startActivityForResult(intent, ActivityRequestCode.QQ_CLEAR_IMAGE_CHOOSER);
                 }
             }
-        });
+        }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     @Override

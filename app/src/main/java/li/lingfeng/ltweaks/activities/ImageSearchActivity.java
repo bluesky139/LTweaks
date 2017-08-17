@@ -114,13 +114,13 @@ public class ImageSearchActivity extends AppCompatActivity {
                     } else if ("image/webp".equals(mimeType)) {
                         compressFormat = Bitmap.CompressFormat.WEBP;
                     }
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    if (scaledBitmap.compress(compressFormat, 100, outputStream)) {
-                        bytes = outputStream.toByteArray();
+                    byte[] scaledBytes = IOUtils.bitmap2bytes(scaledBitmap, compressFormat);
+                    if (scaledBytes != null) {
+                        bytes = scaledBytes;
                         Logger.d("Resized image " + compressFormat);
                     }
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 Logger.w("Can't resize image, " + e);
                 Logger.stackTrace(e);
             }

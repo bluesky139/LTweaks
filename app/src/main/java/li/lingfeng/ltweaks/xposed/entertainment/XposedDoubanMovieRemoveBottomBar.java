@@ -91,7 +91,9 @@ public class XposedDoubanMovieRemoveBottomBar extends XposedBase {
 
         FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
         mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
-        mDrawerLayout.updateDrawerColor(Color.parseColor("#51C061"), Color.parseColor("#F2F1EE"), Color.BLACK);
+        mDrawerLayout.updateHeaderBackground(Color.parseColor("#51C061"));
+        mDrawerLayout.updateNavListBackground(Color.parseColor("#F2F1EE"));
+        mDrawerLayout.updateNavListTextColor(Color.BLACK);
         ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
         rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));

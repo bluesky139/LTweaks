@@ -2,25 +2,17 @@ package li.lingfeng.ltweaks.xposed.communication;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.util.LruCache;
-import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
@@ -28,8 +20,8 @@ import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
+import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.utils.Utils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -94,7 +86,7 @@ public class XposedQQChatBackground extends XposedBase {
         });
     }
 
-    private void handleLayoutChanged(Activity activity) {
+    private void handleLayoutChanged(Activity activity) throws Throwable {
         int idInputBar = ContextUtils.getIdId("inputBar");
         LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
         ViewGroup viewGroup = (ViewGroup) inputBar.getParent();
@@ -114,7 +106,10 @@ public class XposedQQChatBackground extends XposedBase {
 
         if (drawable == null) {
             if (mLargestDrawable != null && mLargestDrawable.getBitmap().getHeight() > height) {
-                Bitmap bitmap = Utils.bitmapCopy(mLargestDrawable.getBitmap(), 0, 0, width, height);
+                Bitmap bitmap = IOUtils.bitmapCopy(mLargestDrawable.getBitmap(), 0, 0, width, height);
+                if (bitmap == null) {
+                    return;
+                }
                 drawable = new BitmapDrawable(bitmap);
                 mBackgroundDrawables.put(height, drawable);
             }
@@ -130,7 +125,7 @@ public class XposedQQChatBackground extends XposedBase {
                     Logger.e("Can't access file " + filepath);
                     return;
                 }
-                Bitmap dest = Utils.createCenterCropBitmapFromFile(filepath, width, height);
+                Bitmap dest = IOUtils.createCenterCropBitmapFromFile(filepath, width, height);
                 if (dest == null) {
                     return;
                 }

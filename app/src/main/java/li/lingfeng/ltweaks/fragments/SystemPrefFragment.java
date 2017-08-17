@@ -284,9 +284,9 @@ public class SystemPrefFragment extends BasePrefFragment {
                 Intent intent = new Intent(getActivity(), TrustAgentWifiSettings.class);
                 getActivity().startActivity(intent);
             }
-            return;
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @PreferenceClick(prefs = R.string.key_solid_explorer_url_replacers)

@@ -8,4 +8,5 @@ public class ActivityRequestCode {
 
     public static final int KEYGUARD = 111;
     public static final int QQ_CLEAR_IMAGE_CHOOSER = 112;
+    public static final int COOLAPK_SELECT_HEADER_BACKGROUND = 113;
 }
