@@ -1,10 +1,9 @@
 package li.lingfeng.ltweaks;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -14,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.io.File;
 
 import li.lingfeng.ltweaks.utils.PermissionUtils;
 
@@ -27,6 +28,13 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            File file = new File(Environment.getDataDirectory(), "data/" + getPackageName() + "/shared_prefs/" + getPackageName() + "_preferences.xml");
+            if (file.exists()) {
+                file.setReadable(true, false);
+            }
+        } catch (Throwable e) {}
+
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
