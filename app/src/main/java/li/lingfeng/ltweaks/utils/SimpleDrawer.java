@@ -46,6 +46,11 @@ public class SimpleDrawer extends DrawerLayout {
     protected NavItem mHeaderItem;
 
     public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem) {
+        this(context, mainView, navItems, headerItem, false);
+    }
+
+    public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem,
+                        boolean useCircleHeaderImage) {
         super(context);
         mNavItems = navItems;
         mHeaderItem = headerItem;
@@ -55,7 +60,7 @@ public class SimpleDrawer extends DrawerLayout {
         mNavLayout.setOrientation(LinearLayout.VERTICAL);
         mNavLayout.setBackgroundColor(Color.WHITE);
 
-        createHeaderView();
+        createHeaderView(useCircleHeaderImage);
         createListView();
 
         LayoutParams params = new LayoutParams(dp2px(280), LayoutParams.MATCH_PARENT);
@@ -63,7 +68,7 @@ public class SimpleDrawer extends DrawerLayout {
         addView(mNavLayout, params);
     }
 
-    protected void createHeaderView() {
+    protected void createHeaderView(boolean useCircleHeaderImage) {
         mHeaderLayout = new LinearLayout(getContext());
         mHeaderLayout.setBackgroundColor(Color.parseColor("#4CAF50"));
         mHeaderLayout.setGravity(Gravity.BOTTOM);
@@ -77,7 +82,7 @@ public class SimpleDrawer extends DrawerLayout {
             }
         });
 
-        mHeaderImage = new ImageView(getContext());
+        mHeaderImage = useCircleHeaderImage ? new CircleImageView(getContext()) : new ImageView(getContext());
         mHeaderImage.setPadding(0, padding, 0, 0);
         mHeaderImage.setImageDrawable(mHeaderItem.mIcon);
         mHeaderImage.setOnClickListener(new OnClickListener() {

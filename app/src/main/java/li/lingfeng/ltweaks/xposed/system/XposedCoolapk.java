@@ -267,7 +267,7 @@ public class XposedCoolapk extends XposedBase {
             FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(mActivity);
             SimpleDrawer.NavItem[] navItemArray = new SimpleDrawer.NavItem[navItems.size()];
             mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems.toArray(navItemArray),
-                    headerItem);
+                    headerItem, true);
             updateDrawerColor(mActivity.getTheme());
             mRootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
