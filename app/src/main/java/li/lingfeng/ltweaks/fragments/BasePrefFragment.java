@@ -41,9 +41,6 @@ public class BasePrefFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
-        }
         setHasOptionsMenu(true);
     }
 
@@ -53,6 +50,7 @@ public class BasePrefFragment extends PreferenceFragment
         listenPreferenceChanges();
         listenPreferenceClicks();
         listenPreferenceLongClicks();
+        Prefs.makeWorldReadable();
     }
 
     private void listenPreferenceChanges() {
