@@ -1,7 +1,6 @@
 package li.lingfeng.ltweaks.fragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -12,19 +11,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.lib.PreferenceChange;
 
 /**
  * Created by smallville on 2016/12/24.
@@ -41,6 +39,8 @@ public class BasePrefFragment extends PreferenceFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
+        Prefs.makeWorldReadable();
         setHasOptionsMenu(true);
     }
 
@@ -50,7 +50,6 @@ public class BasePrefFragment extends PreferenceFragment
         listenPreferenceChanges();
         listenPreferenceClicks();
         listenPreferenceLongClicks();
-        Prefs.makeWorldReadable();
     }
 
     private void listenPreferenceChanges() {
