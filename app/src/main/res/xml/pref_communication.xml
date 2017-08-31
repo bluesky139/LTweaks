@@ -17,6 +17,11 @@
             android:showDefault="true"
             android:showSilent="true"
             android:ringtoneType="ringtone" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_wechat_remove_bottom_bar"
+            android:title="@string/pref_wechat_remove_bottom_bar"
+            android:summary="@string/pref_wechat_remove_bottom_bar_summary" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_qq">

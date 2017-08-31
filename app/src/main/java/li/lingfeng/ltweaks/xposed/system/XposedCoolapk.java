@@ -119,7 +119,7 @@ public class XposedCoolapk extends XposedBase {
                                 mTabContainer.setVisibility(View.GONE);
                                 Logger.i("Set mTabContainer gone.");
                             }
-                        } catch (Exception e) {
+                        } catch (Throwable e) {
                             Logger.e("onGlobalLayout error, " + e.getMessage());
                             Logger.stackTrace(e);
                         }
@@ -217,7 +217,7 @@ public class XposedCoolapk extends XposedBase {
         });
     }
 
-    private void handleWithTabContainer(ViewGroup tabContainer) {
+    private void handleWithTabContainer(ViewGroup tabContainer) throws Throwable {
         mTabContainer = tabContainer;
         List<View> tabViews = ViewUtils.findAllViewByName(mTabContainer, "bottom_navigation_container");
         if (tabViews.size() == 0) {

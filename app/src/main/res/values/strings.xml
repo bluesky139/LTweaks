@@ -122,6 +122,8 @@ Open source on github: \n
     <string name="pref_wechat_use_incoming_ringtone">Customize incoming ringtone</string>
     <string name="pref_wechat_use_incoming_ringtone_summary">Set ringtone below</string>
     <string name="pref_wechat_set_incoming_ringtone">Set incoming ringtone</string>
+    <string name="pref_wechat_remove_bottom_bar">Remove bottom bar</string>
+    <string name="pref_wechat_remove_bottom_bar_summary">Put them into drawer menu\nNote: If WeChat can\'t be launched, try delete /data/data/com.tencent.mm/tinker folder, and create a same one with 000 permission.</string>
     <string name="pref_category_qq">QQ (Only tested on lite version)</string>
     <string name="pref_qq_dismiss_contacts_enabler">Dismiss contacts enabler</string>
     <string name="pref_qq_dismiss_contacts_enabler_summary">Don\'t enable this if you are using contacts</string>

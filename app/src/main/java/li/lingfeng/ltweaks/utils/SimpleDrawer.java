@@ -33,7 +33,7 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
  * Created by smallville on 2017/2/6.
  */
 
-public class SimpleDrawer extends DrawerLayout {
+public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerListener {
 
     protected LinearLayout mNavLayout;
     protected LinearLayout mHeaderLayout;
@@ -66,6 +66,7 @@ public class SimpleDrawer extends DrawerLayout {
         LayoutParams params = new LayoutParams(dp2px(280), LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.LEFT;
         addView(mNavLayout, params);
+        addDrawerListener(this);
     }
 
     protected void createHeaderView(boolean useCircleHeaderImage, final Object headerBackgroundClick) {
@@ -150,8 +151,32 @@ public class SimpleDrawer extends DrawerLayout {
         return mHeaderImage;
     }
 
+    public TextView getHeaderText() {
+        return mHeaderText;
+    }
+
     public LinearLayout getHeaderLayout() {
         return mHeaderLayout;
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        mNavList.requestFocus();
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 
     public static class NavItem {
@@ -159,7 +184,13 @@ public class SimpleDrawer extends DrawerLayout {
         CharSequence mText;
         Object mClickObj;
 
-        public NavItem(Drawable icon, CharSequence text, Object clickObj) {
+        public NavItem(Drawable icon, CharSequence text, Object clickObj) throws Throwable {
+            if (icon == null || text == null) {
+                throw new Exception("NavItem icon " + icon + ", text " + text);
+            }
+            if (clickObj == null) {
+                Logger.w("NavITem " + text + " clickObj is null.");
+            }
             mIcon = icon;
             mText = text;
             mClickObj = clickObj;
@@ -206,22 +237,31 @@ public class SimpleDrawer extends DrawerLayout {
                 return view;
             }
 
-            TextView textView = new TextView(getContext());
-            NavItem navItem = getItem(position);
-            textView.setText(navItem.mText);
-            navItem.mIcon.setColorFilter(0xFF7B7B7B, PorterDuff.Mode.SRC_ATOP);
-            textView.setCompoundDrawablesWithIntrinsicBounds(navItem.mIcon, null, null, null);
+            try {
+                TextView textView = new TextView(getContext());
+                NavItem navItem = getItem(position);
+                textView.setText(navItem.mText);
+                navItem.mIcon.setColorFilter(0xFF7B7B7B, PorterDuff.Mode.SRC_ATOP);
+                textView.setCompoundDrawablesWithIntrinsicBounds(navItem.mIcon, null, null, null);
 
-            textView.setTextColor(Color.parseColor("#FF212121"));
-            textView.setTextSize(14f);
-            textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textView.setGravity(Gravity.CENTER_VERTICAL);
-            textView.setPadding(dp2px(16f), dp2px(12f), 0, dp2px(12f));
-            textView.setMinHeight(dp2px(48f));
-            textView.setSingleLine();
-            textView.setCompoundDrawablePadding(dp2px(32f));
+                textView.setTextColor(Color.parseColor("#FF212121"));
+                textView.setTextSize(14f);
+                textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                textView.setGravity(Gravity.CENTER_VERTICAL);
+                textView.setPadding(dp2px(16f), dp2px(12f), 0, dp2px(12f));
+                textView.setMinHeight(dp2px(48f));
+                textView.setSingleLine();
+                textView.setCompoundDrawablePadding(dp2px(32f));
+                view = textView;
+            } catch (Throwable e) {
+                Logger.e("SimpleDrawer can't create list item view, " + e);
+                Logger.stackTrace(e);
 
-            view = textView;
+                TextView textView = new TextView(getContext());
+                textView.setText("Error!!!");
+                view = textView;
+            }
+
             mNavItemViews[position] = view;
             return view;
         }

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
@@ -75,13 +76,14 @@ public class ViewUtils {
         });
     }
 
-    public static <T extends View> List<T> findAllViewByTypeInSameHierarchy(ViewGroup rootView,
+    public static <T extends View> List<T> findAllViewByTypeInSameHierarchy(final ViewGroup rootView,
                                                                             final Class<T> type,
                                                                             final int minCount) {
         final List<T> results = new ArrayList<>();
         traverseViews(rootView, new ViewTraverseCallback2() {
 
             private int mDeep = 0;
+            private ViewParent mParent = rootView;
 
             @Override
             public boolean onView(View view, int deep) {
@@ -89,11 +91,12 @@ public class ViewUtils {
                     return false;
                 }
 
-                if (mDeep != deep) {
+                if (mDeep != deep || view.getParent() != mParent) {
                     if (results.size() >= minCount) {
                         return true;
                     }
                     mDeep = deep;
+                    mParent = view.getParent();
                     results.clear();
                 }
                 results.add((T) view);
@@ -191,7 +194,13 @@ public class ViewUtils {
     // Views will be detached from activity.
     public static FrameLayout rootChildsIntoOneLayout(Activity activity) {
         ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+        return viewChildsIntoOneLayout(activity, rootView);
+    }
+
+    // Views will be detached from activity.
+    public static FrameLayout viewChildsIntoOneLayout(Activity activity, ViewGroup rootView) {
         FrameLayout allView = new FrameLayout(activity);
+        allView.setContentDescription("allView");
         while (rootView.getChildCount() > 0) {
             View view = rootView.getChildAt(0);
             rootView.removeView(view);
