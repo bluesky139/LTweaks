@@ -182,6 +182,8 @@ Open source on github: \n
     <string name="pref_system_share_image_search">添加菜单\"以图搜图\"</string>
     <string name="pref_system_share_image_search_summary">你可以通过其它应用、本地文件等分享图片，搜索引擎可选：Google，TinEye，IQDB</string>
     <string name="pref_system_share_filter">隐藏分享菜单项</string>
+    <string name="pref_system_share_copy_to_share">复制后分享</string>
+    <string name="pref_system_share_copy_to_share_summary">当你复制文本的时候, 会浮现一个按钮让你能直接分享文本.\n也许在某些应用中不工作</string>
     <string name="pref_category_coolapk">酷市场</string>
     <string name="pref_coolapk_remove_bottom_bar">去底栏</string>
     <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>

@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks;
 
+import android.app.AndroidAppHelper;
 import android.app.Application;
 
 /**
@@ -10,6 +11,9 @@ public class MyApplication extends Application {
 
     private static Application instance_;
     public static Application instance() {
+        if (instance_ == null) {
+            return AndroidAppHelper.currentApplication();
+        }
         return instance_;
     }
 
@@ -17,9 +21,5 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance_ = this;
-    }
-
-    public static void setInstanceFromXposed(Application application) {
-        instance_ = application;
     }
 }

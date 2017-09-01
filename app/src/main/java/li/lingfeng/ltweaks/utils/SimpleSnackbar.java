@@ -1,7 +1,6 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -12,7 +11,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,23 +108,27 @@ public class SimpleSnackbar extends LinearLayout {
 
     public void show() {
         Logger.i("SimpleSnackbar show.");
-        ViewGroup rootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
-        if (!(rootView instanceof FrameLayout)) {
-            throw new RuntimeException("rootView is not FrameLayout?");
-        }
-
+        ViewGroup rootView = (ViewGroup) mActivity.findViewById(android.R.id.content).getRootView();
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.BOTTOM;
-        setVisibility(View.INVISIBLE);
+
+        float yPos = rootView.getY() + rootView.getHeight();
+        int windowHeight = ViewUtils.getWindowHeight(mActivity);
+        Logger.d("yPos " + yPos + ", windowHeight " + windowHeight);
+        if (yPos > windowHeight) {
+            params.bottomMargin = ViewUtils.getWindowHeightWithNavigator(mActivity) - windowHeight;
+            Logger.d("params.bottomMargin " + params.bottomMargin);
+        }
+        setAlpha(0f);
         rootView.addView(this, params);
 
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                SimpleSnackbar.this.setVisibility(View.VISIBLE);
                 ViewCompat.setTranslationY(SimpleSnackbar.this, SimpleSnackbar.this.getHeight());
                 ViewCompat.animate(SimpleSnackbar.this)
                         .translationY(0f)
+                        .alpha(1f)
                         .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
                         .setDuration(250)
                         .start();
@@ -140,6 +142,7 @@ public class SimpleSnackbar extends LinearLayout {
         mHandler.removeCallbacksAndMessages(null);
         ViewCompat.animate(this)
                 .translationY(getHeight())
+                .alpha(0f)
                 .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
                 .setDuration(250)
                 .setListener(new ViewPropertyAnimatorListenerAdapter() {

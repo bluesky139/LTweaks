@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.Pair;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -231,6 +233,25 @@ public class ViewUtils {
             webView.evaluateJavascript(js, null);
         } else {
             webView.loadUrl("javascript:" + js);
+        }
+    }
+
+    public static int getWindowHeight(Activity activity) {
+        return activity.getWindowManager().getDefaultDisplay().getHeight();
+    }
+
+    public static int getWindowHeightWithNavigator(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        try {
+            Class c = Class.forName("android.view.Display");
+            Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
+            method.setAccessible(true);
+            method.invoke(display, dm);
+            return dm.heightPixels;
+        } catch (Throwable e) {
+            Logger.e("Can't getWindowHeightWithNavigator, " + e);
+            return getWindowHeight(activity);
         }
     }
 }

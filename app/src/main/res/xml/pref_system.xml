@@ -30,6 +30,11 @@
         <Preference
             android:key="@string/key_system_share_filter"
             android:title="@string/pref_system_share_filter" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_system_share_copy_to_share"
+            android:title="@string/pref_system_share_copy_to_share"
+            android:summary="@string/pref_system_share_copy_to_share_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -24,11 +24,6 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedShadowsocksPreciseRoute extends XposedBase {
 
     @Override
-    protected Class getApplicationClass() {
-        return findClass("com.github.shadowsocks.ShadowsocksApplication");
-    }
-
-    @Override
     protected void handleLoadPackage() throws Throwable {
         findAndHookMethod("com.github.shadowsocks.ShadowsocksVpnService", "startShadowsocksDaemon", new XC_MethodHook() {
             private Set<Unhook> hooks;
