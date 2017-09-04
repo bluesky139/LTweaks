@@ -115,8 +115,6 @@ Open source on github: \n
     <!--Communication-->
     <string name="pref_header_communication">Communication</string>
     <string name="pref_category_wechat">WeChat</string>
-    <string name="pref_wechat_system_share_in_inner_browser">Add \"System Share\" in inner browser</string>
-    <string name="pref_wechat_system_share_in_inner_browser_summary">Also will be copied to clipboard</string>
     <string name="pref_wechat_use_incoming_ringtone">Customize incoming ringtone</string>
     <string name="pref_wechat_use_incoming_ringtone_summary">Set ringtone below</string>
     <string name="pref_wechat_set_incoming_ringtone">Set incoming ringtone</string>
