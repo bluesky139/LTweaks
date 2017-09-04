@@ -33,15 +33,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_category_taobao">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_taobao_share_item"
-            android:title="@string/pref_taobao_share_item"
-            android:summary="@string/pref_taobao_share_item_summary" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:title="@string/pref_category_smzdm">
         <SwitchPreference
             android:defaultValue="false"

@@ -100,8 +100,6 @@ Open source on github: \n
     <string name="pref_suning_history">Price history in share menu</string>
     <string name="pref_suning_history_summary">Use with above share function</string>
     <string name="pref_category_taobao">Taobao</string>
-    <string name="pref_taobao_share_item">Share product by \"System Share\"</string>
-    <string name="pref_taobao_share_item_summary">Use \"Copy To Clipboard\" in app share menu, a button will appear for you</string>
     <string name="pref_category_smzdm">SMZDM</string>
     <string name="pref_smzdm_open_link_in_jd_app">Open link in JD app</string>
     <string name="pref_smzdm_open_link_in_jd_app_summary">Of course only for JD link</string>
