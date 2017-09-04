@@ -226,6 +226,7 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
     <string name="share_qrcode_cant_decode">Can\'t decode image.</string>
+    <string name="share_qrcode_wechat_scan">Scan with WeChat</string>
     <string name="share_image_search">Search by image</string>
     <string name="share_image_google_search">Google</string>
     <string name="share_image_tineye_search">TinEye</string>

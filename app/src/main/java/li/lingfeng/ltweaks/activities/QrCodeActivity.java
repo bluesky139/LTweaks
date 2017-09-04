@@ -1,6 +1,8 @@
 package li.lingfeng.ltweaks.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +25,11 @@ import com.google.zxing.Result;
 import java.util.regex.Matcher;
 
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.prefs.ClassNames;
+import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PermissionUtils;
 import li.lingfeng.ltweaks.utils.ZXingUtils;
 
 /**
@@ -33,6 +40,7 @@ public class QrCodeActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private TextView mQrcodeText;
+    private Button mWeChatButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +63,8 @@ public class QrCodeActivity extends AppCompatActivity {
         mQrcodeText = (TextView) findViewById(R.id.qrcode_text);
         mQrcodeText.setTextIsSelectable(true);
         mQrcodeText.setMovementMethod(LinkMovementMethod.getInstance());
+        mWeChatButton = (Button) findViewById(R.id.qrcode_wechat_scan);
+        mWeChatButton.setOnClickListener(new WeChatButton(uri));
 
         new DecodeTask().execute(uri);
     }
@@ -68,12 +78,13 @@ public class QrCodeActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Result result) {
+            mProgressBar.setVisibility(View.GONE);
+            mQrcodeText.setVisibility(View.VISIBLE);
+            mWeChatButton.setVisibility(View.VISIBLE);
             if (result == null) {
-                Toast.makeText(QrCodeActivity.this, R.string.share_qrcode_cant_decode, Toast.LENGTH_SHORT).show();
-                QrCodeActivity.this.finish();
+                mQrcodeText.setText(R.string.share_qrcode_cant_decode);
+                mQrcodeText.setTextColor(Color.RED);
             } else {
-                mProgressBar.setVisibility(View.GONE);
-                mQrcodeText.setVisibility(View.VISIBLE);
                 String text = result.getText();
                 Spannable content = new SpannableString(text);
 
@@ -84,6 +95,41 @@ public class QrCodeActivity extends AppCompatActivity {
                     content.setSpan(new URLSpan(url), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 mQrcodeText.setText(content);
+            }
+        }
+    }
+
+    private class WeChatButton implements View.OnClickListener {
+
+        private Uri mUri;
+
+        public WeChatButton(Uri uri) {
+            mUri = uri;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (!PermissionUtils.tryPermissions(QrCodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                return;
+            }
+
+            String path = getExternalFilesDir(null) + "/qrcode_wechat_scan_image";
+            if (!IOUtils.saveUriToFile(mUri, path)) {
+                Toast.makeText(QrCodeActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setClassName(PackageNames.WE_CHAT, ClassNames.WE_CHAT_LAUNCHER_UI);
+                intent.putExtra("LauncherUI.From.Scaner.Shortcut", true);
+                intent.putExtra("ltweaks_scannable_image", path);
+                intent.setFlags(335544320);
+                startActivity(intent);
+                QrCodeActivity.this.finish();
+            } catch (Throwable e) {
+                Toast.makeText(QrCodeActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                Logger.e("Start WeChat image scanner error, " + e);
             }
         }
     }

@@ -31,6 +31,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -45,7 +46,6 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.WE_CHAT, prefs = R.string.key_wechat_remove_bottom_bar)
 public class XposedWeChatRemoveBottomBar extends XposedBase {
 
-    private static final String LAUNCHER_UI = "com.tencent.mm.ui.LauncherUI";
     private static final String VIEW_PAGER = "com.tencent.mm.ui.base.CustomViewPager";
     private static final String PERSIONAL_INFO = "com.tencent.mm.plugin.setting.ui.setting.SettingsPersonalInfoUI";
     private SimpleDrawer mDrawerLayout;
@@ -55,7 +55,7 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookActivity(LAUNCHER_UI, "onCreate", Bundle.class, new XC_MethodHook() {
+        findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 mGotContentView = false;
@@ -81,7 +81,7 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
             }
         });
 
-        findAndHookActivity(LAUNCHER_UI, "setContentView", View.class, new XC_MethodHook() {
+        findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "setContentView", View.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
                 if (mGotContentView) {
@@ -116,7 +116,7 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
             }
         });
 
-        findAndHookActivity(LAUNCHER_UI, "onDestroy", new XC_MethodHook() {
+        findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "onDestroy", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mDrawerLayout = null;
@@ -125,7 +125,7 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
             }
         });
 
-        findAndHookActivity(LAUNCHER_UI, "dispatchKeyEvent", KeyEvent.class, new XC_MethodHook() {
+        findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "dispatchKeyEvent", KeyEvent.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 KeyEvent keyEvent = (KeyEvent) param.args[0];

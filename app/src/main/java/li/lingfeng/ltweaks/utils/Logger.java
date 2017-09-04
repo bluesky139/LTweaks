@@ -50,6 +50,10 @@ public class Logger {
     }
 
     public static void intent(Intent intent) {
+        if (intent == null) {
+            Logger.d(" intent is null.");
+            return;
+        }
         Logger.d(" intent action: " + intent.getAction());
         Logger.d(" intent component: " + (intent.getComponent() != null ? intent.getComponent().toShortString() : ""));
         Logger.d(" intent type: " + intent.getType());

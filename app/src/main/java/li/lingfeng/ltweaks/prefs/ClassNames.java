@@ -39,4 +39,7 @@ public class ClassNames {
 
     // QQ
     public static final String QQ_CHAT_ACTIVITY = "com.tencent.mobileqq.activity.ChatActivity";
+
+    // WeChat
+    public static final String WE_CHAT_LAUNCHER_UI = "com.tencent.mm.ui.LauncherUI";
 }

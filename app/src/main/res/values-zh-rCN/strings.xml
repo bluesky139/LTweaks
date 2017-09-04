@@ -226,6 +226,7 @@ Open source on github: \n
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>
     <string name="share_qrcode_cant_decode">无法识别.</string>
+    <string name="share_qrcode_wechat_scan">使用微信扫描</string>
     <string name="share_image_search">以图搜图</string>
     <string name="share_image_google_search">Google</string>
     <string name="share_image_tineye_search">TinEye</string>
