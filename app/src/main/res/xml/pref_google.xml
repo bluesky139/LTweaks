@@ -116,5 +116,11 @@
             android:key="@string/key_youtube_remove_bottom_bar"
             android:title="@string/pref_youtube_remove_bottom_bar"
             android:summary="@string/pref_youtube_remove_bottom_bar_summary" />
+        <ListPreference
+            android:defaultValue="0"
+            android:key="@string/key_youtube_set_quality"
+            android:title="@string/pref_youtube_set_quality"
+            android:entries="@array/youtube_quality_string"
+            android:entryValues="@array/youtube_quality_int" />
     </PreferenceCategory>
 </PreferenceScreen>

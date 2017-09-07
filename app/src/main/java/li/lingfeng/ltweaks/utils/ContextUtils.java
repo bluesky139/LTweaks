@@ -87,6 +87,14 @@ public class ContextUtils {
         return getResId(name, "string", context);
     }
 
+    public static int getArrayId(String name) {
+        return getArrayId(name, MyApplication.instance());
+    }
+
+    public static int getArrayId(String name, Context context) {
+        return getResId(name, "array", context);
+    }
+
     public static int getDrawableId(String name) {
         return getDrawableId(name, MyApplication.instance());
     }
@@ -109,6 +117,27 @@ public class ContextUtils {
 
     public static String getString(String name, Context context) {
         return context.getString(getStringId(name, context));
+    }
+
+    public static String[] getStringArray(String name) {
+        return getStringArray(name, MyApplication.instance());
+    }
+
+    public static String[] getStringArray(String name, Context context) {
+        return context.getResources().getStringArray(getArrayId(name, context));
+    }
+
+    public static int[] getIntArrayFromStringArray(String name) {
+        return getIntArrayFromStringArray(name, MyApplication.instance());
+    }
+
+    public static int[] getIntArrayFromStringArray(String name, Context context) {
+        String[] strs = getStringArray(name, context);
+        int[] ints = new int[strs.length];
+        for (int i = 0; i < strs.length; ++i) {
+            ints[i] = Integer.parseInt(strs[i]);
+        }
+        return ints;
     }
 
     public static Drawable getDrawable(String name) {

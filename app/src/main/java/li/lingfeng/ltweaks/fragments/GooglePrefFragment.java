@@ -1,8 +1,11 @@
 package li.lingfeng.ltweaks.fragments;
 
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ChromeIncognitoActivity;
@@ -67,5 +70,11 @@ public class GooglePrefFragment extends BasePrefFragment {
     @PreferenceChange(prefs = R.string.key_chrome_incognito_search)
     private void enableChromeIncognitoSearch(Preference preference, boolean enabled) {
         ComponentUtils.enableComponent(ChromeIncognitoActivity.class, enabled);
+    }
+
+    @PreferenceChange(prefs = R.string.key_youtube_set_quality, refreshAtStart = true)
+    private void setYoutubeQuality(ListPreference preference, String intValue) {
+        int index = ArrayUtils.indexOf(getResources().getStringArray(R.array.youtube_quality_int), intValue);
+        preference.setSummary(getResources().getStringArray(R.array.youtube_quality_string)[index]);
     }
 }

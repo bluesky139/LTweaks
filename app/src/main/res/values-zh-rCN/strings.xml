@@ -84,6 +84,21 @@ Open source on github: \n
     <string name="pref_category_youtube">Youtube</string>
     <string name="pref_youtube_remove_bottom_bar">去底栏</string>
     <string name="pref_youtube_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_youtube_set_quality">自动设置分辨率</string>
+
+    <!-- Youtube -->
+    <string-array name="youtube_quality_string">
+        <item>自动</item>
+        <item>144p</item>
+        <item>240p</item>
+        <item>360p</item>
+        <item>480p</item>
+        <item>720p</item>
+        <item>1080p</item>
+        <item>1440p</item>
+        <item>2160p</item>
+        <item>4320p</item>
+    </string-array>
 
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>

@@ -76,6 +76,15 @@ public class SharedPreferences implements android.content.SharedPreferences {
         return getInt(getKeyById(key), defValue);
     }
 
+    public int getIntFromString(String key, int defValue) {
+        String s = getString(key, String.valueOf(defValue));
+        return Integer.parseInt(s);
+    }
+
+    public int getIntFromString(@StringRes int key, int defValue) {
+        return getIntFromString(getKeyById(key), defValue);
+    }
+
     @Override
     public long getLong(String key, long defValue) {
         reloadIfNecessary();
