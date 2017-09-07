@@ -21,6 +21,7 @@ public class ClassNames {
     public static final String PACKAGE_PARSER = "android.content.pm.PackageParser";
     public static final String PACKAGE_MANAGER_SERVICE = "com.android.server.pm.PackageManagerService";
     public static final String ACTIVITY_INTENT_RESOLVER = "com.android.server.pm.PackageManagerService$ActivityIntentResolver";
+    public static final String PHONE_WINDOW = "com.android.internal.policy.PhoneWindow";
 
     public static final String QS_TILE_HOST = "com.android.systemui.statusbar.phone.QSTileHost";
     public static final String INTENT_TILE = "com.android.systemui.qs.tiles.IntentTile";

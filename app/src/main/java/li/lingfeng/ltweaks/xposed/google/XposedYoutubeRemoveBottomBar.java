@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import java.util.List;
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -69,6 +71,17 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
                 }
             }
         });
+
+        findAndHookMethod(ClassNames.PHONE_WINDOW, "setStatusBarColor", int.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                int color = (int) param.args[0];
+                Logger.d("setStatusBarColor " + color);
+                if (mDrawerLayout != null) {
+                    mDrawerLayout.updateHeaderBackground(color);
+                }
+            }
+        });
     }
 
     private void hookBottomBar(final Activity activity) throws Throwable {
@@ -91,6 +104,9 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
         FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
         mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
         int color = ContextUtils.getColorFromTheme(activity.getTheme(), android.R.attr.colorPrimary);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            color = activity.getWindow().getStatusBarColor();
+        }
         mDrawerLayout.updateHeaderBackground(color);
         final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
         rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
