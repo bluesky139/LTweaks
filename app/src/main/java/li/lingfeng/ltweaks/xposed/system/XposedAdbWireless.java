@@ -30,8 +30,8 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.ANDROID_SYSTEM_UI, prefs = R.string.key_quick_settings_tile_adb_wireless)
 public class XposedAdbWireless extends XposedBase {
 
-    private static final String ACTION_UPDATE_STATE = XposedAdbWireless.class + ".ACTION_UPDATE_STATE";
-    private static final String ACTION_ADB_SWITCH = XposedAdbWireless.class + ".ACTION_ADB_SWITCH";
+    private static final String ACTION_UPDATE_STATE = XposedAdbWireless.class.getName() + ".ACTION_UPDATE_STATE";
+    private static final String ACTION_ADB_SWITCH = XposedAdbWireless.class.getName() + ".ACTION_ADB_SWITCH";
     private Context mContext;
     private AdbSwitchReceiver mReceiver;
 
