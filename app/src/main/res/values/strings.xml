@@ -162,6 +162,8 @@ Open source on github: \n
     <string name="pref_qq_exit_directly_by_sharing_summary">After sharing something to someone, do not back to main activity by pressing back button</string>
     <string name="pref_qq_fix_image_sharing">Fix image sharing in some situation</string>
     <string name="pref_qq_fix_image_sharing_summary">eg. Sharing from Google+</string>
+    <string name="pref_qq_disable_discussion_notification">Disable notification of discussion group</string>
+    <string name="pref_qq_disable_discussion_notification_summary">No matter \"Notification\" is checked or not in discussion group settings</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>

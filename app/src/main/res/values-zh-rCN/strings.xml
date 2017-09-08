@@ -150,6 +150,8 @@ Open source on github: \n
     <string name="pref_qq_exit_directly_by_sharing_summary">在使用分享后, 按返回键时不退到主界面</string>
     <string name="pref_qq_fix_image_sharing">修复某些情况下的图片分享</string>
     <string name="pref_qq_fix_image_sharing_summary">比如: 从 Google+ 分享</string>
+    <string name="pref_qq_disable_discussion_notification">禁止讨论组的消息通知</string>
+    <string name="pref_qq_disable_discussion_notification_summary">不管讨论组设置里是否钩选\"新消息通知\"</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>

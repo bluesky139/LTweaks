@@ -78,6 +78,9 @@ public class XposedQQCollaseChatButtons extends XposedBase {
         private void handleLayoutChanged(final Activity activity) {
             int idInputBar = ContextUtils.getIdId("inputBar");
             final LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
+            if (inputBar == null) {
+                return;
+            }
             ViewUtils.traverseViews((ViewGroup) inputBar.getRootView(), new ViewUtils.ViewTraverseCallback2() {
                 @Override
                 public boolean onView(View view, int deep) {

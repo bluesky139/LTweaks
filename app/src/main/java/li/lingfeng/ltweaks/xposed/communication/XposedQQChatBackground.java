@@ -89,6 +89,9 @@ public class XposedQQChatBackground extends XposedBase {
     private void handleLayoutChanged(Activity activity) throws Throwable {
         int idInputBar = ContextUtils.getIdId("inputBar");
         LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
+        if (inputBar == null) {
+            return;
+        }
         ViewGroup viewGroup = (ViewGroup) inputBar.getParent();
         int width = viewGroup.getMeasuredWidth();
         int height = viewGroup.getMeasuredHeight();
