@@ -47,11 +47,11 @@ import okhttp3.Response;
 @XposedLoad(packages = PackageNames.GOOGLE_PLAY, prefs = R.string.key_google_play_view_in_coolapk)
 public class XposedGooglePlay extends XposedBase {
 
-    private MenuItem itemCoolApk;
-    private MenuItem itemApkPure;
-    private MenuItem itemSearchInMobilism;
-    private MenuItem itemSearchInApkMirror;
-    private HashMap<MenuItem, String> markets;
+    private static final String MENU_COOLAPK = "View in CoolApk";
+    private static final String MENU_APKPURE = "View in ApkPure";
+    private static final String MENU_MOBILISM = "Search in Mobilism";
+    private static final String MENU_APKMIRROR = "Search in ApkMirror";
+    private HashMap<String, String> markets;
 
     private Field fNavigationMgr;
     private Method mGetCurrentDoc;
@@ -62,15 +62,14 @@ public class XposedGooglePlay extends XposedBase {
         findAndHookMethod("com.google.android.finsky.activities.MainActivity", "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
                 Menu menu = (Menu) param.args[0];
-                itemCoolApk = menu.add("View in CoolApk");
-                itemApkPure = menu.add("View in ApkPure");
-                itemSearchInMobilism = menu.add("Search in Mobilism");
-                itemSearchInApkMirror = menu.add("Search in ApkMirror");
-                markets = new HashMap<MenuItem, String>(2) {{
-                    put(itemCoolApk, PackageNames.COOLAPK);
-                    put(itemApkPure, PackageNames.APKPURE);
+                menu.add("View in CoolApk");
+                menu.add("View in ApkPure");
+                menu.add("Search in Mobilism");
+                menu.add("Search in ApkMirror");
+                markets = new HashMap<String, String>(2) {{
+                    put(MENU_COOLAPK, PackageNames.COOLAPK);
+                    put(MENU_APKPURE, PackageNames.APKPURE);
                 }};
                 Logger.i("Menu is added, View in other market.");
             }
@@ -79,16 +78,16 @@ public class XposedGooglePlay extends XposedBase {
         findAndHookMethod("com.google.android.finsky.activities.MainActivity", "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
                 MenuItem item = (MenuItem) param.args[0];
-                if (itemCoolApk != item && itemApkPure != item && itemSearchInMobilism != item
-                        && itemSearchInApkMirror != item) {
+                CharSequence menuName = item.getTitle();
+                if (!MENU_COOLAPK.equals(menuName) && !MENU_APKPURE.equals(menuName)
+                        && !MENU_MOBILISM.equals(menuName) && !MENU_APKMIRROR.equals(menuName)) {
                     return;
                 }
 
                 Activity activity = (Activity) param.thisObject;
                 try {
-                    if (itemSearchInMobilism == item) {
+                    if (MENU_MOBILISM.equals(menuName)) {
                         int idTitle = ContextUtils.getIdId("title_title");
                         TextView titleView = (TextView) activity.findViewById(idTitle);
                         String title = titleView.getText().toString().replaceAll("[^a-zA-Z\\d]", " ").replaceAll("\\s{2,}", " ").trim();
@@ -142,10 +141,10 @@ public class XposedGooglePlay extends XposedBase {
                         }
                         Logger.i("Got package name " + maxStr);
 
-                        if (itemSearchInApkMirror == item) {
+                        if (MENU_APKMIRROR.equals(menuName)) {
                             ContextUtils.searchInApkMirror(activity, maxStr);
                         } else {
-                            ContextUtils.openAppInMarket(activity, maxStr, markets.get(item));
+                            ContextUtils.openAppInMarket(activity, maxStr, markets.get(menuName));
                         }
                     }
                 } catch (Exception e) {
