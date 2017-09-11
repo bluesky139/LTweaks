@@ -26,7 +26,8 @@ public class XposedAppInfoGoMarket extends XposedAppInfo {
                 Pair.create("Google Play", 1010),
                 Pair.create("CoolApk", 1011),
                 Pair.create("ApkPure", 1012),
-                Pair.create("Mobilism", 1013)
+                Pair.create("Mobilism", 1013),
+                Pair.create("ApkMirror", 1014)
         };
     }
 
@@ -36,19 +37,21 @@ public class XposedAppInfoGoMarket extends XposedAppInfo {
         if ("Mobilism".equals(menuName)) {
             ApplicationInfo appInfo = getApplicationInfo(param);
             ContextUtils.searchInMobilism(activity, appInfo.loadLabel(activity.getPackageManager()));
-            return;
-        }
-
-        Map<String, String> marketNameToPackage = new HashMap<String, String>() {{
-            put("Google Play", PackageNames.GOOGLE_PLAY);
-            put("CoolApk", PackageNames.COOLAPK);
-            put("ApkPure", PackageNames.APKPURE);
-        }};
-        String market = marketNameToPackage.get(menuName);
-        if (market != null) {
-            ContextUtils.openAppInMarket(activity, getPackageName(param), market);
+        } else if ("ApkMirror".equals(menuName)) {
+            String packageName = getPackageName(param);
+            ContextUtils.searchInApkMirror(activity, packageName);
         } else {
-            throw new Exception("Unknown menu " + menuName);
+            Map<String, String> marketNameToPackage = new HashMap<String, String>() {{
+                put("Google Play", PackageNames.GOOGLE_PLAY);
+                put("CoolApk", PackageNames.COOLAPK);
+                put("ApkPure", PackageNames.APKPURE);
+            }};
+            String market = marketNameToPackage.get(menuName);
+            if (market != null) {
+                ContextUtils.openAppInMarket(activity, getPackageName(param), market);
+            } else {
+                throw new Exception("Unknown menu " + menuName);
+            }
         }
     }
 }

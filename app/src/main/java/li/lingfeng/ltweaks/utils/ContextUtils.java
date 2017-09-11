@@ -413,4 +413,9 @@ public class ContextUtils {
         String url = "https://forum.mobilism.org/search.php?keywords=" + keywords + "&sr=topics&sf=titleonly&fid%5B%5D=398";
         startBrowser(activity, url);
     }
+
+    public static void searchInApkMirror(Activity activity, CharSequence packageName) {
+        String url = "https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=" + packageName;
+        startBrowser(activity, url);
+    }
 }

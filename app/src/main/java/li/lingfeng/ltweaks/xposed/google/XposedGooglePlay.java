@@ -50,6 +50,7 @@ public class XposedGooglePlay extends XposedBase {
     private MenuItem itemCoolApk;
     private MenuItem itemApkPure;
     private MenuItem itemSearchInMobilism;
+    private MenuItem itemSearchInApkMirror;
     private HashMap<MenuItem, String> markets;
 
     private Field fNavigationMgr;
@@ -66,6 +67,7 @@ public class XposedGooglePlay extends XposedBase {
                 itemCoolApk = menu.add("View in CoolApk");
                 itemApkPure = menu.add("View in ApkPure");
                 itemSearchInMobilism = menu.add("Search in Mobilism");
+                itemSearchInApkMirror = menu.add("Search in ApkMirror");
                 markets = new HashMap<MenuItem, String>(2) {{
                     put(itemCoolApk, PackageNames.COOLAPK);
                     put(itemApkPure, PackageNames.APKPURE);
@@ -79,7 +81,8 @@ public class XposedGooglePlay extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 MenuItem item = (MenuItem) param.args[0];
-                if (itemCoolApk != item && itemApkPure != item && itemSearchInMobilism != item) {
+                if (itemCoolApk != item && itemApkPure != item && itemSearchInMobilism != item
+                        && itemSearchInApkMirror != item) {
                     return;
                 }
 
@@ -138,7 +141,12 @@ public class XposedGooglePlay extends XposedBase {
                             }
                         }
                         Logger.i("Got package name " + maxStr);
-                        ContextUtils.openAppInMarket(activity, maxStr, markets.get(item));
+
+                        if (itemSearchInApkMirror == item) {
+                            ContextUtils.searchInApkMirror(activity, maxStr);
+                        } else {
+                            ContextUtils.openAppInMarket(activity, maxStr, markets.get(item));
+                        }
                     }
                 } catch (Exception e) {
                     Logger.e("Can't view in other market, " + e);
