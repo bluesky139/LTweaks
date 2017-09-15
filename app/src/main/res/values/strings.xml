@@ -99,7 +99,7 @@ Open source on github: \n
         <item>2160p</item>
         <item>4320p</item>
     </string-array>
-    <string-array name="youtube_quality_int">
+    <string-array name="youtube_quality_int" translatable="false">
         <item>0</item>
         <item>144</item>
         <item>240</item>
