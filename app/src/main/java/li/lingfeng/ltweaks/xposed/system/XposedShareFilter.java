@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.os.Binder;
+import android.os.Build;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -41,35 +42,48 @@ public class XposedShareFilter extends XposedBase {
             }
         });
 
-        hookAllMethods(ClassNames.ACTIVITY_INTENT_RESOLVER, "queryIntent", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Intent intent = (Intent) param.args[0];
-                if (!ArrayUtils.contains(IntentActions.sSendActions, intent.getAction()) || mContext == null) {
-                    return;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            hookAllMethods(ClassNames.PACKAGE_MANAGER_SERVICE, "queryIntentActivities", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    handleQueryIntent(param);
                 }
-                int uid = Binder.getCallingUid();
-                ApplicationInfo appInfo = mContext.getPackageManager().getApplicationInfo(PackageNames.L_TWEAKS, 0);
-                if (uid == appInfo.uid) {
-                    return;
+            });
+        } else {
+            hookAllMethods(ClassNames.PACKAGE_MANAGER_SERVICE, "queryIntentActivitiesInternal", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    handleQueryIntent(param);
                 }
+            });
+        }
+    }
 
-                Set<String> activities = Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, null);
-                if (activities == null || activities.isEmpty()) {
-                    return;
-                }
+    private void handleQueryIntent(XC_MethodHook.MethodHookParam param) throws Throwable {
+        Intent intent = (Intent) param.args[0];
+        if (!ArrayUtils.contains(IntentActions.sSendActions, intent.getAction()) || mContext == null) {
+            return;
+        }
+        int uid = Binder.getCallingUid();
+        ApplicationInfo appInfo = mContext.getPackageManager().getApplicationInfo(PackageNames.L_TWEAKS, 0);
+        if (uid == appInfo.uid) {
+            return;
+        }
 
-                List<ResolveInfo> results = (List<ResolveInfo>) param.getResult();
-                int removedCount = 0;
-                for (int i = results.size() - 1; i >= 0; --i) {
-                    ResolveInfo info = results.get(i);
-                    if (activities.contains(info.activityInfo.applicationInfo.packageName + "/" + info.activityInfo.name)) {
-                        results.remove(i);
-                        ++removedCount;
-                    }
-                }
-                Logger.i("Removed " + removedCount + " share activities for " + intent.getAction());
+        Set<String> activities = Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, null);
+        if (activities == null || activities.isEmpty()) {
+            return;
+        }
+
+        List<ResolveInfo> results = (List<ResolveInfo>) param.getResult();
+        int removedCount = 0;
+        for (int i = results.size() - 1; i >= 0; --i) {
+            ResolveInfo info = results.get(i);
+            if (activities.contains(info.activityInfo.applicationInfo.packageName + "/" + info.activityInfo.name)) {
+                results.remove(i);
+                ++removedCount;
             }
-        });
+        }
+        Logger.i("Removed " + removedCount + " share activities for " + intent.getAction());
     }
 }

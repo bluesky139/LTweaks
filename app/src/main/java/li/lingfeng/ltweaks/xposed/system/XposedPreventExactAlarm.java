@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.xposed.system;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,27 +28,31 @@ public class XposedPreventExactAlarm extends XposedPreventRunning {
     private static final long WINDOW_HEURISTIC = -1;
     private static final int FLAG_ALLOW_WHILE_IDLE = 1<<2;
 
+    private static final int INDEX_WINDOW_MILLIS = 2;
+    private static final int INDEX_FLAGS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? 7 : 5;
+
     @Override
     protected void handleLoadPackage() throws Throwable {
         super.handleLoadPackage();
         hookAllMethods(ClassNames.ALARM_MANAGER_SERVICE, "setImpl", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                int uid = (int) param.args[param.args.length - 1];
+                int uidIndex = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? param.args.length - 2 : param.args.length - 1;
+                int uid = (int) param.args[uidIndex];
                 if (sPreventUids.contains(uid)) {
-                    long windowMillis = (long) param.args[2];
-                    int flags = (int) param.args[5];
+                    long windowMillis = (long) param.args[INDEX_WINDOW_MILLIS];
+                    int flags = (int) param.args[INDEX_FLAGS];
                     //Logger.d("Alarm from " + uid + " " + windowMillis + " " + Integer.toBinaryString(flags));
 
                     boolean isSet = false;
                     if (windowMillis >= 0) {  // 0 is WINDOW_EXACT, >0 is no later in milliseconds.
                         windowMillis = WINDOW_HEURISTIC;
-                        param.args[2] = windowMillis;
+                        param.args[INDEX_WINDOW_MILLIS] = windowMillis;
                         isSet = true;
                     }
                     if ((flags & FLAG_ALLOW_WHILE_IDLE) != 0) {
                         flags &= ~FLAG_ALLOW_WHILE_IDLE;
-                        param.args[5] = flags;
+                        param.args[INDEX_FLAGS] = flags;
                         isSet = true;
                     }
 
