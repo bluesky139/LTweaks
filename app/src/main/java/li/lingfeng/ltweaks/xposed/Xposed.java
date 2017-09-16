@@ -7,6 +7,8 @@ import android.text.TextUtils;
 
 import com.crossbowffs.remotepreferences.RemotePreferences;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +17,9 @@ import java.util.Map;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
@@ -27,7 +31,7 @@ import li.lingfeng.ltweaks.prefs.Prefs;
  * Created by smallville on 2016/12/22.
  */
 
-public abstract class Xposed implements IXposedHookLoadPackage {
+public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPackage {
 
     private Set<Class<? extends XposedBase>> mModulesForAll = new HashSet<>(); // These modules are loaded for all packages.
     private Map<String, Set<Class<? extends XposedBase>>> mModules = new HashMap<>();     // package name -> set of Xposed class implemented IXposedHookLoadPackage.
@@ -73,6 +77,12 @@ public abstract class Xposed implements IXposedHookLoadPackage {
     protected abstract void addModulePrefs();
 
     @Override
+    public void initZygote(StartupParam startupParam) throws Throwable {
+        Prefs.xprefs = new XSharedPreferences(PackageNames.L_TWEAKS);
+        Prefs.xprefs.makeWorldReadable();
+    }
+
+    @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (isEmptyModules()) {
             addModulesForAll();
@@ -81,7 +91,7 @@ public abstract class Xposed implements IXposedHookLoadPackage {
         }
 
         // Use remote preferences for com.android.settings, to fix reading preference denied by SELinux
-        if (lpparam.packageName.equals(PackageNames.ANDROID_SETTINGS)) {
+        if (!ArrayUtils.contains(PackageNames._SYSTEM_BOOT_PACKAGES, lpparam.packageName)) {
             XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {

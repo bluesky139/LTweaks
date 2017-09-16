@@ -90,6 +90,12 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Prefs.makeWorldReadable();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         getDelegate().onStop();

@@ -53,4 +53,10 @@ public class PackageNames {
     public static final String ANDROID_SETTINGS = "com.android.settings";
     public static final String SHADOWSOCKS = "com.github.shadowsocks";
     public static final String SOLID_EXPLORER = "pl.solidexplorer2";
+
+    public static final String[] _SYSTEM_BOOT_PACKAGES = new String[] {
+            ANDROID,
+            ANDROID_SETTINGS,
+            ANDROID_SYSTEM_UI
+    };
 }
