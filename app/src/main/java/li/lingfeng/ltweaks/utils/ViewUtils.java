@@ -121,6 +121,20 @@ public class ViewUtils {
         return null;
     }
 
+    public static <T extends View> List<T> findAllViewById(final ViewGroup rootView, final int id) {
+        final List<T> results = new ArrayList<>();
+        traverseViews(rootView, new ViewTraverseCallback2() {
+            @Override
+            public boolean onView(View view, int deep) {
+                if (view.getId() == id) {
+                    results.add((T) view);
+                }
+                return false;
+            }
+        });
+        return results;
+    }
+
     public static void printChilds(ViewGroup rootView) {
         traverseViews(rootView, false, new ViewTraverseCallback() {
             @Override
