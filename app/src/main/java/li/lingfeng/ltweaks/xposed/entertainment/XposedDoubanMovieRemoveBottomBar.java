@@ -74,30 +74,46 @@ public class XposedDoubanMovieRemoveBottomBar extends XposedBase {
 
     private void hookBottomBar(Activity activity) throws Throwable {
         int idTabStrip = ContextUtils.getIdId("tab_strip");
-        ViewGroup tabStrip = (ViewGroup) activity.findViewById(idTabStrip);
-        List<RelativeLayout> layouts = ViewUtils.findAllViewByType(tabStrip, RelativeLayout.class);
-        Logger.d("tabStrip with " + layouts.size() + " relative layouts.");
+        final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+        List<View> views = ViewUtils.findAllViewById(rootView, idTabStrip);
+        for (View view : views) {
+            if (view instanceof ViewGroup) {
+                ViewGroup tabStrip = (ViewGroup) view;
+                Logger.d("tabStrip " + tabStrip);
+                List<RelativeLayout> layouts = ViewUtils.findAllViewByType(tabStrip, RelativeLayout.class);
+                Logger.d("tabStrip with " + layouts.size() + " relative layouts.");
+                if (layouts.size() == 0) {
+                    continue;
+                }
 
-        SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[layouts.size()];
-        for (int i = 0; i < layouts.size(); ++i) {
-            RelativeLayout layout = layouts.get(i);
-            ImageView imageView = ViewUtils.findViewByType(layout, ImageView.class);
-            TextView textView = ViewUtils.findViewByType(layout, TextView.class);
-            SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(imageView.getDrawable(), textView.getText(), layout);
-            navItems[i] = navItem;
+                SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[layouts.size()];
+                for (int i = 0; i < layouts.size(); ++i) {
+                    RelativeLayout layout = layouts.get(i);
+                    ImageView imageView = ViewUtils.findViewByType(layout, ImageView.class);
+                    if (imageView == null) {
+                        continue;
+                    }
+                    TextView textView = ViewUtils.findViewByType(layout, TextView.class);
+                    if (textView == null) {
+                        continue;
+                    }
+                    SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(imageView.getDrawable(), textView.getText(), layout);
+                    navItems[i] = navItem;
+                }
+                SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(ContextUtils.getAppIcon(),
+                        ContextUtils.getAppName(), null);
+
+                FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
+                mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
+                mDrawerLayout.updateHeaderBackground(Color.parseColor("#51C061"));
+                mDrawerLayout.updateNavListBackground(Color.parseColor("#F2F1EE"));
+                mDrawerLayout.updateNavListTextColor(Color.BLACK);
+                rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                tabStrip.setVisibility(View.GONE);
+                Logger.i("Simple drawer is created.");
+                break;
+            }
         }
-        SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(ContextUtils.getAppIcon(),
-                ContextUtils.getAppName(), null);
-
-        FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
-        mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
-        mDrawerLayout.updateHeaderBackground(Color.parseColor("#51C061"));
-        mDrawerLayout.updateNavListBackground(Color.parseColor("#F2F1EE"));
-        mDrawerLayout.updateNavListTextColor(Color.BLACK);
-        ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
-        rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        tabStrip.setVisibility(View.GONE);
-        Logger.i("Simple drawer is created.");
     }
 }
