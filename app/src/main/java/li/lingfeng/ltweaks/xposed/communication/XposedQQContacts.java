@@ -22,10 +22,18 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedQQContacts extends XposedBase {
 
     private static final String sPhoneFrameActivity = "com.tencent.mobileqq.activity.phone.PhoneFrameActivity";
+    private static final String sPhoneLaunchActivity = "com.tencent.mobileqq.activity.phone.PhoneLaunchActivity";
 
     @Override
     protected void handleLoadPackage() throws Throwable {
         findAndHookActivity(sPhoneFrameActivity, "onCreate", Bundle.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Logger.i("Dismiss contacts enabler.");
+                ((Activity) param.thisObject).finish();
+            }
+        });
+        findAndHookActivity(sPhoneLaunchActivity, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.i("Dismiss contacts enabler.");
