@@ -56,6 +56,7 @@ public class PackageNames {
 
     public static final String[] _SYSTEM_BOOT_PACKAGES = new String[] {
             ANDROID,
-            ANDROID_SYSTEM_UI
+            ANDROID_SYSTEM_UI,
+            ANDROID_SETTINGS
     };
 }
