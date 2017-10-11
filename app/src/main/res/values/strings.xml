@@ -121,6 +121,8 @@ Open source on github: \n
     <string name="pref_jd_share_item_summary">Use \"Copy To Clipboard\" in app share menu, a button will appear for you</string>
     <string name="pref_jd_history">Price history in share menu</string>
     <string name="pref_jd_history_summary">Use with above share function</string>
+    <string name="pref_jd_basic_share_activity">Original share activity</string>
+    <string name="pref_jd_basic_share_activity_summary">Not something like \"Share Reward\", in case no \"Copy Link\" button</string>
     <string name="pref_category_suning">Suning</string>
     <string name="pref_suning_share_item">Share product by \"System Share\"</string>
     <string name="pref_suning_share_item_summary">Use \"Copy To Clipboard\" in app share menu, a button will appear for you</string>

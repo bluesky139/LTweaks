@@ -109,6 +109,8 @@ Open source on github: \n
     <string name="pref_jd_share_item_summary">在自带的分享菜单中使用\"复制链接\"，之后会浮现一个分享按钮给你</string>
     <string name="pref_jd_history">查询历史价格</string>
     <string name="pref_jd_history_summary">配合上面的分享功能来使用</string>
+    <string name="pref_jd_basic_share_activity">原始分享界面</string>
+    <string name="pref_jd_basic_share_activity_summary">而不是\"分享有礼\"之类的，避免没有\"复制链接\"按钮</string>
     <string name="pref_category_suning">苏宁</string>
     <string name="pref_suning_share_item">使用系统分享来分享商品</string>
     <string name="pref_suning_share_item_summary">在自带的分享菜单中使用\"复制链接\"，之后会浮现一个分享按钮给你</string>

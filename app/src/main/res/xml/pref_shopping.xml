@@ -16,6 +16,11 @@
             android:key="@string/key_jd_history"
             android:title="@string/pref_jd_history"
             android:summary="@string/pref_jd_history_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_jd_basic_share_activity"
+            android:title="@string/pref_jd_basic_share_activity"
+            android:summary="@string/pref_jd_basic_share_activity_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
