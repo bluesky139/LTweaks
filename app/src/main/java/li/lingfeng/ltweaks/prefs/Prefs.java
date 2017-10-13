@@ -4,20 +4,17 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.File;
 
-import de.robv.android.xposed.XSharedPreferences;
 import li.lingfeng.ltweaks.MyApplication;
-import li.lingfeng.ltweaks.utils.Logger;
 
 /**
  * Created by smallville on 2016/12/24.
  */
 
 public class Prefs {
-    public static XSharedPreferences xprefs; // Loaded in zygote, for system boot packages
+    public static android.content.SharedPreferences xprefs; // Loaded in zygote, for system boot packages
+                                                            // Or remote preferences, set in Application.attach()
     private static SharedPreferences instance_;
     public static SharedPreferences instance() {
         if (instance_ == null) {
@@ -32,14 +29,7 @@ public class Prefs {
     }
 
     private static SharedPreferences createXSharedPreferences() {
-        XSharedPreferences pref;
-        if (MyApplication.instance() == null
-                || ArrayUtils.contains(PackageNames._SYSTEM_BOOT_PACKAGES, MyApplication.instance().getPackageName())) {
-            pref = xprefs;
-        } else {
-            pref = new XSharedPreferences(PackageNames.L_TWEAKS);
-        }
-        return new SharedPreferences(pref);
+        return new SharedPreferences(xprefs);
     }
 
     private static SharedPreferences createSharedPreferences() {

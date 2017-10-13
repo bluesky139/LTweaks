@@ -78,8 +78,9 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
 
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
-        Prefs.xprefs = new XSharedPreferences(PackageNames.L_TWEAKS);
-        Prefs.xprefs.makeWorldReadable();
+        XSharedPreferences pref = new XSharedPreferences(PackageNames.L_TWEAKS);
+        pref.makeWorldReadable();
+        Prefs.xprefs = pref;
     }
 
     @Override
@@ -98,6 +99,7 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
                     Application app = (Application) param.thisObject;
                     RemotePreferences pref = new RemotePreferences(app,
                             "li.lingfeng.ltweaks.mainpreferences", "li.lingfeng.ltweaks_preferences");
+                    Prefs.xprefs = pref;
                     handleLoadPackageByPrefs(lpparam, pref);
                 }
             });
