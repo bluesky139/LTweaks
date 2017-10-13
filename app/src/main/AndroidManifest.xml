@@ -44,7 +44,7 @@
         <activity
             android:name=".activities.BilibiliActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dialog"
+            android:theme="@style/Theme.AppCompat.Dialog"
             android:label="Bilibili"
             android:taskAffinity="li.lingfeng.ltweaks.activities.BilibiliActivity"
             android:enabled="false">
@@ -60,7 +60,7 @@
         <activity
             android:name=".activities.DoubanMovieActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dialog"
+            android:theme="@style/Theme.AppCompat.Dialog"
             android:label="@string/douban_movie_app"
             android:taskAffinity="li.lingfeng.ltweaks.activities.DoubanMovieActivity"
             android:enabled="false">
@@ -78,7 +78,7 @@
         <activity
             android:name=".activities.JDActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dialog"
+            android:theme="@style/Theme.AppCompat.Dialog"
             android:label="@string/jd_app"
             android:taskAffinity="li.lingfeng.ltweaks.activities.JDActivity"
             android:enabled="false">
@@ -186,7 +186,7 @@
             android:name=".activities.ProcessTextActivity"
             android:taskAffinity="li.lingfeng.ltweaks.activities.ProcessTextActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dialog">
+            android:theme="@style/Theme.AppCompat.Dialog">
         </activity>
         <activity-alias
             android:name=".activities.DoubanMovieProcessTextActivity"
@@ -215,7 +215,7 @@
             android:taskAffinity="li.lingfeng.ltweaks.activities.ChromeIncognitoActivity"
             android:excludeFromRecents="true"
             android:label="@string/process_text_incognito_search"
-            android:theme="@style/ThemeOverlay.AppCompat.Dialog"
+            android:theme="@style/Theme.AppCompat.Dialog"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
