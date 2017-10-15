@@ -180,9 +180,9 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
     }
 
     public static class NavItem {
-        Drawable mIcon;
-        CharSequence mText;
-        Object mClickObj;
+        public Drawable mIcon;
+        public CharSequence mText;
+        public Object mClickObj;
 
         public NavItem(Drawable icon, CharSequence text, Object clickObj) throws Throwable {
             if (icon == null || text == null) {
@@ -196,7 +196,7 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
             mClickObj = clickObj;
         }
 
-        void onClick(View view) {
+        public void onClick(View view) {
             Logger.i("Drawer item " + mText + " is clicked.");
             if (mClickObj == null) {
                 return;

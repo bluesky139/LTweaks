@@ -135,6 +135,11 @@ public class ViewUtils {
         return results;
     }
 
+    public static View findViewByName(ViewGroup rootView, String name) {
+        int id = ContextUtils.getIdId(name);
+        return id > 0 ? rootView.findViewById(id) : null;
+    }
+
     public static void printChilds(ViewGroup rootView) {
         traverseViews(rootView, false, new ViewTraverseCallback() {
             @Override
