@@ -9,6 +9,7 @@ import com.crossbowffs.remotepreferences.RemotePreferenceProvider;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
 
 /**
@@ -23,8 +24,14 @@ public class MainPreferenceProvider extends RemotePreferenceProvider {
 
     @Override
     public boolean onCreate() {
-        SharedPreferences preferences = getContext().getSharedPreferences("li.lingfeng.ltweaks_preferences",
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? Context.MODE_WORLD_READABLE : 0);
+        Context context = getContext();
+        int mode = Context.MODE_WORLD_READABLE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context = context.createDeviceProtectedStorageContext();
+            mode = 0;
+        }
+        SharedPreferences preferences = context.getSharedPreferences("li.lingfeng.ltweaks_preferences", mode);
+        Prefs.makeWorldReadable();
         try {
             Field field = RemotePreferenceProvider.class.getDeclaredField("mPreferences");
             field.setAccessible(true);

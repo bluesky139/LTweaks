@@ -20,6 +20,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public abstract class XposedAppInfo extends XposedBase {
 
     private static final String INSTALLED_APP_DETAILS = "com.android.settings.applications.InstalledAppDetails";
+    public static final String SETTINGS_ACTIVITY = "com.android.settings.SettingsActivity";
 
     @Override
     protected void handleLoadPackage() throws Throwable {

@@ -42,6 +42,8 @@ public class BasePrefFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
+        } else {
+            getPreferenceManager().setStorageDeviceProtected();
         }
         setHasOptionsMenu(true);
     }

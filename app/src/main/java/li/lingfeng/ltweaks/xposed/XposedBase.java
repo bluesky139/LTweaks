@@ -1,12 +1,13 @@
 package li.lingfeng.ltweaks.xposed;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.Service;
+import android.text.TextUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -15,8 +16,11 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.MyApplication;
-import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PrefKeys;
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.XposedUtils;
 
 /**
  * Created by smallville on 2017/1/23.
@@ -24,14 +28,51 @@ import li.lingfeng.ltweaks.utils.Logger;
 
 public abstract class XposedBase implements IXposedHookLoadPackage {
 
-    private static Method sMethodBeforeHooked;
-    private static Method sMethodAfterHooked;
-
     protected XC_LoadPackage.LoadPackageParam lpparam;
+    private Set<XC_MethodHook.Unhook> performCreateHooks;
 
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         this.lpparam = lpparam;
-        handleLoadPackage();
+        final XposedLoad xposedLoad = getClass().getAnnotation(XposedLoad.class);
+        if (!xposedLoad.loadAtActivityCreate().isEmpty()) {
+            final Class cls = findClass(xposedLoad.loadAtActivityCreate());
+            performCreateHooks = hookAllMethods(Activity.class, "performCreate", new XC_MethodHook() {
+                boolean handled = false;
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    if (handled || !cls.isAssignableFrom(param.thisObject.getClass())) {
+                        return;
+                    }
+                    handled = true;
+                    XposedUtils.unhookAll(performCreateHooks);
+                    performCreateHooks = null;
+
+                    if (xposedLoad.useRemotePreferences()) {
+                        Activity activity = (Activity) param.thisObject;
+                        Prefs.createRemotePreferences(activity.getApplicationContext());
+                    }
+                    List<String> enabledPrefs = new ArrayList<>();
+                    for (int pref : xposedLoad.prefs()) {
+                        if (Prefs.instance().getBoolean(pref, false)) {
+                            enabledPrefs.add(PrefKeys.getById(pref));
+                        }
+                    }
+
+                    if (enabledPrefs.size() > 0) {
+                        try {
+                            Logger.i("Load " + XposedBase.this.getClass().getName() + " for " + lpparam.packageName
+                                    + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                            handleLoadPackage();
+                        } catch (Throwable e) {
+                            Logger.e("Can't handleLoadPackage, " + e.getMessage());
+                            Logger.stackTrace(e);
+                        }
+                    }
+                }
+            });
+        } else {
+            handleLoadPackage();
+        }
     }
 
     protected abstract void handleLoadPackage() throws Throwable;

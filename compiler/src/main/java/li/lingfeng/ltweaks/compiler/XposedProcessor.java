@@ -130,12 +130,11 @@ public class XposedProcessor extends AbstractProcessor {
         mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor is generating " + genFile.toUri().toString());
 
         writer.write("package li.lingfeng.ltweaks.prefs;\n\n");
-        writer.write("import java.util.HashMap;\n");
-        writer.write("import java.util.Map;\n\n");
+        writer.write("import android.util.SparseArray;\n\n");
         writer.write("public class PrefKeys {\n\n");
 
         Map<Integer, String> keys = getKeyMap();
-        writer.write("\tprivate static Map<Integer, String> id2valueMap = new HashMap<Integer, String>() {{\n");
+        writer.write("\tprivate static SparseArray<String> id2valueMap = new SparseArray<String>(" + keys.size() + ") {{\n");
         for (Map.Entry<Integer, String> kv : keys.entrySet()) {
             writer.write("\t\tput(" + kv.getKey() + ", \"" + kv.getValue() + "\");\n");
         }

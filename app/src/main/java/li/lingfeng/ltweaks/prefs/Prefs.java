@@ -2,19 +2,27 @@ package li.lingfeng.ltweaks.prefs;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Environment;
+
+import com.crossbowffs.remotepreferences.RemotePreferences;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 
+import de.robv.android.xposed.XSharedPreferences;
 import li.lingfeng.ltweaks.MyApplication;
+import li.lingfeng.ltweaks.utils.Logger;
 
 /**
  * Created by smallville on 2016/12/24.
  */
 
 public class Prefs {
-    public static android.content.SharedPreferences xprefs; // Loaded in zygote, for system boot packages
-                                                            // Or remote preferences, set in Application.attach()
+    private static final String M_PATH = "/data/data/" + PackageNames.L_TWEAKS + "/shared_prefs/" + PackageNames.L_TWEAKS + "_preferences.xml";
+    private static final String N_PATH = "/data/user_de/0/" + PackageNames.L_TWEAKS + "/shared_prefs/" + PackageNames.L_TWEAKS + "_preferences.xml";
+    public static final String PATH = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? M_PATH : N_PATH;
+    private static boolean mNPathChecked = false;
+
     private static SharedPreferences instance_;
     public static SharedPreferences instance() {
         if (instance_ == null) {
@@ -29,15 +37,60 @@ public class Prefs {
     }
 
     private static SharedPreferences createXSharedPreferences() {
-        return new SharedPreferences(xprefs);
+        XSharedPreferences pref = new XSharedPreferences(new File(PATH));
+        return new SharedPreferences(pref);
     }
 
     private static SharedPreferences createSharedPreferences() {
-        android.content.SharedPreferences pref = MyApplication.instance().getSharedPreferences(
-                MyApplication.instance().getPackageName() + "_preferences",
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? Context.MODE_WORLD_READABLE : 0);
+        Context context = MyApplication.instance();
+        int mode = Context.MODE_WORLD_READABLE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context = context.createDeviceProtectedStorageContext();
+            mode = 0;
+        }
+        android.content.SharedPreferences pref = context.getSharedPreferences(
+                context.getPackageName() + "_preferences", mode);
         makeWorldReadable();
         return new SharedPreferences(pref);
+    }
+
+    public static void createRemotePreferences(Context appContext) {
+        if (instance_ != null) {
+            Logger.w("createRemotePreferences, but instance exists.");
+        }
+        RemotePreferences pref = new RemotePreferences(appContext,
+                "li.lingfeng.ltweaks.mainpreferences", "li.lingfeng.ltweaks_preferences");
+        instance_ = new SharedPreferences(pref);
+    }
+
+    // Move settings to world readable place, start from Android 7.0
+    public static void moveToN() {
+        if (mNPathChecked || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return;
+        }
+        mNPathChecked = true;
+
+        // https://github.com/rovo89/XposedBridge/issues/206
+        File folder = new File("/data/user_de/0/" + PackageNames.L_TWEAKS);
+        folder.setExecutable(true, false);
+
+        final File mFile = new File(M_PATH);
+        if (!mFile.exists()) {
+            return;
+        }
+        final File nFile = new File(N_PATH);
+        if (nFile.exists()) {
+            return;
+        }
+
+        try {
+            Logger.v("Move exist M prefs to N.");
+            FileUtils.copyFile(mFile, nFile);
+            nFile.setReadable(true, false);
+            mFile.delete();
+        } catch (Throwable e) {
+            Logger.e("Can't move M prefs to N, " + e);
+        }
     }
 
     public static void makeWorldReadable() {
@@ -49,8 +102,7 @@ public class Prefs {
             return;
         }
         try {
-            File file = new File(Environment.getDataDirectory(),
-                    "data/" + packageName + "/shared_prefs/" + packageName + "_preferences.xml");
+            File file = new File(PATH);
             if (file.exists()) {
                 file.setReadable(true, false);
             }

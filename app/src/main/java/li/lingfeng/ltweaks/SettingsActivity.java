@@ -5,13 +5,11 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
@@ -25,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.List;
 
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.PermissionUtils;
@@ -54,6 +53,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Prefs.moveToN();
         super.onCreate(savedInstanceState);
         setupActionBar();
     }

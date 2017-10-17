@@ -1,14 +1,8 @@
 package li.lingfeng.ltweaks.xposed;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.crossbowffs.remotepreferences.RemotePreferences;
-
-import org.apache.commons.lang3.ArrayUtils;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,14 +12,11 @@ import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
-import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.prefs.Prefs;
+import li.lingfeng.ltweaks.utils.Logger;
 
 /**
  * Created by smallville on 2016/12/22.
@@ -78,9 +69,10 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
 
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
-        XSharedPreferences pref = new XSharedPreferences(PackageNames.L_TWEAKS);
-        pref.makeWorldReadable();
-        Prefs.xprefs = pref;
+        File file = new File(Prefs.PATH);
+        if (file.exists()) {
+            file.setReadable(true, false);
+        }
     }
 
     @Override
@@ -91,25 +83,6 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
             addModulePrefs();
         }
 
-        // Use remote preferences for com.android.settings, to fix reading preference denied by SELinux
-        if (!ArrayUtils.contains(PackageNames._SYSTEM_BOOT_PACKAGES, lpparam.packageName)) {
-            XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    Application app = (Application) param.thisObject;
-                    RemotePreferences pref = new RemotePreferences(app,
-                            "li.lingfeng.ltweaks.mainpreferences", "li.lingfeng.ltweaks_preferences");
-                    Prefs.xprefs = pref;
-                    handleLoadPackageByPrefs(lpparam, pref);
-                }
-            });
-        } else {
-            handleLoadPackageByPrefs(lpparam, Prefs.instance());
-        }
-    }
-
-    private void handleLoadPackageByPrefs(XC_LoadPackage.LoadPackageParam lpparam,
-                                          SharedPreferences sharedPreferences) {
         Set<Class<? extends XposedBase>> modules = getModules(lpparam.packageName);
         if (modules == null) {
             return;
@@ -117,26 +90,33 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
 
         for (Class<?> cls : modules) {
             try {
+                XposedLoad xposedLoad = cls.getAnnotation(XposedLoad.class);
                 List<String> enabledPrefs = new ArrayList<>();
-                Set<String> prefs = getModulePrefs(cls);
-                if (prefs != null) {
-                    for (String pref : prefs) {
-                        if (sharedPreferences.getBoolean(pref, false)) {
-                            enabledPrefs.add(pref);
+                Logger.d("xposedLoad.loadAtActivityCreate() " + lpparam.packageName + " " + cls.getSimpleName() + " " + xposedLoad.loadAtActivityCreate());
+                if (xposedLoad.loadAtActivityCreate().isEmpty()) {
+                    Set<String> prefs = getModulePrefs(cls);
+                    if (prefs != null) {
+                        for (String pref : prefs) {
+                            if (Prefs.instance().getBoolean(pref, false)) {
+                                enabledPrefs.add(pref);
+                            }
                         }
                     }
                 }
 
-                if (enabledPrefs.size() > 0 || cls.getAnnotation(XposedLoad.class).prefs().length == 0) {
+                if (enabledPrefs.size() > 0 || xposedLoad.prefs().length == 0
+                        || !xposedLoad.loadAtActivityCreate().isEmpty()) {
                     IXposedHookLoadPackage module = (IXposedHookLoadPackage) cls.newInstance();
-                    if (mModulesForAll.contains(cls)) {
-                        if (lpparam.packageName.equals(PackageNames.ANDROID)) {
-                            Logger.i("Load " + cls.getName() + " for all packages"
+                    if (xposedLoad.loadAtActivityCreate().isEmpty()) {
+                        if (mModulesForAll.contains(cls)) {
+                            if (lpparam.packageName.equals(PackageNames.ANDROID)) {
+                                Logger.i("Load " + cls.getName() + " for all packages"
+                                        + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                            }
+                        } else {
+                            Logger.i("Load " + cls.getName() + " for " + lpparam.packageName
                                     + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
                         }
-                    } else {
-                        Logger.i("Load " + cls.getName() + " for " + lpparam.packageName
-                                + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
                     }
                     module.handleLoadPackage(lpparam);
                     mLoaded.add(module);
