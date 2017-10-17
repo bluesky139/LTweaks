@@ -9,7 +9,6 @@ import com.crossbowffs.remotepreferences.RemotePreferenceProvider;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
 
 /**
@@ -31,7 +30,6 @@ public class MainPreferenceProvider extends RemotePreferenceProvider {
             mode = 0;
         }
         SharedPreferences preferences = context.getSharedPreferences("li.lingfeng.ltweaks_preferences", mode);
-        Prefs.makeWorldReadable();
         try {
             Field field = RemotePreferenceProvider.class.getDeclaredField("mPreferences");
             field.setAccessible(true);
