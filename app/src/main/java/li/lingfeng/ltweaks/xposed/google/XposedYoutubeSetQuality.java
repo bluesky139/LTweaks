@@ -195,9 +195,11 @@ public class XposedYoutubeSetQuality extends XposedBase {
                     if (mResultItemClick != null && mResultFragment != null) {
                         break;
                     }
+                } catch (XposedHelpers.ClassNotFoundError e) {
+                    Logger.v("class not found, " + clsName);
+                    ++mErrorCount;
                 } catch (Throwable e) {
                     Logger.v("test class failed, " + clsName + ", " + e);
-                    ++mErrorCount;
                 }
                 if (mErrorCount > MAX_ERROR_COUNT) {
                     Logger.e("test class error count > " + MAX_ERROR_COUNT + ", abort.");
@@ -261,12 +263,11 @@ public class XposedYoutubeSetQuality extends XposedBase {
 
         ResultFragment testClassFragment(String name) throws Throwable {
             Class cls = findClass(name);
-            if (!KeyEvent.Callback.class.isAssignableFrom(cls)
-                    || !ComponentCallbacks.class.isAssignableFrom(cls)
+            if (!ComponentCallbacks.class.isAssignableFrom(cls)
                     || !View.OnCreateContextMenuListener.class.isAssignableFrom(cls)) {
                 return null;
             }
-            Logger.v("Test cls " + cls + " implemented KeyEvent.Callback.");
+            Logger.v("Test cls " + cls + " implemented ComponentCallbacks.");
             ResultFragment result = new ResultFragment();
             result.mClsFragment = cls;
 

@@ -92,7 +92,6 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
             try {
                 XposedLoad xposedLoad = cls.getAnnotation(XposedLoad.class);
                 List<String> enabledPrefs = new ArrayList<>();
-                Logger.d("xposedLoad.loadAtActivityCreate() " + lpparam.packageName + " " + cls.getSimpleName() + " " + xposedLoad.loadAtActivityCreate());
                 if (xposedLoad.loadAtActivityCreate().isEmpty()) {
                     Set<String> prefs = getModulePrefs(cls);
                     if (prefs != null) {
