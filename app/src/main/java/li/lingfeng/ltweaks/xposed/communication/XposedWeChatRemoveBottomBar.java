@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -46,20 +47,16 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.WE_CHAT, prefs = R.string.key_wechat_remove_bottom_bar)
 public class XposedWeChatRemoveBottomBar extends XposedBase {
 
-    private static final String VIEW_PAGER = "com.tencent.mm.ui.base.CustomViewPager";
     private static final String PERSIONAL_INFO = "com.tencent.mm.plugin.setting.ui.setting.SettingsPersonalInfoUI";
     private SimpleDrawer mDrawerLayout;
     private WeakReference mUserInfoDbRef;
-    private boolean mGotContentView = true;
     private Method mMethodAvatar;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
         findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                mGotContentView = false;
-
+            protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
                 List<Method> methods = getPossibleMethodsOfAvatar();
                 if (methods == null) {
                     throw new Exception("Can't get methods of avatar.");
@@ -78,39 +75,13 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
                     });
                     unhooks.add(unhook);
                 }
-            }
-        });
 
-        findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "setContentView", View.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-                if (mGotContentView) {
-                    return;
-                }
-
-                // Main view is framelayout.
-                final View view = (View) param.args[0];
-                if (view.getClass().getName().startsWith(PackageNames.WE_CHAT)
-                        || !(view instanceof ViewGroup)) {
-                    Logger.d("Skip content view " + view);
-                    return;
-                }
-
-                // Main view contains view pager.
-                Class clsViewPager = findClass(VIEW_PAGER);
-                View viewPager = ViewUtils.findViewByType((ViewGroup) view, clsViewPager);
-                if (viewPager == null) {
-                    Logger.d("Skip content view " + view + ", view pager is not in it.");
-                    return;
-                }
-
-                Logger.d("Got content view " + view);
-                mGotContentView = true;
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
                         Activity activity = (Activity) param.thisObject;
-                        listenOnLayoutChange(activity, view);
+                        View rootView = activity.findViewById(android.R.id.content);
+                        listenOnLayoutChange(activity, rootView);
                     }
                 });
             }
@@ -121,7 +92,6 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mDrawerLayout = null;
                 mMethodAvatar = null;
-                mGotContentView = true;
             }
         });
 
@@ -160,20 +130,20 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
     }
 
     private void listenOnLayoutChange(final Activity activity, final View view) {
-        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            public void onGlobalLayout() {
                 try {
                     boolean isOk = doModification(activity);
                     if (isOk) {
-                        view.removeOnLayoutChangeListener(this);
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else {
                         Logger.d("Layout is not ready.");
                     }
                 } catch (Throwable e) {
                     Logger.e("startHook error, " + e);
                     Logger.stackTrace(e);
-                    view.removeOnLayoutChangeListener(this);
+                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             }
         });
