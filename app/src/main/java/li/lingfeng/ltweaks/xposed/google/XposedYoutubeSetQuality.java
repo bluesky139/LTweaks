@@ -2,9 +2,7 @@ package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.content.ComponentCallbacks;
-import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -48,21 +46,33 @@ public class XposedYoutubeSetQuality extends XposedBase {
 
         mActivityAttachHook = hookAllMethods(Activity.class, "attach", new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (mActivityAttachHook != null) {
                     XposedUtils.unhookAll(mActivityAttachHook);
                     mActivityAttachHook = null;
-                    startHook();
+                    startHook((Activity) param.thisObject);
                 }
             }
         });
     }
 
-    private void startHook() {
-        mClassTester = new ClassTester();
-        mClassTester.startTest();
-        if (mClassTester.mResultItemClick == null || mClassTester.mResultFragment == null) {
-            return;
+    private void startHook(Activity activity) throws Throwable {
+        try {
+            long startTime = System.currentTimeMillis();
+            mClassTester = new ClassTester();
+            mClassTester.createEmptyResult();
+            Utils.loadObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER, lpparam.classLoader);
+            Utils.loadObfuscatedClasses(mClassTester.mResultFragment, activity, "ltweaks_result_fragment", ClassTester._VER, lpparam.classLoader);
+            Logger.d("time cost aaa " + (System.currentTimeMillis() - startTime));
+        } catch (Throwable e) {
+            Logger.w("Can't load obfuscated classes, " + e);
+            mClassTester = new ClassTester();
+            mClassTester.startTest();
+            if (mClassTester.mResultItemClick == null || mClassTester.mResultFragment == null) {
+                return;
+            }
+            Utils.saveObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER);
+            Utils.saveObfuscatedClasses(mClassTester.mResultFragment, activity, "ltweaks_result_fragment", ClassTester._VER);
         }
 
         XposedBridge.hookMethod(mClassTester.mResultFragment.mMethodNewVideo, new XC_MethodHook() {
@@ -122,6 +132,7 @@ public class XposedYoutubeSetQuality extends XposedBase {
         int mErrorCount = 0;
         static final int MAX_ERROR_COUNT = 50;
         static final int CHECKED_ITEM_CLICK_FIELD_INT = 0x1; // int W
+        static final int _VER = 1;
         ResultItemClick mResultItemClick;
         ResultFragment mResultFragment;
 
@@ -178,6 +189,11 @@ public class XposedYoutubeSetQuality extends XposedBase {
         class ResultFragment extends Result {
             Class mClsFragment; // eho
             Method mMethodNewVideo; // eho.V()
+        }
+
+        void createEmptyResult() {
+            mResultItemClick = new ResultItemClick();
+            mResultFragment = new ResultFragment();
         }
 
         void startTest() {

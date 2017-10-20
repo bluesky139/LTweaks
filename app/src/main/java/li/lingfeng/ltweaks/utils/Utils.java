@@ -1,5 +1,7 @@
 package li.lingfeng.ltweaks.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,8 +13,13 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Iterator;
+
+import de.robv.android.xposed.XposedHelpers;
 
 /**
  * Created by smallville on 2017/3/29.
@@ -114,6 +121,93 @@ public class Utils {
             a = (char) (a + index % 26);
             str += a;
             return str;
+        }
+    }
+
+    public static void saveObfuscatedClasses(Object object, Context context, String prefName, int _ver) throws Throwable {
+        Logger.v("saveObfuscatedClasses " + prefName);
+        int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        SharedPreferences prefs = context.getSharedPreferences(prefName, 0);
+        SharedPreferences.Editor editor = prefs.edit().clear()
+                .putInt("versionCode", versionCode)
+                .putInt("_ver", _ver);
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (field.getType() == Class.class) {
+                Class c = (Class) field.get(object);
+                editor.putString(field.getName(), c.getName());
+            } else if (field.getType() == Field.class) {
+                Field f = (Field) field.get(object);
+                editor.putString(field.getName(), f.getDeclaringClass().getName() + " " + f.getName());
+            } else if (field.getType() == Method.class) {
+                Method m = (Method) field.get(object);
+                StringBuilder methodStrings = new StringBuilder();
+                Class[] paramTypes = m.getParameterTypes();
+                for (int i = 0; i < paramTypes.length; ++i) {
+                    if (i > 0) {
+                        methodStrings.append(' ');
+                    }
+                    methodStrings.append(paramTypes[i].getName());
+                }
+                editor.putString(field.getName(), m.getDeclaringClass().getName() + " " + m.getName()
+                        + (methodStrings.length() > 0 ? " " + methodStrings : ""));
+            }
+        }
+        editor.apply();
+    }
+
+    public static void loadObfuscatedClasses(Object object, Context context, String prefName, int _ver, ClassLoader classLoader) throws Throwable {
+        Logger.v("loadObfuscatedClasses " + prefName);
+        SharedPreferences prefs = context.getSharedPreferences(prefName, 0);
+        if (prefs.getInt("_ver", 0) != _ver) {
+            throw new Exception("_ver not match.");
+        }
+
+        int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        int existVersionCode = prefs.getInt("versionCode", 0);
+        if (versionCode != existVersionCode) {
+            throw new Exception("Version code not match.");
+        }
+
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getType() != Class.class && field.getType() != Field.class && field.getType() != Method.class) {
+                continue;
+            }
+
+            field.setAccessible(true);
+            String value = prefs.getString(field.getName(), null);
+            if (value == null) {
+                throw new Exception("Can't load " + field.getName());
+            }
+
+            if (field.getType() == Class.class) {
+                Class c = XposedHelpers.findClass(value, classLoader);
+                field.set(object, c);
+            } else if (field.getType() == Field.class) {
+                String[] strings = prefs.getString(field.getName(), "").split(" ");
+                if (strings.length != 2) {
+                    throw new Exception("Field format not match, " + value);
+                }
+                Class c = XposedHelpers.findClass(strings[0], classLoader);
+                Field f = c.getDeclaredField(strings[1]);
+                f.setAccessible(true);
+                field.set(object, f);
+            } else if (field.getType() == Method.class) {
+                String[] strings = prefs.getString(field.getName(), "").split(" ");
+                if (strings.length < 2) {
+                    throw new Exception("Method format not match, " + value);
+                }
+                Class c = XposedHelpers.findClass(strings[0], classLoader);
+                Class[] parameterTypes = new Class[strings.length - 2];
+                for (int i = 0; i < parameterTypes.length; ++i) {
+                    parameterTypes[i] = XposedHelpers.findClass(strings[i + 2], classLoader);
+                }
+                Method m = XposedHelpers.findMethodExact(c, strings[1], parameterTypes);
+                m.setAccessible(true);
+                field.set(object, m);
+            }
         }
     }
 }
