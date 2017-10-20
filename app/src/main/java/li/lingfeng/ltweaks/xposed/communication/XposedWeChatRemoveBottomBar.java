@@ -48,6 +48,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedWeChatRemoveBottomBar extends XposedBase {
 
     private static final String PERSIONAL_INFO = "com.tencent.mm.plugin.setting.ui.setting.SettingsPersonalInfoUI";
+    private static final int MAX_ERROR_COUNT = 20;
     private SimpleDrawer mDrawerLayout;
     private WeakReference mUserInfoDbRef;
     private Method mMethodAvatar;
@@ -131,6 +132,7 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
 
     private void listenOnLayoutChange(final Activity activity, final View view) {
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            int errorCount = 0;
             @Override
             public void onGlobalLayout() {
                 try {
@@ -138,12 +140,15 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
                     if (isOk) {
                         view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else {
-                        Logger.d("Layout is not ready.");
+                        Logger.v("Layout is not ready.");
                     }
                 } catch (Throwable e) {
-                    Logger.e("startHook error, " + e);
-                    Logger.stackTrace(e);
-                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Logger.v("startHook error, " + e);
+                    ++errorCount;
+                    if (errorCount >= MAX_ERROR_COUNT) {
+                        Logger.stackTrace(e);
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
                 }
             }
         });
