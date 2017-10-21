@@ -2,6 +2,7 @@ package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Pair;
 import android.widget.Toast;
@@ -25,12 +26,14 @@ public class XposedAppInfoGoAppData extends XposedAppInfo {
 
     private static final String MENU_APP_DATA_FOLDER = "Open App Data Folder";
     private static final String MENU_APP_EXTERNAL_DATA_FOLDER = "Open App External Data Folder";
+    private static final String MENU_APP_DEVICE_ENCRYPTED_STORAGE = "Open Device Encrypted Storage";
 
     @Override
     protected Pair<String, Integer>[] newMenuNames() {
         return new Pair[] {
                 Pair.create(MENU_APP_DATA_FOLDER, 1000),
-                Pair.create(MENU_APP_EXTERNAL_DATA_FOLDER, 1001)
+                Pair.create(MENU_APP_EXTERNAL_DATA_FOLDER, 1001),
+                Pair.create(MENU_APP_DEVICE_ENCRYPTED_STORAGE, 1002)
         };
     }
 
@@ -47,6 +50,13 @@ public class XposedAppInfoGoAppData extends XposedAppInfo {
                 ContextUtils.openFolder(activity, dir);
             } else {
                 Toast.makeText(activity, "Folder doesn't exist.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (MENU_APP_DEVICE_ENCRYPTED_STORAGE.equals(menuName)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                String dir = "/data/user_de/0/" + packageName;
+                ContextUtils.openFolder(activity, dir);
+            } else {
+                Toast.makeText(activity, "Android 7.0+ only.", Toast.LENGTH_SHORT).show();
             }
         } else {
             throw new Exception("Unknown menu " + menuName);

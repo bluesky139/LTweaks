@@ -234,7 +234,7 @@ Open source on github: \n
     <string name="pref_selection_action_mode_original_summary">某些菜单项被应用自身隐藏掉\n仅 Android 6.0+</string>
     <string name="pref_category_app_info">应用信息</string>
     <string name="pref_app_info_open_app_data_folder">打开应用数据文件夹</string>
-    <string name="pref_app_info_open_app_data_folder_summary">通常情况下会打开 \"/data/data/[package_name]\" 或 \"/sdcard/Android/data/[package_name]\"(外部存储), 你需要一个支持 root 的文件管理器, 配合 Solid Explorer 测试过\n以菜单的形式添加</string>
+    <string name="pref_app_info_open_app_data_folder_summary">通常情况下会打开 \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" 或 \"/data/user_de/0/[package_name]\", 你需要一个支持 root 的文件管理器, 配合 Solid Explorer 测试过\n以菜单的形式添加</string>
     <string name="pref_app_info_go_market">跳转到市场</string>
     <string name="pref_app_info_go_market_summary">跳转到 Google Play, 酷市场, ApkPure, Mobilism\n以菜单的形式添加</string>
 
