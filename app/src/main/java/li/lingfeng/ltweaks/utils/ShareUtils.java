@@ -2,7 +2,6 @@ package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -28,10 +27,7 @@ public class ShareUtils {
                     .setAction("Share...", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(Intent.ACTION_SEND);
-                            intent.setType("text/plain");
-                            intent.putExtra(Intent.EXTRA_TEXT, text);
-                            activity.startActivity(intent);
+                            shareText(activity, text.toString());
                         }
                     })
                     .show();
