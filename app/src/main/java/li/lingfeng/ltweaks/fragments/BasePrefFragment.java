@@ -227,6 +227,10 @@ public class BasePrefFragment extends PreferenceFragment
         preference.setOnPreferenceClickListener(this);
     }
 
+    protected void enablePreference(@StringRes int key, boolean enabled) {
+        findPreference(key).setEnabled(enabled);
+    }
+
     protected void uncheckPreferenceByDisabledComponent(@StringRes int key, Class componentCls) {
         uncheckPreferenceByDisabledComponent(key, componentCls.getName());
     }

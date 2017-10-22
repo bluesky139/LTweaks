@@ -21,6 +21,7 @@ Open source on github: \n
     <string name="app_send_mail_description">请描述一下你做了什么，出了什么错.\n可能的话请附上一些截屏.</string>
     <string name="app_send_to">发送到...</string>
     <string name="app_ok">OK</string>
+    <string name="app_cancel">取消</string>
     <string name="app_close">关闭</string>
     <string name="app_delete">删除</string>
     <string name="app_shortcut_is_created">快捷方式已创建.</string>
@@ -237,6 +238,11 @@ Open source on github: \n
     <string name="pref_app_info_open_app_data_folder_summary">通常情况下会打开 \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" 或 \"/data/user_de/0/[package_name]\", 你需要一个支持 root 的文件管理器, 配合 Solid Explorer 测试过\n以菜单的形式添加</string>
     <string name="pref_app_info_go_market">跳转到市场</string>
     <string name="pref_app_info_go_market_summary">跳转到 Google Play, 酷市场, ApkPure, Mobilism\n以菜单的形式添加</string>
+    <string name="pref_category_lineage_os">Lineage OS</string>
+    <string name="pref_lineage_os_live_display_time">自定义 Live Display 时间</string>
+    <string name="pref_lineage_os_live_display_time_summary">手动设置 Live Display 时间, 而不是通过位置来计算日出/日落</string>
+    <string name="pref_lineage_os_live_display_time_sunrise">设置 Live Display 日出时间</string>
+    <string name="pref_lineage_os_live_display_time_sunset">设置 Live Display 日落时间</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>

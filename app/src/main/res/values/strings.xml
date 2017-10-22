@@ -21,6 +21,7 @@ Open source on github: \n
     <string name="app_send_mail_description">Please describe what you did, and what happened.\nAlso attach some screenshot if possible.</string>
     <string name="app_send_to">Send To...</string>
     <string name="app_ok">OK</string>
+    <string name="app_cancel">Cancel</string>
     <string name="app_close">Close</string>
     <string name="app_delete">Delete</string>
     <string name="app_shortcut_is_created">Shortcut is created.</string>
@@ -249,6 +250,11 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="pref_app_info_open_app_data_folder_summary">Generally, it will open \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" or \"/data/user_de/0/[package_name]\", you need a file explorer which supports root access, tested with Solid Explorer\nAdd as menu</string>
     <string name="pref_app_info_go_market">Go to market</string>
     <string name="pref_app_info_go_market_summary">Go to Google Play, CoolApk, ApkPure, Mobilism\nAdd as menu</string>
+    <string name="pref_category_lineage_os">Lineage OS</string>
+    <string name="pref_lineage_os_live_display_time">Customize Live Display time</string>
+    <string name="pref_lineage_os_live_display_time_summary">Manually set Live Display time, not calculate sunrise/sunset from location</string>
+    <string name="pref_lineage_os_live_display_time_sunrise">Set Live Display sunrise</string>
+    <string name="pref_lineage_os_live_display_time_sunset">Set Live Display sunset</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>

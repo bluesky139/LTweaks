@@ -139,4 +139,21 @@
             android:title="@string/pref_app_info_go_market"
             android:summary="@string/pref_app_info_go_market_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_lineage_os">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_lineage_os_live_display_time"
+            android:title="@string/pref_lineage_os_live_display_time"
+            android:summary="@string/pref_lineage_os_live_display_time_summary" />
+        <li.lingfeng.ltweaks.fragments.base.TimePickerPreference
+            android:defaultValue="08:00"
+            android:key="@string/key_lineage_os_live_display_time_sunrise"
+            android:title="@string/pref_lineage_os_live_display_time_sunrise" />
+        <li.lingfeng.ltweaks.fragments.base.TimePickerPreference
+            android:defaultValue="19:00"
+            android:key="@string/key_lineage_os_live_display_time_sunset"
+            android:title="@string/pref_lineage_os_live_display_time_sunset" />
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -293,4 +293,10 @@ public class SystemPrefFragment extends BasePrefFragment {
     private void setupSolidExplorerUrlReplacer(Preference preference) {
         startActivity(new Intent(getActivity(), SolidExplorerUrlReplacerSettings.class));
     }
+
+    @PreferenceChange(prefs = R.string.key_lineage_os_live_display_time, refreshAtStart = true)
+    private void customizeLineageOSLiveDisplayTime(SwitchPreference preference, boolean enabled) {
+        enablePreference(R.string.key_lineage_os_live_display_time_sunrise, enabled);
+        enablePreference(R.string.key_lineage_os_live_display_time_sunset, enabled);
+    }
 }
