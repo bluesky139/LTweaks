@@ -1,9 +1,7 @@
 package li.lingfeng.ltweaks.prefs;
 
-import android.os.Build;
-import android.support.annotation.StringRes;
 import android.support.annotation.Nullable;
-import android.content.SharedPreferences.Editor;
+import android.support.annotation.StringRes;
 
 import java.util.Map;
 import java.util.Set;
@@ -23,9 +21,6 @@ public class SharedPreferences implements android.content.SharedPreferences {
     }
 
     public void reloadIfNecessary() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return;
-        }
         try {
             if (mOriginal instanceof XSharedPreferences) {
                 XSharedPreferences pref = (XSharedPreferences) mOriginal;

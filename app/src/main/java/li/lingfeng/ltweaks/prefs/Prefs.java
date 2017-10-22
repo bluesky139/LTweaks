@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.prefs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import com.crossbowffs.remotepreferences.RemotePreferences;
@@ -21,7 +22,7 @@ public class Prefs {
     private static final String M_PATH = "/data/data/" + PackageNames.L_TWEAKS + "/shared_prefs/" + PackageNames.L_TWEAKS + "_preferences.xml";
     private static final String N_PATH = "/data/user_de/0/" + PackageNames.L_TWEAKS + "/shared_prefs/" + PackageNames.L_TWEAKS + "_preferences.xml";
     public static final String PATH = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? M_PATH : N_PATH;
-    private static boolean mNPathChecked = false;
+    private static boolean sInitedAtActivityCreate = false;
 
     private static SharedPreferences instance_;
     public static SharedPreferences instance() {
@@ -63,12 +64,19 @@ public class Prefs {
         instance_ = new SharedPreferences(pref);
     }
 
+    public static void initAtActivityCreate() {
+        if (!sInitedAtActivityCreate) {
+            sInitedAtActivityCreate = true;
+            moveToN();
+            listenPreferenceChange();
+        }
+    }
+
     // Move settings to world readable place, start from Android 7.0
-    public static void moveToN() {
-        if (mNPathChecked || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+    private static void moveToN() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             return;
         }
-        mNPathChecked = true;
 
         // https://github.com/rovo89/XposedBridge/issues/206
         File folder = new File("/data/user_de/0/" + PackageNames.L_TWEAKS);
@@ -92,6 +100,21 @@ public class Prefs {
             Logger.e("Can't move M prefs to N, " + e);
         }
     }
+
+    private static void listenPreferenceChange() {
+        instance().registerOnSharedPreferenceChangeListener(sPreferenceChangeListener);
+    }
+
+    private static android.content.SharedPreferences.OnSharedPreferenceChangeListener sPreferenceChangeListener
+            = new android.content.SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(android.content.SharedPreferences sharedPreferences, String key) {
+            Intent intent = new Intent(PackageNames.L_TWEAKS + ".ACTION_PREF_CHANGE." + key);
+            intent.putExtra("key", key);
+            intent.putExtra("value", sharedPreferences.getAll().get(key).toString());
+            MyApplication.instance().sendBroadcast(intent);
+        }
+    };
 
     public static void makeWorldReadable() {
         if (MyApplication.instance() == null) {

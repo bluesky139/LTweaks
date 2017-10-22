@@ -60,9 +60,9 @@ public class TimePickerPreference extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
-            int hour = mTimePicker.getCurrentHour();
-            int minute = mTimePicker.getCurrentMinute();
-            String time = String.format("%02d:%02d", hour, minute);
+            mHour = mTimePicker.getCurrentHour();
+            mMinute = mTimePicker.getCurrentMinute();
+            String time = String.format("%02d:%02d", mHour, mMinute);
             persistString(time);
             setSummary(time);
         }

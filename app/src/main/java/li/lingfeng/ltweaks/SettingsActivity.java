@@ -53,7 +53,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Prefs.moveToN();
+        Prefs.initAtActivityCreate();
         super.onCreate(savedInstanceState);
         setupActionBar();
     }
