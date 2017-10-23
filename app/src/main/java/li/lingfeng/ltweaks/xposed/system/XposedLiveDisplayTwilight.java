@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.xposed.system;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -7,8 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.os.Build;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.TimeZone;
@@ -37,8 +38,6 @@ public class XposedLiveDisplayTwilight extends XposedBase {
     private static final String TWILIGHT_STATE   = TWILIGHT_TRACKER + "$TwilightState";
     private static final String ACTION_UPDATE_TWILIGHT_STATE = XposedLiveDisplayTwilight.class.getName() + ".ACTION_UPDATE_TWILIGHT_STATE";
     private Object mTwilightTracker;
-    private String mSunrise;
-    private String mSunset;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -72,9 +71,8 @@ public class XposedLiveDisplayTwilight extends XposedBase {
                 ArrayList listeners = (ArrayList) XposedHelpers.getObjectField(param.thisObject, "mListeners");
                 if (listeners.size() == 1) {
                     mTwilightTracker = param.thisObject;
-                    mSunrise = Prefs.instance().getString(R.string.key_lineage_os_live_display_time_sunrise, "08:00");
-                    mSunset = Prefs.instance().getString(R.string.key_lineage_os_live_display_time_sunset, "19:00");
-
+                    Prefs.instance().registerPreferenceChangeKey(R.string.key_lineage_os_live_display_time_sunrise);
+                    Prefs.instance().registerPreferenceChangeKey(R.string.key_lineage_os_live_display_time_sunset);
                     Context context = (Context) XposedHelpers.getObjectField(mTwilightTracker, "mContext");
                     IntentFilter filter = new IntentFilter(ACTION_UPDATE_TWILIGHT_STATE);
                     filter.addAction(Intent.ACTION_TIME_CHANGED);
@@ -92,11 +90,6 @@ public class XposedLiveDisplayTwilight extends XposedBase {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (intent.getStringExtra("key").equals(PrefKeys.getById(R.string.key_lineage_os_live_display_time_sunrise))) {
-                    mSunrise = intent.getStringExtra("value");
-                } else {
-                    mSunset = intent.getStringExtra("value");
-                }
                 updateTwilightState();
             } catch (Throwable e) {
                 Logger.e("updateTwilightState exception in receiver, " + e);
@@ -105,20 +98,23 @@ public class XposedLiveDisplayTwilight extends XposedBase {
         }
     };
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void updateTwilightState() throws Throwable {
+        String sunrise = Prefs.instance().getString(R.string.key_lineage_os_live_display_time_sunrise, "08:00");
+        String sunset = Prefs.instance().getString(R.string.key_lineage_os_live_display_time_sunset, "19:00");
         TimeZone timeZone = TimeZone.getDefault();
-        Logger.i("updateTwilightState sunrise " + mSunrise + ", sunset " + mSunset + ", timeZone "
+        Logger.i("updateTwilightState sunrise " + sunrise + ", sunset " + sunset + ", timeZone "
                 + timeZone.getDisplayName(false, TimeZone.LONG) + " "
                 + TimeUnit.HOURS.convert(timeZone.getRawOffset(), TimeUnit.MILLISECONDS));
-        if (mSunrise.equals(mSunset)) {
+        if (sunrise.equals(sunset)) {
             Logger.w("Sunrise equals sunset.");
             return;
         }
 
-        int sunriseHour = Integer.parseInt(mSunrise.split(":")[0]);
-        int sunriseMinute = Integer.parseInt(mSunrise.split(":")[1]);
-        int sunsetHour = Integer.parseInt(mSunset.split(":")[0]);
-        int sunsetMinute = Integer.parseInt(mSunset.split(":")[1]);
+        int sunriseHour = Integer.parseInt(sunrise.split(":")[0]);
+        int sunriseMinute = Integer.parseInt(sunrise.split(":")[1]);
+        int sunsetHour = Integer.parseInt(sunset.split(":")[0]);
+        int sunsetMinute = Integer.parseInt(sunset.split(":")[1]);
 
         long now = System.currentTimeMillis();
         long todaySunrise = now - now % 86400000 + sunriseHour * 3600000 + sunriseMinute * 60000 - timeZone.getRawOffset();
@@ -142,6 +138,6 @@ public class XposedLiveDisplayTwilight extends XposedBase {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) XposedHelpers.getObjectField(mTwilightTracker, "mAlarmManager");
         alarmManager.cancel(pendingIntent);
-        alarmManager.set(AlarmManager.RTC, nextUpdate, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC, nextUpdate, pendingIntent);
     }
 }
