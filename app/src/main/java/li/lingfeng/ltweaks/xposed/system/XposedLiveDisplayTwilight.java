@@ -24,6 +24,8 @@ import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
+import static li.lingfeng.ltweaks.prefs.SharedPreferences.ACTION_PREF_CHANGE_PREFIX;
+
 /**
  * Created by smallville on 2017/10/12.
  */
@@ -77,8 +79,8 @@ public class XposedLiveDisplayTwilight extends XposedBase {
                     IntentFilter filter = new IntentFilter(ACTION_UPDATE_TWILIGHT_STATE);
                     filter.addAction(Intent.ACTION_TIME_CHANGED);
                     filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-                    filter.addAction(PackageNames.L_TWEAKS + ".ACTION_PREF_CHANGE." + PrefKeys.getById(R.string.key_lineage_os_live_display_time_sunrise));
-                    filter.addAction(PackageNames.L_TWEAKS + ".ACTION_PREF_CHANGE." + PrefKeys.getById(R.string.key_lineage_os_live_display_time_sunset));
+                    filter.addAction(ACTION_PREF_CHANGE_PREFIX + PrefKeys.getById(R.string.key_lineage_os_live_display_time_sunrise));
+                    filter.addAction(ACTION_PREF_CHANGE_PREFIX + PrefKeys.getById(R.string.key_lineage_os_live_display_time_sunset));
                     context.registerReceiver(mReceiver, filter);
                     updateTwilightState();
                 }

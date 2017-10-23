@@ -39,6 +39,7 @@ public class XposedShareFilter extends XposedBase {
                 Field field = param.thisObject.getClass().getDeclaredField("mContext");
                 field.setAccessible(true);
                 mContext = (Context) field.get(param.thisObject);
+                Prefs.instance().registerPreferenceChangeKey(R.string.key_system_share_filter_activities);
             }
         });
 

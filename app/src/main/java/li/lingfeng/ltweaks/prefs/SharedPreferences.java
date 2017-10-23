@@ -1,12 +1,19 @@
 package li.lingfeng.ltweaks.prefs;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.robv.android.xposed.XSharedPreferences;
+import li.lingfeng.ltweaks.utils.Logger;
 
 /**
  * Created by smallville on 2017/1/21.
@@ -14,19 +21,16 @@ import de.robv.android.xposed.XSharedPreferences;
 
 public class SharedPreferences implements android.content.SharedPreferences {
 
+    public static final String ACTION_PREF_CHANGE_PREFIX = PackageNames.L_TWEAKS + ".ACTION_PREF_CHANGE.";
+    private Context mContext;
     private android.content.SharedPreferences mOriginal;
+    private Set<String> mRegisteredChangeKeys;
+    private Map<String, Object> mChangedValues; // Receive changed values from broadcast
+    private BroadcastReceiver mValueChangeReceiver;
 
-    public SharedPreferences(android.content.SharedPreferences original) {
+    public SharedPreferences(Context context, android.content.SharedPreferences original) {
+        mContext = context;
         mOriginal = original;
-    }
-
-    public void reloadIfNecessary() {
-        try {
-            if (mOriginal instanceof XSharedPreferences) {
-                XSharedPreferences pref = (XSharedPreferences) mOriginal;
-                pref.reload();
-            }
-        } catch (Throwable e) {}
     }
 
     private String getKeyById(int id) {
@@ -35,14 +39,22 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     @Override
     public Map<String, ?> getAll() {
-        reloadIfNecessary();
-        return mOriginal.getAll();
+        Map all = mOriginal.getAll();
+        if (mChangedValues != null) {
+            all = new HashMap<>(all);
+            for (Map.Entry<String, ?> kv : mChangedValues.entrySet()) {
+                all.put(kv.getKey(), kv.getValue());
+            }
+        }
+        return all;
     }
 
     @Override
     @Nullable
     public String getString(String key, @Nullable String defValue) {
-        reloadIfNecessary();
+        if (mChangedValues != null && mChangedValues.containsKey(key)) {
+            return (String) mChangedValues.get(key);
+        }
         return mOriginal.getString(key, defValue);
     }
 
@@ -54,7 +66,9 @@ public class SharedPreferences implements android.content.SharedPreferences {
     @Override
     @Nullable
     public Set<String> getStringSet(String key, @Nullable Set<String> defValues) {
-        reloadIfNecessary();
+        if (mChangedValues != null && mChangedValues.containsKey(key)) {
+            return (Set<String>) mChangedValues.get(key);
+        }
         return mOriginal.getStringSet(key, defValues);
     }
 
@@ -65,7 +79,9 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     @Override
     public int getInt(String key, int defValue) {
-        reloadIfNecessary();
+        if (mChangedValues != null && mChangedValues.containsKey(key)) {
+            return (int) mChangedValues.get(key);
+        }
         return mOriginal.getInt(key, defValue);
     }
 
@@ -84,7 +100,9 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     @Override
     public long getLong(String key, long defValue) {
-        reloadIfNecessary();
+        if (mChangedValues != null && mChangedValues.containsKey(key)) {
+            return (long) mChangedValues.get(key);
+        }
         return mOriginal.getLong(key, defValue);
     }
 
@@ -94,7 +112,9 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     @Override
     public float getFloat(String key, float defValue) {
-        reloadIfNecessary();
+        if (mChangedValues != null && mChangedValues.containsKey(key)) {
+            return (float) mChangedValues.get(key);
+        }
         return mOriginal.getFloat(key, defValue);
     }
 
@@ -104,7 +124,9 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     @Override
     public boolean getBoolean(String key, boolean defValue) {
-        reloadIfNecessary();
+        if (mChangedValues != null && mChangedValues.containsKey(key)) {
+            return (boolean) mChangedValues.get(key);
+        }
         return mOriginal.getBoolean(key, defValue);
     }
 
@@ -114,7 +136,6 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     @Override
     public boolean contains(String key) {
-        reloadIfNecessary();
         return mOriginal.contains(key);
     }
 
@@ -135,6 +156,64 @@ public class SharedPreferences implements android.content.SharedPreferences {
     @Override
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
         mOriginal.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    public void registerPreferenceChangeKey(@StringRes int key) {
+        registerPreferenceChangeKey(getKeyById(key));
+    }
+
+    public void registerPreferenceChangeKey(String key) {
+        if (mContext.getPackageName().equals(PackageNames.L_TWEAKS)) {
+            return;
+        }
+        if (mValueChangeReceiver == null) {
+            mValueChangeReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (mChangedValues == null) {
+                        mChangedValues = new HashMap<>();
+                    }
+                    String key = intent.getStringExtra("key");
+                    Object originalValue = mOriginal.getAll().get(key);
+                    if (originalValue != null) {
+                        Object value = null;
+                        Class valueCls = originalValue.getClass();
+                        if (valueCls == Boolean.class) {
+                            value = intent.getBooleanExtra("value", false);
+                        } else if (valueCls == Integer.class) {
+                            value = intent.getIntExtra("value", 0);
+                        } else if (valueCls == Long.class) {
+                            value = intent.getLongExtra("value", 0L);
+                        } else if (valueCls == Float.class) {
+                            value = intent.getFloatExtra("value", 0f);
+                        } else if (valueCls == String.class) {
+                            value = intent.getStringExtra("value");
+                        } else if (Set.class.isAssignableFrom(valueCls)) {
+                            String[] array = intent.getStringArrayExtra("value");
+                            if (array == null) {
+                                value = null;
+                            } else {
+                                Set<String> set = new HashSet<>(array.length);
+                                Collections.addAll(set, array);
+                                value = set;
+                            }
+                        } else {
+                            Logger.w("Unhandled pref type " + valueCls);
+                        }
+                        mChangedValues.put(key, value);
+                    }
+                }
+            };
+        }
+        if (mRegisteredChangeKeys == null) {
+            mRegisteredChangeKeys = new HashSet<>();
+        }
+        if (!mRegisteredChangeKeys.contains(key)) {
+            mRegisteredChangeKeys.add(key);
+            IntentFilter filter = new IntentFilter(ACTION_PREF_CHANGE_PREFIX + key);
+            filter.setPriority(999);
+            mContext.registerReceiver(mValueChangeReceiver, filter);
+        }
     }
 
     public class Editor_ implements Editor  {

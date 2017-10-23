@@ -9,10 +9,13 @@ import com.crossbowffs.remotepreferences.RemotePreferences;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.Set;
 
 import de.robv.android.xposed.XSharedPreferences;
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.utils.Logger;
+
+import static li.lingfeng.ltweaks.prefs.SharedPreferences.ACTION_PREF_CHANGE_PREFIX;
 
 /**
  * Created by smallville on 2016/12/24.
@@ -39,7 +42,7 @@ public class Prefs {
 
     private static SharedPreferences createXSharedPreferences() {
         XSharedPreferences pref = new XSharedPreferences(new File(PATH));
-        return new SharedPreferences(pref);
+        return new SharedPreferences(MyApplication.instance(), pref);
     }
 
     private static SharedPreferences createSharedPreferences() {
@@ -52,7 +55,7 @@ public class Prefs {
         android.content.SharedPreferences pref = context.getSharedPreferences(
                 context.getPackageName() + "_preferences", mode);
         makeWorldReadable();
-        return new SharedPreferences(pref);
+        return new SharedPreferences(MyApplication.instance(), pref);
     }
 
     public static void createRemotePreferences(Context appContext) {
@@ -61,7 +64,7 @@ public class Prefs {
         }
         RemotePreferences pref = new RemotePreferences(appContext,
                 "li.lingfeng.ltweaks.mainpreferences", "li.lingfeng.ltweaks_preferences");
-        instance_ = new SharedPreferences(pref);
+        instance_ = new SharedPreferences(appContext, pref);
     }
 
     public static void initAtActivityCreate() {
@@ -109,9 +112,28 @@ public class Prefs {
             = new android.content.SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(android.content.SharedPreferences sharedPreferences, String key) {
-            Intent intent = new Intent(PackageNames.L_TWEAKS + ".ACTION_PREF_CHANGE." + key);
+            Intent intent = new Intent(ACTION_PREF_CHANGE_PREFIX + key);
             intent.putExtra("key", key);
-            intent.putExtra("value", sharedPreferences.getAll().get(key).toString());
+            Object value = sharedPreferences.getAll().get(key);
+            Class valueCls = value.getClass();
+            if (valueCls == Boolean.class) {
+                intent.putExtra("value", (boolean) value);
+            } else if (valueCls == Integer.class) {
+                intent.putExtra("value", (int) value);
+            } else if (valueCls == Long.class) {
+                intent.putExtra("value", (long) value);
+            } else if (valueCls == Float.class) {
+                intent.putExtra("value", (float) value);
+            } else if (valueCls == String.class) {
+                intent.putExtra("value", (String) value);
+            } else if (Set.class.isAssignableFrom(valueCls)) {
+                Set<String> setValue = (Set<String>) value;
+                String[] array = new String[setValue.size()];
+                intent.putExtra("value", setValue.toArray(array));
+            } else {
+                Logger.w("Unhandled pref type " + valueCls);
+                intent.putExtra("value", value.toString());
+            }
             MyApplication.instance().sendBroadcast(intent);
         }
     };
