@@ -14,6 +14,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Binder;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
 import android.util.TypedValue;
 import android.widget.Toast;
 
@@ -45,8 +49,12 @@ public class ContextUtils {
         }
     }
 
+    private static Context sLTweaksContext;
     public static Context createLTweaksContext() {
-        return createPackageContext(PackageNames.L_TWEAKS);
+        if (sLTweaksContext == null) {
+            sLTweaksContext = createPackageContext(PackageNames.L_TWEAKS);
+        }
+        return sLTweaksContext;
     }
 
     public static String getResNameById(int id) {
@@ -119,12 +127,20 @@ public class ContextUtils {
         return context.getString(getStringId(name, context));
     }
 
+    public static String getLString(@StringRes int resId) {
+        return createLTweaksContext().getString(resId);
+    }
+
     public static String[] getStringArray(String name) {
         return getStringArray(name, MyApplication.instance());
     }
 
     public static String[] getStringArray(String name, Context context) {
         return context.getResources().getStringArray(getArrayId(name, context));
+    }
+
+    public static String[] getLStringArray(@ArrayRes int resId) {
+        return createLTweaksContext().getResources().getStringArray(resId);
     }
 
     public static int[] getIntArrayFromStringArray(String name) {
@@ -146,6 +162,10 @@ public class ContextUtils {
 
     public static Drawable getDrawable(String name, Context context) {
         return context.getResources().getDrawable(getDrawableId(name, context));
+    }
+
+    public static Drawable getLDrawable(@DrawableRes int resId) {
+        return createLTweaksContext().getResources().getDrawable(resId);
     }
 
     public static Drawable getMipmap(String name) {
@@ -178,6 +198,10 @@ public class ContextUtils {
 
     public static XmlResourceParser getLayout(String name, Context context) {
         return context.getResources().getLayout(getLayoutId(name, context));
+    }
+
+    public static XmlResourceParser getLLayout(@LayoutRes int resId) {
+        return createLTweaksContext().getResources().getLayout(resId);
     }
 
     public static int getThemeId(String name) {

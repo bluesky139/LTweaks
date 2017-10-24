@@ -113,6 +113,12 @@ Open source on github: \n
         <item>4320</item>
     </string-array>
 
+    <!-- Google Play -->
+    <string name="google_play_view_in_coolapk">View in CoolApk</string>
+    <string name="google_play_view_in_apkpure">View in ApkPure</string>
+    <string name="google_play_search_in_mobilism">Search in Mobilism</string>
+    <string name="google_play_search_in_apkmirror">Search in ApkMirror</string>
+
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>
     <string name="pref_category_jd">JD</string>

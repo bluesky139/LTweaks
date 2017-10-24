@@ -101,6 +101,12 @@ Open source on github: \n
         <item>4320p</item>
     </string-array>
 
+    <!-- Google Play -->
+    <string name="google_play_view_in_coolapk">去酷市场查看</string>
+    <string name="google_play_view_in_apkpure">去 ApkPure 查看</string>
+    <string name="google_play_search_in_mobilism">去 Mobilism 搜索</string>
+    <string name="google_play_search_in_apkmirror">去 ApkMirror 搜索</string>
+
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>
     <string name="pref_category_jd">京东</string>

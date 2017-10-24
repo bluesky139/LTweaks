@@ -47,10 +47,10 @@ import okhttp3.Response;
 @XposedLoad(packages = PackageNames.GOOGLE_PLAY, prefs = R.string.key_google_play_view_in_coolapk)
 public class XposedGooglePlay extends XposedBase {
 
-    private static final String MENU_COOLAPK = "View in CoolApk";
-    private static final String MENU_APKPURE = "View in ApkPure";
-    private static final String MENU_MOBILISM = "Search in Mobilism";
-    private static final String MENU_APKMIRROR = "Search in ApkMirror";
+    private static String MENU_COOLAPK;
+    private static String MENU_APKPURE;
+    private static String MENU_MOBILISM;
+    private static String MENU_APKMIRROR;
     private HashMap<String, String> markets;
 
     private Field fNavigationMgr;
@@ -62,11 +62,18 @@ public class XposedGooglePlay extends XposedBase {
         findAndHookMethod("com.google.android.finsky.activities.MainActivity", "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (MENU_COOLAPK == null) {
+                    MENU_COOLAPK = ContextUtils.getLString(R.string.google_play_view_in_coolapk);
+                    MENU_APKPURE = ContextUtils.getLString(R.string.google_play_view_in_apkpure);
+                    MENU_MOBILISM = ContextUtils.getLString(R.string.google_play_search_in_mobilism);
+                    MENU_APKMIRROR = ContextUtils.getLString(R.string.google_play_search_in_apkmirror);
+                }
+
                 Menu menu = (Menu) param.args[0];
-                menu.add("View in CoolApk");
-                menu.add("View in ApkPure");
-                menu.add("Search in Mobilism");
-                menu.add("Search in ApkMirror");
+                menu.add(MENU_COOLAPK);
+                menu.add(MENU_APKPURE);
+                menu.add(MENU_MOBILISM);
+                menu.add(MENU_APKMIRROR);
                 markets = new HashMap<String, String>(2) {{
                     put(MENU_COOLAPK, PackageNames.COOLAPK);
                     put(MENU_APKPURE, PackageNames.APKPURE);
