@@ -166,7 +166,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         try {
-            File srcFile = new File("/data/data/de.robv.android.xposed.installer/log/error.log");
+            File srcFile = new File("/data/" + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? "user_de/0" : "data")
+                    + "/de.robv.android.xposed.installer/log/error.log");
             File dstFile = new File(getExternalFilesDir(null), "error.log");
             FileUtils.copyFile(srcFile, dstFile);
             return dstFile;
