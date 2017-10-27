@@ -20,8 +20,7 @@ import li.lingfeng.ltweaks.utils.ContextUtils;
  */
 @XposedLoad(packages = PackageNames.ANDROID_SETTINGS,
             prefs = R.string.key_app_info_open_app_data_folder,
-            loadAtActivityCreate = XposedAppInfo.SETTINGS_ACTIVITY,
-            useRemotePreferences = true)
+            loadPrefsInZygote = true)
 public class XposedAppInfoGoAppData extends XposedAppInfo {
 
     private static final String MENU_APP_DATA_FOLDER = "Open App Data Folder";

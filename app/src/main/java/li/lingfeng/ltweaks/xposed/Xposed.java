@@ -12,10 +12,12 @@ import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
+import li.lingfeng.ltweaks.prefs.SharedPreferences;
 import li.lingfeng.ltweaks.utils.Logger;
 
 /**
@@ -73,6 +75,7 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         if (file.exists()) {
             file.setReadable(true, false);
         }
+        Prefs.zygotePrefs = new XSharedPreferences(file);
     }
 
     @Override
@@ -91,6 +94,10 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         for (Class<?> cls : modules) {
             try {
                 XposedLoad xposedLoad = cls.getAnnotation(XposedLoad.class);
+                if (xposedLoad.loadPrefsInZygote()) {
+                    Prefs.useZygotePreferences();
+                }
+
                 List<String> enabledPrefs = new ArrayList<>();
                 if (xposedLoad.loadAtActivityCreate().isEmpty()) {
                     Set<String> prefs = getModulePrefs(cls);

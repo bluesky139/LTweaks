@@ -15,4 +15,5 @@ public @interface XposedLoad {
     int[] prefs();  // Always load if empty.
     String loadAtActivityCreate() default ""; // Activity name.
     boolean useRemotePreferences() default false;
+    boolean loadPrefsInZygote() default false;
 }

@@ -25,6 +25,7 @@ public class Prefs {
     private static final String M_PATH = "/data/data/" + PackageNames.L_TWEAKS + "/shared_prefs/" + PackageNames.L_TWEAKS + "_preferences.xml";
     private static final String N_PATH = "/data/user_de/0/" + PackageNames.L_TWEAKS + "/shared_prefs/" + PackageNames.L_TWEAKS + "_preferences.xml";
     public static final String PATH = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? M_PATH : N_PATH;
+    public static XSharedPreferences zygotePrefs;
     private static boolean sInitedAtActivityCreate = false;
 
     private static SharedPreferences instance_;
@@ -43,6 +44,13 @@ public class Prefs {
     private static SharedPreferences createXSharedPreferences() {
         XSharedPreferences pref = new XSharedPreferences(new File(PATH));
         return new SharedPreferences(MyApplication.instance(), pref);
+    }
+
+    public static void useZygotePreferences() {
+        if (instance_ != null) {
+            Logger.w("useZygotePreferences, but instance exists.");
+        }
+        instance_ = new SharedPreferences(MyApplication.instance(), zygotePrefs);
     }
 
     private static SharedPreferences createSharedPreferences() {
