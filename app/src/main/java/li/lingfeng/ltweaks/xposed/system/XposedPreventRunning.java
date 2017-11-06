@@ -5,12 +5,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.prefs.ClassNames;
-import li.lingfeng.ltweaks.utils.IOUtils;
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -18,35 +18,34 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
  * Created by smallville on 2017/3/26.
  */
 
-public class XposedPreventRunning extends XposedBase {
+public abstract class XposedPreventRunning extends XposedBase {
 
-    protected static List<String> sPreventList = new ArrayList<>();
-    protected static List<Integer> sPreventUids = new ArrayList<>();
+    protected Set<String> mPreventList;
+    protected Set<Integer> mPreventUids = new HashSet<>();
+
+    protected abstract int getPreventListKey();
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        if (sPreventList.size() == 0) {
-            final List<String> lines = IOUtils.readLines("/data/system/me.piebridge.prevent.list");
-            for (String line : lines) {
-                Logger.d("Prevent list item: " + line);
-            }
-            sPreventList = lines;
+        mPreventList = Prefs.instance().getStringSet(getPreventListKey(), new HashSet<String>());
+        for (String line : mPreventList) {
+            Logger.d("Prevent list item: " + line);
         }
 
         findAndHookMethod(ClassNames.ACTIVITY_MANAGER_SERVICE, "finishBooting", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (sPreventUids.size() > 0) {
+                if (mPreventUids.size() > 0) {
                     return;
                 }
                 Field field = param.thisObject.getClass().getDeclaredField("mContext");
                 field.setAccessible(true);
                 Context context = (Context) field.get(param.thisObject);
 
-                for (String line : sPreventList) {
+                for (String line : mPreventList) {
                     try {
                         ApplicationInfo info = context.getPackageManager().getApplicationInfo(line, PackageManager.GET_META_DATA);
-                        sPreventUids.add(info.uid);
+                        mPreventUids.add(info.uid);
                         Logger.d("Prevent list item uid: " + info.uid);
                     } catch (Exception e)
                     {}

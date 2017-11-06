@@ -144,8 +144,8 @@ public class SharedPreferences implements android.content.SharedPreferences {
     }
 
     @Override
-    public Editor_ edit() {
-        return new Editor_(mOriginal.edit());
+    public Editor edit() {
+        return new Editor(mOriginal.edit());
     }
 
     @Override
@@ -216,93 +216,93 @@ public class SharedPreferences implements android.content.SharedPreferences {
         }
     }
 
-    public class Editor_ implements Editor  {
+    public class Editor implements android.content.SharedPreferences.Editor {
 
-        private Editor mOriginal;
+        private android.content.SharedPreferences.Editor mOriginal;
 
-        public Editor_(Editor original) {
+        public Editor(android.content.SharedPreferences.Editor original) {
             mOriginal = original;
         }
 
         @Override
-        public Editor_ putString(String key, @Nullable String value) {
+        public Editor putString(String key, @Nullable String value) {
             mOriginal.putString(key, value);
             return this;
         }
 
-        public Editor_ putString(@StringRes int key, @Nullable String value) {
+        public Editor putString(@StringRes int key, @Nullable String value) {
             putString(getKeyById(key), value);
             return this;
         }
 
         @Override
-        public Editor_ putStringSet(String key, @Nullable Set<String> values) {
+        public Editor putStringSet(String key, @Nullable Set<String> values) {
             mOriginal.putStringSet(key, values);
             return this;
         }
 
-        public Editor_ putStringSet(@StringRes int key, @Nullable Set<String> values) {
+        public Editor putStringSet(@StringRes int key, @Nullable Set<String> values) {
             putStringSet(getKeyById(key), values);
             return this;
         }
 
         @Override
-        public Editor_ putInt(String key, int value) {
+        public Editor putInt(String key, int value) {
             mOriginal.putInt(key, value);
             return this;
         }
 
-        public Editor_ putInt(@StringRes int key, int value) {
+        public Editor putInt(@StringRes int key, int value) {
             putInt(getKeyById(key), value);
             return this;
         }
 
         @Override
-        public Editor_ putLong(String key, long value) {
+        public Editor putLong(String key, long value) {
             mOriginal.putLong(key, value);
             return this;
         }
 
-        public Editor_ putLong(@StringRes int key, long value) {
+        public Editor putLong(@StringRes int key, long value) {
             putLong(getKeyById(key), value);
             return this;
         }
 
         @Override
-        public Editor_ putFloat(String key, float value) {
+        public Editor putFloat(String key, float value) {
             mOriginal.putFloat(key, value);
             return this;
         }
 
-        public Editor_ putFloat(@StringRes int key, float value) {
+        public Editor putFloat(@StringRes int key, float value) {
             putFloat(getKeyById(key), value);
             return this;
         }
 
         @Override
-        public Editor_ putBoolean(String key, boolean value) {
+        public Editor putBoolean(String key, boolean value) {
             mOriginal.putBoolean(key, value);
             return this;
         }
 
-        public Editor_ putBoolean(@StringRes int key, boolean value) {
+        public Editor putBoolean(@StringRes int key, boolean value) {
             putBoolean(getKeyById(key), value);
             return this;
         }
 
         @Override
-        public Editor_ remove(String key) {
+        public Editor remove(String key) {
             mOriginal.remove(key);
             return this;
         }
 
-        public Editor_ remove(@StringRes int key) {
+        public Editor remove(@StringRes int key) {
             remove(getKeyById(key));
             return this;
         }
 
         @Override
-        public Editor_ clear() {
+        public Editor clear() {
             mOriginal.clear();
             return this;
         }

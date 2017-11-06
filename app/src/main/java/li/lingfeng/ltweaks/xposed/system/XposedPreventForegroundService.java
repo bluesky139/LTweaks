@@ -1,26 +1,24 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.app.Notification;
 import android.content.ComponentName;
-import android.os.IBinder;
-
-import java.io.File;
-import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
-import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2017/3/22.
  */
-@XposedLoad(packages = PackageNames.ANDROID, prefs = R.string.key_prevent_running_prevent_foreground_service)
+@XposedLoad(packages = PackageNames.ANDROID, prefs = {})
 public class XposedPreventForegroundService extends XposedPreventRunning {
+    @Override
+    protected int getPreventListKey() {
+        return R.string.key_prevent_list_prevent_foreground_service;
+    }
+
     @Override
     protected void handleLoadPackage() throws Throwable {
         super.handleLoadPackage();
@@ -28,7 +26,7 @@ public class XposedPreventForegroundService extends XposedPreventRunning {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 ComponentName className = (ComponentName) param.args[0];
-                if (!sPreventList.contains(className.getPackageName())) {
+                if (!mPreventList.contains(className.getPackageName())) {
                     return;
                 }
                 Logger.i("Prevent foreground service " + className.getClassName());

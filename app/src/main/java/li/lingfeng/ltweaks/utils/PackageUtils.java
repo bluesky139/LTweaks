@@ -1,11 +1,17 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.R;
@@ -15,6 +21,30 @@ import li.lingfeng.ltweaks.R;
  */
 
 public class PackageUtils {
+
+    public static final int SORT_BY_NAME = 0;
+    public static final int SORT_BY_DATE = 1;
+
+    public static List<PackageInfo> getInstalledPackages() {
+        return MyApplication.instance().getPackageManager().getInstalledPackages(0);
+    }
+
+    public static void sortPackages(List<PackageInfo> packages, final int sort) {
+        final PackageManager packageManager = MyApplication.instance().getPackageManager();
+        Collections.sort(packages, new Comparator<PackageInfo>() {
+            @Override
+            public int compare(PackageInfo o1, PackageInfo o2) {
+                if (sort == SORT_BY_NAME) {
+                    return o1.applicationInfo.loadLabel(packageManager).toString().compareTo(
+                            o2.applicationInfo.loadLabel(packageManager).toString());
+                } else if (sort == SORT_BY_DATE) {
+                    return (int) (o1.firstInstallTime - o2.firstInstallTime);
+                } else  {
+                    throw new RuntimeException("sortPackages() unknown sort " + sort);
+                }
+            }
+        });
+    }
 
     public static boolean isPackageInstalled(String packageName) {
         try {

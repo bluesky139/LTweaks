@@ -221,18 +221,21 @@ Open source on github: \n
     <string name="pref_category_coolapk">Coolapk</string>
     <string name="pref_coolapk_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_coolapk_remove_bottom_bar_summary">Put them into drawer menu</string>
-    <string name="pref_category_prevent_running">Prevent Running (A Xposed module, use prevent list from it)</string>
+    <string name="pref_category_prevent_running">Prevent Running</string>
     <string name="pref_prevent_running_prevent_foreground_service">Prevent foreground service</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">Prevent service becomes foreground service, some app will create invisible foreground service to avoid low memory kill.\n
 Note, this is a simple and crude way, visible \"Running Notification\" will also disappear.</string>
     <string name="pref_prevent_running_set_inactive">App standby</string>
-    <string name="pref_prevent_running_set_inactive_summary">Try set app to standby, rather than kill it. (\"Force stop background apps\" should be set to \"Never\" in Prevent Running)\nFor Android 6.0+\n
+    <string name="pref_prevent_running_set_inactive_summary">Try set app to standby, rather than kill it.\nFor Android 6.0+\n
 Note, somehow, some app will disconnect from internet, those apps didn\'t have a long time test on 6.0</string>
     <string name="pref_prevent_running_prevent_exact_alarm">Delay wakeup of exact alarm</string>
     <string name="pref_prevent_running_prevent_exact_alarm_summary">Some task will be delayed due to optimize battery use by system\nFor Android 6.0+</string>
     <string name="pref_prevent_running_prevent_wake_lock">Prevent wake lock</string>
+    <string name="pref_prevent_running_prevent_wake_lock_summary">Without wake lock, app may hard to keep running at screen off</string>
     <string name="pref_prevent_running_prevent_receiver">Prevent some broadcast</string>
-    <string name="pref_prevent_running_prevent_receiver_summary">Long click to see list</string>
+    <string name="pref_prevent_running_set_list">Set prevent list</string>
+    <string name="pref_prevent_running_set_list_summary">You can set each prevent method for individual app.\n
+Note, you\'d better know what these methods for, in case of unexpected error</string>
     <string name="pref_category_shadowsocks">Shadowsocks</string>
     <string name="pref_shadowsocks_precise_route">Use precise ip range</string>
     <string name="pref_shadowsocks_precise_route_summary">For \"Bypass LAN &amp; mainland China\"\nIt will increase connection time, be patient. (About 15 seconds on Nexus 5)</string>
@@ -270,6 +273,11 @@ Note, somehow, some app will disconnect from internet, those apps didn\'t have a
     <string name="share_image_google_search">Google</string>
     <string name="share_image_tineye_search">TinEye</string>
     <string name="share_image_iqdb_search">IQDB</string>
+
+    <!-- Prevent Running -->
+    <string name="prevent_running_list_all">All</string>
+    <string name="prevent_running_list_prevented">Prevented</string>
+    <string name="prevent_running_list_not_prevented">Not prevented</string>
 
     <!-- Process Text -->
     <string name="process_text_douban_movie">Douban Movie</string>

@@ -48,30 +48,10 @@
 
     <PreferenceCategory
         android:title="@string/pref_category_prevent_running">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_prevent_running_prevent_foreground_service"
-            android:title="@string/pref_prevent_running_prevent_foreground_service"
-            android:summary="@string/pref_prevent_running_prevent_foreground_service_summary" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_prevent_running_set_inactive"
-            android:title="@string/pref_prevent_running_set_inactive"
-            android:summary="@string/pref_prevent_running_set_inactive_summary" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_prevent_running_prevent_exact_alarm"
-            android:title="@string/pref_prevent_running_prevent_exact_alarm"
-            android:summary="@string/pref_prevent_running_prevent_exact_alarm_summary" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_prevent_running_prevent_wake_lock"
-            android:title="@string/pref_prevent_running_prevent_wake_lock" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_prevent_running_prevent_receiver"
-            android:title="@string/pref_prevent_running_prevent_receiver"
-            android:summary="@string/pref_prevent_running_prevent_receiver_summary" />
+        <Preference
+            android:key="@string/key_prevent_running_set_list"
+            android:title="@string/pref_prevent_running_set_list"
+            android:summary="@string/pref_prevent_running_set_list_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -23,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.buildware.widget.indeterm.IndeterminateCheckBox;
+import com.buildware.widget.indeterm.IndeterminateCheckable;
+
 import java.lang.reflect.Constructor;
 
 import li.lingfeng.ltweaks.R;
@@ -40,7 +43,7 @@ public class ListCheckActivity extends AppCompatActivity {
     }
 
     public interface OnCheckedChangeListener {
-        void onCheckedChanged(DataProvider.ListItem item, boolean isChecked);
+        void onCheckedChanged(DataProvider.ListItem item, Boolean isChecked);
     }
 
     public static abstract class DataProvider implements OnItemClickListener, OnCheckedChangeListener {
@@ -50,7 +53,7 @@ public class ListCheckActivity extends AppCompatActivity {
             public Drawable mIcon;
             public CharSequence mTitle;
             public CharSequence mDescription;
-            public boolean mChecked;
+            public Boolean mChecked; // null is indeterminate
 
             public <T> T getData(Class<T> cls) {
                 return cls.cast(mData);
@@ -87,7 +90,7 @@ public class ListCheckActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onCheckedChanged(ListItem item, boolean isChecked) {
+        public void onCheckedChanged(ListItem item, Boolean isChecked) {
         }
 
         protected void notifyDataSetChanged() {
@@ -239,12 +242,12 @@ public class ListCheckActivity extends AppCompatActivity {
                 if (getDataProvider().hideCheckBox()) {
                     holder.mEnabler.setVisibility(View.GONE);
                 } else {
-                    holder.mEnabler.setOnCheckedChangeListener(null);
-                    holder.mEnabler.setChecked(data.mChecked);
-                    holder.mEnabler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    holder.mEnabler.setOnStateChangedListener(null);
+                    holder.mEnabler.setState(data.mChecked);
+                    holder.mEnabler.setOnStateChangedListener(new IndeterminateCheckBox.OnStateChangedListener() {
                         @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            getDataProvider().onCheckedChanged(data, isChecked);
+                        public void onStateChanged(IndeterminateCheckBox checkBox, @Nullable Boolean state) {
+                            getDataProvider().onCheckedChanged(data, state);
                         }
                     });
                 }
@@ -273,14 +276,14 @@ public class ListCheckActivity extends AppCompatActivity {
                 public ImageView mIcon;
                 public TextView mTitle;
                 public TextView mDescription;
-                public CheckBox mEnabler;
+                public IndeterminateCheckBox mEnabler;
 
                 public ViewHolder(View view) {
                     super(view);
                     mIcon = (ImageView) view.findViewById(R.id.icon);
                     mTitle = (TextView) view.findViewById(R.id.title);
                     mDescription = (TextView) view.findViewById(R.id.description);
-                    mEnabler = (CheckBox) view.findViewById(R.id.enabler);
+                    mEnabler = (IndeterminateCheckBox) view.findViewById(R.id.enabler);
                 }
             }
         }

@@ -93,7 +93,7 @@ public class TrustAgentWifiSettings extends ListCheckActivity {
         }
 
         @Override
-        public void onCheckedChanged(ListItem item, boolean isChecked) {
+        public void onCheckedChanged(ListItem item, Boolean isChecked) {
             Pair pair = (Pair) item.mData;
             String ap = pair.first + "," + pair.second;
             if (isChecked) {

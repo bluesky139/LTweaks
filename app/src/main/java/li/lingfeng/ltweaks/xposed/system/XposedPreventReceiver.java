@@ -1,21 +1,12 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageParser;
-import android.hardware.Camera;
-import android.net.ConnectivityManager;
-import android.net.Proxy;
-import android.net.wifi.WifiManager;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.R;
@@ -28,10 +19,15 @@ import li.lingfeng.ltweaks.utils.Logger;
 /**
  * Created by smallville on 2017/3/27.
  */
-@XposedLoad(packages = PackageNames.ANDROID, prefs = R.string.key_prevent_running_prevent_receiver)
+@XposedLoad(packages = PackageNames.ANDROID, prefs = {})
 public class XposedPreventReceiver extends XposedPreventRunning {
 
     private Field mFieldActions;
+
+    @Override
+    protected int getPreventListKey() {
+        return R.string.key_prevent_list_prevent_receiver;
+    }
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -43,7 +39,7 @@ public class XposedPreventReceiver extends XposedPreventRunning {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 String callerPackage = (String) param.args[1];
-                if (!sPreventList.contains(callerPackage)) {
+                if (!mPreventList.contains(callerPackage)) {
                     return;
                 }
                 IntentFilter filter = (IntentFilter) param.args[3];
@@ -58,7 +54,7 @@ public class XposedPreventReceiver extends XposedPreventRunning {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 PackageParser.Package owner = (PackageParser.Package) param.args[0];
-                if ((boolean) param.args[param.args.length - 2] == false || !sPreventList.contains(owner.packageName)) {
+                if ((boolean) param.args[param.args.length - 2] == false || !mPreventList.contains(owner.packageName)) {
                     return;
                 }
                 PackageParser.Activity activity = (PackageParser.Activity) param.getResult();

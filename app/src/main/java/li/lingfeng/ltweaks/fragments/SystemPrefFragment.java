@@ -26,6 +26,7 @@ import li.lingfeng.ltweaks.activities.ListCheckActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
 import li.lingfeng.ltweaks.activities.SolidExplorerUrlReplacerSettings;
 import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
+import li.lingfeng.ltweaks.fragments.sub.system.PreventListDataProvider;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
@@ -36,8 +37,8 @@ import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.utils.PermissionUtils;
 import li.lingfeng.ltweaks.utils.PackageUtils;
+import li.lingfeng.ltweaks.utils.PermissionUtils;
 
 /**
  * Created by smallville on 2017/1/4.
@@ -118,10 +119,10 @@ public class SystemPrefFragment extends BasePrefFragment {
 
     @PreferenceClick(prefs = R.string.key_system_share_filter)
     private void systemShareFilter(Preference preference) {
-        ListCheckActivity.create(getActivity(), DataProvider.class);
+        ListCheckActivity.create(getActivity(), ShareFilterDataProvider.class);
     }
 
-    public static class DataProvider extends ListCheckActivity.DataProvider {
+    public static class ShareFilterDataProvider extends ListCheckActivity.DataProvider {
 
         public class ActivityInfo {
             public ResolveInfo mInfo;
@@ -142,7 +143,7 @@ public class SystemPrefFragment extends BasePrefFragment {
         private Set<String> mDisabledActivities;
         private boolean mNeedReload = true;
 
-        public DataProvider(ListCheckActivity activity) {
+        public ShareFilterDataProvider(ListCheckActivity activity) {
             super(activity);
             mDisabledActivities = new HashSet<>(
                     Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, new HashSet<String>())
@@ -230,7 +231,7 @@ public class SystemPrefFragment extends BasePrefFragment {
         }
 
         @Override
-        public void onCheckedChanged(ListItem item, boolean isChecked) {
+        public void onCheckedChanged(ListItem item, Boolean isChecked) {
             ActivityInfo activityInfo = (ActivityInfo) item.mData;
             String fullActivityName = activityInfo.mInfo.activityInfo.applicationInfo.packageName + "/" + activityInfo.mInfo.activityInfo.name;
             Logger.i((isChecked ? "Disabled" : "Enabled") + " share activity " + fullActivityName);
@@ -253,16 +254,11 @@ public class SystemPrefFragment extends BasePrefFragment {
         }
     }
 
-    @PreferenceLongClick(prefs = R.string.key_prevent_running_prevent_receiver)
-    private void seeReceiverPreventedActions(final SwitchPreference preference) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("Actions")
-                .setItems(IntentActions.sReceiverPreventedArray, null)
-                .create()
-                .show();
+    @PreferenceClick(prefs = R.string.key_prevent_running_set_list)
+    private void setPreventList(Preference preference) {
+        ListCheckActivity.create(getActivity(), PreventListDataProvider.class);
     }
 
-    @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)
     private void setSmartLockWifiList(Preference preference) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
