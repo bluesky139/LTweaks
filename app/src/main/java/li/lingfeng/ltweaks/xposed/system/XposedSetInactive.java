@@ -25,6 +25,9 @@ import li.lingfeng.ltweaks.utils.Logger;
  */
 @XposedLoad(packages = PackageNames.ANDROID, prefs = {})
 public class XposedSetInactive extends XposedPreventRunning {
+
+    private static final String ACTION_SET_INACTIVE = ScreenOffReceiver.class.getName() + ".ACTION_SET_INACTIVE";
+
     @Override
     protected int getPreventListKey() {
         return R.string.key_prevent_list_set_inactive;
@@ -52,14 +55,12 @@ public class XposedSetInactive extends XposedPreventRunning {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(ScreenOffReceiver.ACTION_SET_INACTIVE);
+        filter.addAction(ACTION_SET_INACTIVE);
         context.registerReceiver(new ScreenOffReceiver(context), filter);
         Logger.i("ScreenOffReceiver is registered.");
     }
 
-    private static class ScreenOffReceiver extends BroadcastReceiver {
-
-        static final String ACTION_SET_INACTIVE = ScreenOffReceiver.class.getName() + ".ACTION_SET_INACTIVE";
+    private class ScreenOffReceiver extends BroadcastReceiver {
 
         private IUsageStatsManager mUsageStatsManager;
         private Object mUsageStatsService;
@@ -86,7 +87,7 @@ public class XposedSetInactive extends XposedPreventRunning {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 mAlarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 300000, mSetInactiveIntent);
-                Logger.i("Set delay to set-inactive, mPreventList size " + XposedPreventRunning.mPreventList.size());
+                Logger.i("Set delay to set-inactive, mPreventList size " + mPreventList.size());
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 mAlarmManager.cancel(mSetInactiveIntent);
                 Logger.i("Cancel delay to set-inactive.");
@@ -97,7 +98,7 @@ public class XposedSetInactive extends XposedPreventRunning {
 
         private void onAlarm() {
             Logger.d("set-inactive onAlarm");
-            for (String name : XposedPreventRunning.mPreventList) {
+            for (String name : mPreventList) {
                 try {
                     boolean isInactive = mUsageStatsManager.isAppInactive(name, 0);
                     if (isInactive)
