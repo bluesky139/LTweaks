@@ -107,6 +107,11 @@
             android:key="@string/key_chrome_go_top_or_bottom"
             android:title="@string/pref_chrome_go_top_or_bottom"
             android:summary="@string/pref_chrome_go_top_or_bottom_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_chrome_open_with"
+            android:title="@string/pref_chrome_open_with"
+            android:summary="@string/pref_chrome_open_with_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
