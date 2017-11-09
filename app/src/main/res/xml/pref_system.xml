@@ -8,6 +8,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/pref_category_text">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_text_double_click_for_selectable"
+            android:title="@string/pref_text_double_click_for_selectable"
+            android:summary="@string/pref_text_double_click_for_selectable_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/pref_category_youdao">
         <Preference
             android:key="@string/key_youdao_quick_query_shortcut"

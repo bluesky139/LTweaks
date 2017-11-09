@@ -197,6 +197,10 @@ Open source on github: \n
     <string name="pref_header_system">系统 / 工具</string>
     <string name="pref_category_text_aide">Text Aide</string>
     <string name="pref_text_aide_open_youdao">使用有道词典</string>
+    <string name="pref_category_text">文本</string>
+    <string name="pref_text_double_click_for_selectable">双击让文本变为可选状态</string>
+    <string name="pref_text_double_click_for_selectable_summary">然后再像平常一样长按进行操作.\n
+也许在某些地方无法使用</string>
     <string name="pref_category_youdao">有道词典</string>
     <string name="pref_youdao_quick_query_shortcut">为快速查询创建快捷方式</string>
     <string name="pref_youdao_quick_query_shortcut_summary">进入纯粹的单词查询界面，没有多余的功能</string>

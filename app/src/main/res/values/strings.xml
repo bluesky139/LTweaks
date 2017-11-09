@@ -209,6 +209,10 @@ Open source on github: \n
     <string name="pref_header_system">System / Tools</string>
     <string name="pref_category_text_aide">Text Aide</string>
     <string name="pref_text_aide_open_youdao">Use Youdao dict</string>
+    <string name="pref_category_text">Text</string>
+    <string name="pref_text_double_click_for_selectable">Double click for selectable</string>
+    <string name="pref_text_double_click_for_selectable_summary">Double click to let text become selectable, then long press text to do something as usual.\n
+May not work on all places</string>
     <string name="pref_category_youdao">Youdao Dict</string>
     <string name="pref_youdao_quick_query_shortcut">Create shortcut for quick query</string>
     <string name="pref_youdao_quick_query_shortcut_summary">Activity for word query, nothing more</string>

@@ -64,6 +64,7 @@
 
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>
+    <string name="key_text_double_click_for_selectable">key_text_double_click_for_selectable</string>
     <string name="key_youdao_quick_query_shortcut">key_youdao_quick_query_shortcut</string>
     <string name="key_system_share_qrcode_scan">key_system_share_qrcode_scan</string>
     <string name="key_system_share_image_search">key_system_share_image_search</string>
