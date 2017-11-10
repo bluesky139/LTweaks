@@ -110,6 +110,13 @@ Open source on github: \n
     <string name="google_play_search_in_mobilism">去 Mobilism 搜索</string>
     <string name="google_play_search_in_apkmirror">去 ApkMirror 搜索</string>
 
+    <string name="chrome_open_in_incognito">隐身模式打开此页面</string>
+    <string name="chrome_google_cache">查看 Google 缓存</string>
+    <string name="chrome_wayback_machine">Wayback Machine</string>
+    <string name="chrome_go_top">回到顶部</string>
+    <string name="chrome_go_bottom">转到底部</string>
+    <string name="chrome_open_with">使用其它应用打开...</string>
+
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>
     <string name="pref_category_jd">京东</string>

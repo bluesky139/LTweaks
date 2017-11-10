@@ -122,6 +122,14 @@ Open source on github: \n
     <string name="google_play_search_in_mobilism">Search in Mobilism</string>
     <string name="google_play_search_in_apkmirror">Search in ApkMirror</string>
 
+    <!-- Chrome -->
+    <string name="chrome_open_in_incognito">Open in Incognito</string>
+    <string name="chrome_google_cache">View Google Cache</string>
+    <string name="chrome_wayback_machine">Wayback Machine</string>
+    <string name="chrome_go_top">Go Top</string>
+    <string name="chrome_go_bottom">Go Bottom</string>
+    <string name="chrome_open_with">Open With...</string>
+
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>
     <string name="pref_category_jd">JD</string>

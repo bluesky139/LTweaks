@@ -16,6 +16,7 @@ import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.IntentActions;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
@@ -30,7 +31,7 @@ import li.lingfeng.ltweaks.utils.Utils;
         PackageNames.CHROME_BETA,
         PackageNames.CHROME_DEV,
         PackageNames.CHROME_CANARY
-}, prefs = R.string.key_chrome_incognito_search)
+}, prefs = R.string.key_chrome_incognito_search, loadAtActivityCreate = ClassNames.ACTIVITY)
 public class XposedChromeIncognitoSearch extends XposedChromeBase {
 
     private static final String INTENT_HANDLER = "org.chromium.chrome.browser.IntentHandler";
@@ -42,11 +43,12 @@ public class XposedChromeIncognitoSearch extends XposedChromeBase {
     private static final String TAB_CONTEXT_MENU_POPULATOR = "org.chromium.chrome.browser.tab.TabContextMenuPopulator";
     private static final String CONTEXT_MENU_PARAMS = "org.chromium.chrome.browser.contextmenu.ContextMenuParams";
     private static final String SELECTION_POPUP_CONTROLLER = "org.chromium.content.browser.SelectionPopupController";
-    private static final String MENU_INCOGNITO = "Open in incognito";
+    private static String MENU_INCOGNITO;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
         super.handleLoadPackage();
+        MENU_INCOGNITO = ContextUtils.getLString(R.string.chrome_open_in_incognito);
 
         // Allow open url in incognito.
         findAndHookMethod(INTENT_HANDLER, "shouldIgnoreIntent", Intent.class, new XC_MethodHook() {
