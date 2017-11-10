@@ -181,10 +181,10 @@ Open source on github: \n
     <string name="pref_douban_movie_remove_bottom_bar">去底栏</string>
     <string name="pref_douban_movie_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_douban_movie_remove_ads">移除全屏广告</string>
-    <string name="pref_category_bilibili">Bilibili</string>
-    <string name="pref_bilibili_search">选中文本后去 Bilibili 搜索</string>
+    <string name="pref_category_bilibili">哔哩哔哩</string>
+    <string name="pref_bilibili_search">选中文本后去哔哩哔哩搜索</string>
     <string name="pref_bilibili_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
-    <string name="pref_bilibili_open_link_in_app">Bilibili 的链接由 Bilibili 客户端打开</string>
+    <string name="pref_bilibili_open_link_in_app">哔哩哔哩的链接由哔哩哔哩客户端打开</string>
     <string name="pref_bilibili_open_link_in_app_summary">比如 http://m.bilibili.com/video/av123.html</string>
     <string name="pref_bilibili_expand_following">在关注页面展开所有视频</string>
     <string name="pref_bilibili_expand_following_summary">通过自动点击\"还有N个视频被折叠\"</string>
@@ -278,7 +278,7 @@ Open source on github: \n
 
     <!-- Process Text -->
     <string name="process_text_douban_movie">豆瓣电影</string>
-    <string name="process_text_bilibili">Bilibili</string>
+    <string name="process_text_bilibili">哔哩哔哩</string>
     <string name="process_text_incognito_search">隐身搜索</string>
 
     <!-- Url Replacer -->
