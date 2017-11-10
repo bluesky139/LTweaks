@@ -2,7 +2,9 @@ package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -241,9 +243,20 @@ public class ViewUtils {
     }
 
     public static void showDialog(Context context, String message) {
+        showDialog(context, message, null);
+    }
+
+    public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener) {
         new AlertDialog.Builder(context)
                 .setMessage(message)
-                .setPositiveButton(R.string.app_ok, null)
+                .setPositiveButton(R.string.app_ok, positiveListener)
+                .show();
+    }
+
+    public static void showDialog(Context context, @StringRes int messageId, DialogInterface.OnClickListener positiveListener) {
+        new AlertDialog.Builder(context)
+                .setMessage(messageId)
+                .setPositiveButton(R.string.app_ok, positiveListener)
                 .show();
     }
 

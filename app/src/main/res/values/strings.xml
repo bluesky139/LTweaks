@@ -26,6 +26,7 @@ Open source on github: \n
     <string name="app_delete">Delete</string>
     <string name="app_shortcut_is_created">Shortcut is created.</string>
     <string name="app_submit_issue">Submit Issue</string>
+    <string name="app_error_check_mode_world_readable">Start Android 7.0, store mode of preferences is changed, you need enable this module in Xposed Installer and reboot once first</string>
 
     <!--Common-->
     <string name="uninstall_message">Detected \"%s\" is installed, it has become part of \"L Tweaks\", better to uninstall it.</string>

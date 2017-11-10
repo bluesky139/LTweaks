@@ -4,6 +4,7 @@ package li.lingfeng.ltweaks;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -53,9 +54,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Prefs.initAtActivityCreate();
+        int errStringId = Prefs.initAtActivityCreate(this);
         super.onCreate(savedInstanceState);
         setupActionBar();
+
+        if (errStringId > 0) {
+            ViewUtils.showDialog(this, errStringId, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SettingsActivity.this.finish();
+                }
+            });
+        }
     }
 
     /**
