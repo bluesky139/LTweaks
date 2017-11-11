@@ -13,6 +13,7 @@ import java.util.Set;
 
 import de.robv.android.xposed.XSharedPreferences;
 import li.lingfeng.ltweaks.MyApplication;
+import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.utils.Logger;
 
 import static li.lingfeng.ltweaks.prefs.SharedPreferences.ACTION_PREF_CHANGE_PREFIX;
@@ -55,13 +56,11 @@ public class Prefs {
 
     private static SharedPreferences createSharedPreferences() {
         Context context = MyApplication.instance();
-        int mode = Context.MODE_WORLD_READABLE;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             context = context.createDeviceProtectedStorageContext();
-            mode = 0;
         }
         android.content.SharedPreferences pref = context.getSharedPreferences(
-                context.getPackageName() + "_preferences", mode);
+                context.getPackageName() + "_preferences", Context.MODE_WORLD_READABLE);;
         makeWorldReadable();
         return new SharedPreferences(MyApplication.instance(), pref);
     }
@@ -75,11 +74,30 @@ public class Prefs {
         instance_ = new SharedPreferences(appContext, pref);
     }
 
-    public static void initAtActivityCreate() {
+    // Return error string id, or 0 if everything is ok
+    public static int initAtActivityCreate(Context context) {
         if (!sInitedAtActivityCreate) {
-            sInitedAtActivityCreate = true;
+            if (!checkModeWorldReadable(context)) {
+                return R.string.app_error_check_mode_world_readable;
+            }
             moveToN();
             listenPreferenceChange();
+            sInitedAtActivityCreate = true;
+        }
+        return 0;
+    }
+
+    public static boolean checkModeWorldReadable(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return true;
+        }
+        try {
+            context.createDeviceProtectedStorageContext().getSharedPreferences(
+                    "test_preferences_mode", Context.MODE_WORLD_READABLE);
+            return true;
+        } catch (SecurityException e) {
+            Logger.w("LTweaks mode world readable is not hooked.");
+            return false;
         }
     }
 

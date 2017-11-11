@@ -76,6 +76,7 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
             file.setReadable(true, false);
         }
         Prefs.zygotePrefs = new XSharedPreferences(file);
+        Prefs.zygotePrefs.makeWorldReadable();
     }
 
     @Override

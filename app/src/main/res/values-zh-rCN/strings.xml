@@ -26,6 +26,7 @@ Open source on github: \n
     <string name="app_delete">删除</string>
     <string name="app_shortcut_is_created">快捷方式已创建.</string>
     <string name="app_submit_issue">提交问题</string>
+    <string name="app_error_check_mode_world_readable">从 Android 7.0 开始, 设置的存储方式发生了一点改变, 你需要先在 Xposed Installer 中启动此模块并重启一次</string>
 
     <!--Common-->
     <string name="uninstall_message">检测到已安装 \"%s\", 它已经成为了 \"L Tweaks\" 的一部分, 最好删除它.</string>
@@ -109,6 +110,13 @@ Open source on github: \n
     <string name="google_play_search_in_mobilism">去 Mobilism 搜索</string>
     <string name="google_play_search_in_apkmirror">去 ApkMirror 搜索</string>
 
+    <string name="chrome_open_in_incognito">隐身模式打开此页面</string>
+    <string name="chrome_google_cache">查看 Google 缓存</string>
+    <string name="chrome_wayback_machine">Wayback Machine</string>
+    <string name="chrome_go_top">回到顶部</string>
+    <string name="chrome_go_bottom">转到底部</string>
+    <string name="chrome_open_with">使用其它应用打开...</string>
+
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>
     <string name="pref_category_jd">京东</string>
@@ -173,10 +181,10 @@ Open source on github: \n
     <string name="pref_douban_movie_remove_bottom_bar">去底栏</string>
     <string name="pref_douban_movie_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_douban_movie_remove_ads">移除全屏广告</string>
-    <string name="pref_category_bilibili">Bilibili</string>
-    <string name="pref_bilibili_search">选中文本后去 Bilibili 搜索</string>
+    <string name="pref_category_bilibili">哔哩哔哩</string>
+    <string name="pref_bilibili_search">选中文本后去哔哩哔哩搜索</string>
     <string name="pref_bilibili_search_summary">使用选中文本后的浮动菜单\n仅 Android 6.0+</string>
-    <string name="pref_bilibili_open_link_in_app">Bilibili 的链接由 Bilibili 客户端打开</string>
+    <string name="pref_bilibili_open_link_in_app">哔哩哔哩的链接由哔哩哔哩客户端打开</string>
     <string name="pref_bilibili_open_link_in_app_summary">比如 http://m.bilibili.com/video/av123.html</string>
     <string name="pref_bilibili_expand_following">在关注页面展开所有视频</string>
     <string name="pref_bilibili_expand_following_summary">通过自动点击\"还有N个视频被折叠\"</string>
@@ -275,7 +283,7 @@ Open source on github: \n
 
     <!-- Process Text -->
     <string name="process_text_douban_movie">豆瓣电影</string>
-    <string name="process_text_bilibili">Bilibili</string>
+    <string name="process_text_bilibili">哔哩哔哩</string>
     <string name="process_text_incognito_search">隐身搜索</string>
 
     <!-- Url Replacer -->

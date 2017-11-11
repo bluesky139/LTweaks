@@ -26,6 +26,7 @@ Open source on github: \n
     <string name="app_delete">Delete</string>
     <string name="app_shortcut_is_created">Shortcut is created.</string>
     <string name="app_submit_issue">Submit Issue</string>
+    <string name="app_error_check_mode_world_readable">Start Android 7.0, store mode of preferences is changed, you need enable this module in Xposed Installer and reboot once first</string>
 
     <!--Common-->
     <string name="uninstall_message">Detected \"%s\" is installed, it has become part of \"L Tweaks\", better to uninstall it.</string>
@@ -120,6 +121,14 @@ Open source on github: \n
     <string name="google_play_view_in_apkpure">View in ApkPure</string>
     <string name="google_play_search_in_mobilism">Search in Mobilism</string>
     <string name="google_play_search_in_apkmirror">Search in ApkMirror</string>
+
+    <!-- Chrome -->
+    <string name="chrome_open_in_incognito">Open in Incognito</string>
+    <string name="chrome_google_cache">View Google Cache</string>
+    <string name="chrome_wayback_machine">Wayback Machine</string>
+    <string name="chrome_go_top">Go Top</string>
+    <string name="chrome_go_bottom">Go Bottom</string>
+    <string name="chrome_open_with">Open With...</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>

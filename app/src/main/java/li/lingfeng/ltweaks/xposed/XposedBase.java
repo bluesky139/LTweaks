@@ -7,7 +7,9 @@ import android.text.TextUtils;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -19,6 +21,7 @@ import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PrefKeys;
 import li.lingfeng.ltweaks.prefs.Prefs;
+import li.lingfeng.ltweaks.utils.Callback;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.XposedUtils;
 
@@ -30,6 +33,7 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected XC_LoadPackage.LoadPackageParam lpparam;
     private Set<XC_MethodHook.Unhook> performCreateHooks;
+    private Map<Class, List<Callback.C1<Activity>>> activityCreateCallbacks;
 
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         this.lpparam = lpparam;
@@ -74,6 +78,45 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
     }
 
     protected abstract void handleLoadPackage() throws Throwable;
+
+    protected void hookAtActivityCreate(final Callback.C1<Activity> callback) {
+        hookAtActivityCreate(Activity.class, callback);
+    }
+
+    protected void hookAtActivityCreate(String strActivity, final Callback.C1<Activity> callback) {
+        final Class cls = findClass(strActivity);
+        hookAtActivityCreate(cls, callback);
+    }
+
+    protected void hookAtActivityCreate(Class<? extends Activity> clsActivity, final Callback.C1<Activity> callback) {
+        if (activityCreateCallbacks == null) {
+            activityCreateCallbacks = new HashMap<>();
+            hookAllMethods(Activity.class, "performCreate", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    for (Class cls : activityCreateCallbacks.keySet()) {
+                        if (cls.isAssignableFrom(param.thisObject.getClass())) {
+                            for (Callback.C1<Activity> callback : activityCreateCallbacks.get(cls)) {
+                                try {
+                                    callback.onResult((Activity) param.thisObject);
+                                } catch (Throwable e) {
+                                    Logger.e("hookAtActivityCreate callback invoke exception, " + e);
+                                    Logger.stackTrace(e);
+                                }
+                            }
+                            activityCreateCallbacks.remove(cls);
+                        }
+                    }
+                }
+            });
+        }
+        List<Callback.C1<Activity>> callbacks = activityCreateCallbacks.get(clsActivity);
+        if (callbacks == null) {
+            callbacks = new ArrayList<>();
+            activityCreateCallbacks.put(clsActivity, callbacks);
+        }
+        callbacks.add(callback);
+    }
 
     protected Class<?> findClass(String name) {
         return XposedHelpers.findClass(name, lpparam.classLoader);

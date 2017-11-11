@@ -6,6 +6,7 @@ package li.lingfeng.ltweaks.prefs;
 
 public class ClassNames {
 
+    public static final String ACTIVITY = "android.app.Activity";
     public static final String FRAGMENT_MANAGER_IMPL = "android.app.FragmentManagerImpl";
 
     public static final String APP_COMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";

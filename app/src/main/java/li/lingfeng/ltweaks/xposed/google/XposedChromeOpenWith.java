@@ -14,6 +14,8 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.Callback;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 
 /**
@@ -32,7 +34,7 @@ public class XposedChromeOpenWith extends XposedChromeBase {
     private static final String CHOOSER_ACTIVITY = "com.android.internal.app.ChooserActivity";
     private static final String RESOLVER_ACTIVITY = "com.android.internal.app.ResolverActivity";
     private static final String EXTRA_AUTO_LAUNCH_SINGLE_CHOICE = "android.intent.extra.AUTO_LAUNCH_SINGLE_CHOICE";
-    private static final String MENU_OPEN_WITH = "Open With...";
+    private static String MENU_OPEN_WITH;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -42,7 +44,12 @@ public class XposedChromeOpenWith extends XposedChromeBase {
         } else if (lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM)) {
             hookAndroidSystem();
         } else {
-            hookChrome();
+            hookAtActivityCreate(new Callback.C1<Activity>() {
+                @Override
+                public void onResult(Activity activity) {
+                    hookChrome();
+                }
+            });
         }
     }
 
@@ -105,6 +112,7 @@ public class XposedChromeOpenWith extends XposedChromeBase {
     }
 
     private void hookChrome() {
+        MENU_OPEN_WITH = ContextUtils.getLString(R.string.chrome_open_with);
         newMenu(MENU_OPEN_WITH, 1006, new NewMenuCallback() {
             @Override
             public void onOptionsItemSelected(Activity activity, MenuItem item, String url, boolean isCustomTab) {
