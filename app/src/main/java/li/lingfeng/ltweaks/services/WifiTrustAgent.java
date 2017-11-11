@@ -52,10 +52,6 @@ public class WifiTrustAgent extends TrustAgentService implements SharedPreferenc
     public void onDestroy() {
         super.onDestroy();
         Logger.d("WifiTrustAgent onDestroy");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !Prefs.checkModeWorldReadable(this)) {
-            return;
-        }
-
         unregisterReceiver(mReceiver);
         Prefs.instance().unregisterOnSharedPreferenceChangeListener(this);
         revokeTrust();
