@@ -24,6 +24,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
 import li.lingfeng.ltweaks.activities.ListCheckActivity;
 import li.lingfeng.ltweaks.activities.QrCodeActivity;
+import li.lingfeng.ltweaks.activities.SelectableTextActivity;
 import li.lingfeng.ltweaks.activities.SolidExplorerUrlReplacerSettings;
 import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
 import li.lingfeng.ltweaks.fragments.sub.system.PreventListDataProvider;
@@ -51,6 +52,7 @@ public class SystemPrefFragment extends BasePrefFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_system);
 
+        uncheckPreferenceByDisabledComponent(R.string.key_text_selectable_text, SelectableTextActivity.class);
         uncheckPreferenceByDisabledComponent(R.string.key_system_share_qrcode_scan, QrCodeActivity.class);
         uncheckPreferenceByDisabledComponent(R.string.key_system_share_image_search, ImageSearchActivity.class);
     }
@@ -60,6 +62,11 @@ public class SystemPrefFragment extends BasePrefFragment {
         if (enabled) {
             PackageUtils.tryUninstallPackage("li.lingfeng.textaide.youdao", "Text Aide with Youdao", getActivity());
         }
+    }
+
+    @PreferenceChange(prefs = R.string.key_text_selectable_text)
+    private void enableSelectableText(Preference preference, boolean enabled) {
+        ComponentUtils.enableComponent(SelectableTextActivity.class, enabled);
     }
 
     @PreferenceClick(prefs = R.string.key_youdao_quick_query_shortcut)

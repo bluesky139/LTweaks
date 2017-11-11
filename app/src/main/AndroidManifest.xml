@@ -126,6 +126,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.SelectableTextActivity" android:excludeFromRecents="true"
+            android:label="@string/text_selectable"
+            android:icon="@mipmap/ic_selectable_text"
+            android:theme="@style/DialogActivityTheme"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.SelectableTextActivity"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.QrCodeActivity" android:excludeFromRecents="true"
             android:label="@string/share_qrcode_scan"
             android:icon="@mipmap/ic_qrcode_scan"
