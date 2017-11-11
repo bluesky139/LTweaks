@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.service.trust.TrustAgentService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,10 @@ public class WifiTrustAgent extends TrustAgentService implements SharedPreferenc
     public void onCreate() {
         super.onCreate();
         Logger.d("WifiTrustAgent onCreate");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !Prefs.checkModeWorldReadable(this)) {
+            return;
+        }
+
         setManagingTrust(true);
         Prefs.instance().registerOnSharedPreferenceChangeListener(this);
 
@@ -47,6 +52,10 @@ public class WifiTrustAgent extends TrustAgentService implements SharedPreferenc
     public void onDestroy() {
         super.onDestroy();
         Logger.d("WifiTrustAgent onDestroy");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !Prefs.checkModeWorldReadable(this)) {
+            return;
+        }
+
         unregisterReceiver(mReceiver);
         Prefs.instance().unregisterOnSharedPreferenceChangeListener(this);
         revokeTrust();
