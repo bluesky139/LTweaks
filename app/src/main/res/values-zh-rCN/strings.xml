@@ -281,6 +281,11 @@ Open source on github: \n
     <string name="share_image_tineye_search">TinEye</string>
     <string name="share_image_iqdb_search">IQDB</string>
 
+    <!-- Prevent Running -->
+    <string name="prevent_running_list_all">所有</string>
+    <string name="prevent_running_list_prevented">已阻止</string>
+    <string name="prevent_running_list_not_prevented">未阻止</string>
+
     <!-- Process Text -->
     <string name="process_text_douban_movie">豆瓣电影</string>
     <string name="process_text_bilibili">哔哩哔哩</string>
