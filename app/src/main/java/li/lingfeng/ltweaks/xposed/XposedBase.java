@@ -40,9 +40,9 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
         final XposedLoad xposedLoad = getClass().getAnnotation(XposedLoad.class);
         if (!xposedLoad.loadAtActivityCreate().isEmpty()) {
             final Class cls = findClass(xposedLoad.loadAtActivityCreate());
-            performCreateHooks = hookAllMethods(Activity.class, "performCreate", new XC_MethodHook() {
+            performCreateHooks = hookAllMethods(Activity.class, "attach", new XC_MethodHook() {
                 @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     if (performCreateHooks == null || !cls.isAssignableFrom(param.thisObject.getClass())) {
                         return;
                     }
