@@ -91,9 +91,9 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
     protected void hookAtActivityCreate(Class<? extends Activity> clsActivity, final Callback.C1<Activity> callback) {
         if (activityCreateCallbacks == null) {
             activityCreateCallbacks = new HashMap<>();
-            hookAllMethods(Activity.class, "performCreate", new XC_MethodHook() {
+            hookAllMethods(Activity.class, "attach", new XC_MethodHook() {
                 @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     for (Class cls : activityCreateCallbacks.keySet()) {
                         if (cls.isAssignableFrom(param.thisObject.getClass())) {
                             for (Callback.C1<Activity> callback : activityCreateCallbacks.get(cls)) {
