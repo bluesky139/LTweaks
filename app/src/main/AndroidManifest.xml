@@ -30,6 +30,15 @@
             android:name=".services.MainPreferenceProvider"
             android:authorities="li.lingfeng.ltweaks.mainpreferences"
             android:exported="true" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="li.lingfeng.ltweaks.fileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 			
         <activity
             android:name=".SettingsActivity"

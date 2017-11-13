@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.method.LinkMovementMethod;
@@ -134,7 +135,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 File file = saveLog();
                 if (file != null) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(file), "text/plain");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".fileProvider", file);
+                        intent.setDataAndType(uri, "text/plain");
+                    } else {
+                        intent.setDataAndType(Uri.fromFile(file), "text/plain");
+                    }
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
