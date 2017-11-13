@@ -66,7 +66,7 @@ public class XposedChromeOpenWith extends XposedChromeBase {
             }
         });
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             hookAllMethods(ClassNames.PACKAGE_MANAGER_SERVICE, "queryIntentActivities", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -80,7 +80,7 @@ public class XposedChromeOpenWith extends XposedChromeBase {
                     removePackageFromActivities(param);
                 }
             });
-        }
+        }*/
     }
 
     private void removePackageFromActivities(XC_MethodHook.MethodHookParam param) {
