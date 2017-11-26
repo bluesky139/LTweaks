@@ -56,7 +56,7 @@
     <!-- Removed "key_bilibili_subscriptions_goto_top" -->
     <string name="key_bilibili_search">key_bilibili_search</string>
     <string name="key_bilibili_open_link_in_app">key_bilibili_open_link_in_app</string>
-    <string name="key_bilibili_expand_following">key_bilibili_expand_following</string>
+    <!-- Removed "key_bilibili_expand_following" -->
     <string name="key_bilibili_remove_bottom_bar">key_bilibili_remove_bottom_bar</string>
     <string name="key_steam_share_url">key_steam_share_url</string>
     <string name="key_steam_database">key_steam_database</string>
