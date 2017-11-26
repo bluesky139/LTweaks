@@ -188,6 +188,8 @@ Open source on github: \n
     <string name="pref_bilibili_open_link_in_app_summary">比如 http://m.bilibili.com/video/av123.html</string>
     <string name="pref_bilibili_expand_following">在关注页面展开所有视频</string>
     <string name="pref_bilibili_expand_following_summary">通过自动点击\"还有N个视频被折叠\"</string>
+    <string name="pref_bilibili_remove_bottom_bar">去底栏</string>
+    <string name="pref_bilibili_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">分享链接</string>
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>
