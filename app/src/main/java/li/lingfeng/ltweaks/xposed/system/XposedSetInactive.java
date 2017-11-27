@@ -87,10 +87,14 @@ public class XposedSetInactive extends XposedPreventRunning {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 mAlarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 300000, mSetInactiveIntent);
-                Logger.i("Set delay to set-inactive, mPreventList size " + mPreventList.size());
+                if (mPreventList.size() != 0) {
+                    Logger.i("Set delay to set-inactive, mPreventList size " + mPreventList.size());
+                }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 mAlarmManager.cancel(mSetInactiveIntent);
-                Logger.i("Cancel delay to set-inactive.");
+                if (mPreventList.size() != 0) {
+                    Logger.i("Cancel delay to set-inactive.");
+                }
             } else if (intent.getAction().equals(ACTION_SET_INACTIVE)) {
                 onAlarm();
             }
