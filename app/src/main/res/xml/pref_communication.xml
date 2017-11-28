@@ -61,6 +61,10 @@
             android:key="@string/key_qq_disable_discussion_notification"
             android:title="@string/pref_qq_disable_discussion_notification"
             android:summary="@string/pref_qq_disable_discussion_notification_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_qq_prevent_audio_panel"
+            android:title="@string/pref_qq_prevent_audio_panel" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_push_bullet">

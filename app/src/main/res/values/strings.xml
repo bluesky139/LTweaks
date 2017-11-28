@@ -184,6 +184,7 @@ Open source on github: \n
     <string name="pref_qq_fix_image_sharing_summary">eg. Sharing from Google+</string>
     <string name="pref_qq_disable_discussion_notification">Disable notification of discussion group</string>
     <string name="pref_qq_disable_discussion_notification_summary">No matter \"Notification\" is checked or not in discussion group settings</string>
+    <string name="pref_qq_prevent_audio_panel">Prevent \"Press To Talk\" panel popup automatically</string>
     <string name="pref_category_push_bullet">Pushbullet</string>
     <string name="pref_push_bullet_share_to_all">Share to all devices by default</string>
     <string name="pref_push_bullet_share_to_all_summary">Then you can disable direct share in Pushbullet settings if you only want to push everything to all devices with one tap</string>

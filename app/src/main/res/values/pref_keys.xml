@@ -46,6 +46,7 @@
     <string name="key_qq_exit_directly_by_sharing">key_qq_exit_directly_by_sharing</string>
     <string name="key_qq_fix_image_sharing">key_qq_fix_image_sharing</string>
     <string name="key_qq_disable_discussion_notification">key_qq_disable_discussion_notification</string>
+    <string name="key_qq_prevent_audio_panel">key_qq_prevent_audio_panel</string>
     <string name="key_push_bullet_share_to_all">key_push_bullet_share_to_all</string>
 
     <!--Entertainment-->
