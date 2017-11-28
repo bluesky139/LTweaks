@@ -32,6 +32,9 @@ public class XposedPreventReceiver extends XposedPreventRunning {
     @Override
     protected void handleLoadPackage() throws Throwable {
         super.handleLoadPackage();
+        if (mPreventList.isEmpty()) {
+            return;
+        }
         mFieldActions = IntentFilter.class.getDeclaredField("mActions");
         mFieldActions.setAccessible(true);
 

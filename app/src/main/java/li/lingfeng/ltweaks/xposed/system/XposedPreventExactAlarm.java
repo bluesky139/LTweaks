@@ -33,6 +33,10 @@ public class XposedPreventExactAlarm extends XposedPreventRunning {
             return;
         }
         super.handleLoadPackage();
+        if (mPreventList.isEmpty()) {
+            return;
+        }
+
         hookAllMethods(ClassNames.ALARM_MANAGER_SERVICE, "setImpl", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

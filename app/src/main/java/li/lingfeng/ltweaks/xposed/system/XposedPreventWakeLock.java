@@ -26,6 +26,10 @@ public class XposedPreventWakeLock extends XposedPreventRunning {
     @Override
     protected void handleLoadPackage() throws Throwable {
         super.handleLoadPackage();
+        if (mPreventList.isEmpty()) {
+            return;
+        }
+
         hookAllMethods(ClassNames.POWER_MANAGER_SERVICE + "$BinderService", "acquireWakeLock", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

@@ -22,6 +22,10 @@ public class XposedPreventForegroundService extends XposedPreventRunning {
     @Override
     protected void handleLoadPackage() throws Throwable {
         super.handleLoadPackage();
+        if (mPreventList.isEmpty()) {
+            return;
+        }
+
         hookAllMethods(ClassNames.ACTIVITY_MANAGER_SERVICE, "setServiceForeground", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
