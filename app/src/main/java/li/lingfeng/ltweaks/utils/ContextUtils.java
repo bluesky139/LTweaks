@@ -176,6 +176,22 @@ public class ContextUtils {
         return context.getResources().getDrawable(getMipmapId(name, context));
     }
 
+    public static float getDimen(String name) {
+        return getDimen(name, MyApplication.instance());
+    }
+
+    public static float getDimen(String name, Context context) {
+        return context.getResources().getDimension(getDimenId(name, context));
+    }
+
+    public static int getDimenId(String name) {
+        return getDimenId(name, MyApplication.instance());
+    }
+
+    public static int getDimenId(String name, Context context) {
+        return getResId(name, "dimen", context);
+    }
+
     public static int getLayoutId(String name) {
         return getLayoutId(name, MyApplication.instance());
     }
@@ -212,6 +228,22 @@ public class ContextUtils {
         return getResId(name, "style", context);
     }
 
+    public static int getColor(String name) {
+        return getColor(name, MyApplication.instance());
+    }
+
+    public static int getColor(String name, Context context) {
+        return context.getResources().getColor(getColorId(name, context));
+    }
+
+    public static int getColorId(String name) {
+        return getColorId(name, MyApplication.instance());
+    }
+
+    public static int getColorId(String name, Context context) {
+        return getResId(name, "color", context);
+    }
+
     public static int getColorFromTheme(Resources.Theme theme, String name) {
         int idColor = getAttrId(name);
         if (idColor <= 0)
@@ -229,12 +261,20 @@ public class ContextUtils {
         }
     }
 
+    public static int getThemeValue(String name) {
+        return getThemeValue(MyApplication.instance().getTheme(), name);
+    }
+
     public static int getThemeValue(Resources.Theme theme, String name) {
         int id = getAttrId(name);
         if (id <= 0) {
             return 0;
         }
         return getThemeValue(theme, id);
+    }
+
+    public static int getThemeValue(int id) {
+        return getThemeValue(MyApplication.instance().getTheme(), id);
     }
 
     public static int getThemeValue(Resources.Theme theme, int id) {
