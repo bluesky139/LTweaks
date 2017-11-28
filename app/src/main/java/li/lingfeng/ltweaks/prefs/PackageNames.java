@@ -37,6 +37,7 @@ public class PackageNames {
     public static final String JIAN_SHU = "com.jianshu.haruki";
     public static final String ZHI_HU = "com.zhihu.android";
     public static final String DIALER = "com.android.dialer";
+    public static final String PUSH_BULLET = "com.pushbullet.android";
 
     // Entertainment
     public static final String DOUBAN_MOVIE = "com.douban.movie";

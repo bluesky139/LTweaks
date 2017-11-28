@@ -62,4 +62,12 @@
             android:title="@string/pref_qq_disable_discussion_notification"
             android:summary="@string/pref_qq_disable_discussion_notification_summary" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_push_bullet">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_push_bullet_share_to_all"
+            android:title="@string/pref_push_bullet_share_to_all"
+            android:summary="@string/pref_push_bullet_share_to_all_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>
