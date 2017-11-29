@@ -96,6 +96,7 @@
     <string name="key_selection_action_mode_original">key_selection_action_mode_original</string>
     <string name="key_app_info_open_app_data_folder">key_app_info_open_app_data_folder</string>
     <string name="key_app_info_go_market">key_app_info_go_market</string>
+    <string name="key_app_info_allow_disable">key_app_info_allow_disable</string>
     <string name="key_lineage_os_live_display_time">key_lineage_os_live_display_time</string>
     <string name="key_lineage_os_live_display_time_sunrise">key_lineage_os_live_display_time_sunrise</string>
     <string name="key_lineage_os_live_display_time_sunset">key_lineage_os_live_display_time_sunset</string>

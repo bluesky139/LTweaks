@@ -272,6 +272,9 @@ Open source on github: \n
     <string name="pref_app_info_open_app_data_folder_summary">通常情况下会打开 \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" 或 \"/data/user_de/0/[package_name]\", 你需要一个支持 root 的文件管理器, 配合 Solid Explorer 测试过\n以菜单的形式添加</string>
     <string name="pref_app_info_go_market">跳转到市场</string>
     <string name="pref_app_info_go_market_summary">跳转到 Google Play, 酷市场, ApkPure, Mobilism\n以菜单的形式添加</string>
+    <string name="pref_app_info_allow_disable">允许禁用系统核心应用</string>
+    <string name="pref_app_info_allow_disable_summary">这将让\"禁用\"按钮在系统核心应用上也可被点击, 小心, 你也许会让你的手机变砖\n
+\"禁用\"按钮会变为红色来给以警告</string>
     <string name="pref_category_lineage_os">Lineage OS</string>
     <string name="pref_lineage_os_live_display_time">自定义 Live Display 时间</string>
     <string name="pref_lineage_os_live_display_time_summary">手动设置 Live Display 时间, 而不是通过位置来计算日出/日落</string>

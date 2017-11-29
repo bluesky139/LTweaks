@@ -19,15 +19,19 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 
 public abstract class XposedAppInfo extends XposedBase {
 
-    private static final String INSTALLED_APP_DETAILS = "com.android.settings.applications.InstalledAppDetails";
+    protected static final String INSTALLED_APP_DETAILS = "com.android.settings.applications.InstalledAppDetails";
     public static final String SETTINGS_ACTIVITY = "com.android.settings.SettingsActivity";
 
     @Override
     protected void handleLoadPackage() throws Throwable {
+        final Pair[] names = newMenuNames();
+        if (names == null || names.length == 0) {
+            return;
+        }
+
         findAndHookMethod(INSTALLED_APP_DETAILS, "onCreateOptionsMenu", Menu.class, MenuInflater.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Pair[] names = newMenuNames();
                 for (Pair<String, Integer> pair : names) {
                     String name = pair.first;
                     int priority = pair.second;
@@ -42,7 +46,7 @@ public abstract class XposedAppInfo extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 MenuItem item = (MenuItem) param.args[0];
-                if (!Utils.pairContains(newMenuNames(), item.getTitle(), true)) {
+                if (!Utils.pairContains(names, item.getTitle(), true)) {
                     return;
                 }
 
