@@ -2,6 +2,8 @@ package li.lingfeng.ltweaks.xposed;
 
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +97,9 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         for (Class<?> cls : modules) {
             try {
                 XposedLoad xposedLoad = cls.getAnnotation(XposedLoad.class);
+                if (ArrayUtils.contains(xposedLoad.excludedPackages(), lpparam.packageName)) {
+                    continue;
+                }
                 if (xposedLoad.loadPrefsInZygote()) {
                     Prefs.useZygotePreferences();
                 }

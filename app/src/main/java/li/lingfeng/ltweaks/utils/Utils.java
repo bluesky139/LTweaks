@@ -16,8 +16,10 @@ import android.view.MenuItem;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import de.robv.android.xposed.XposedHelpers;
 
@@ -26,6 +28,30 @@ import de.robv.android.xposed.XposedHelpers;
  */
 
 public class Utils {
+
+    public static String[] splitFirst(String str, char ch) {
+        int pos = str.indexOf(ch);
+        return new String[] { str.substring(0, pos), str.substring(pos + 1) };
+    }
+
+    public static String[] splitMax(String str, char ch, int max) {
+        List<String> list = new ArrayList<>(max);
+        String left = str;
+        while (list.size() + 1 < max && !left.isEmpty()) {
+            int pos = left.indexOf(ch);
+            if (pos >= 0) {
+                list.add(left.substring(0, pos));
+                left = left.substring(pos + 1);
+            } else {
+                break;
+            }
+        }
+        if (!left.isEmpty()) {
+            list.add(left);
+        }
+        String[] array = new String[list.size()];
+        return list.toArray(array);
+    }
 
     public static String[] splitByLastChar(String str, char ch) {
         int pos = str.lastIndexOf(ch);

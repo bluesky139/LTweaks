@@ -7,9 +7,11 @@ import android.content.IntentFilter;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,11 +23,16 @@ import li.lingfeng.ltweaks.utils.Logger;
 
 public class SharedPreferences implements android.content.SharedPreferences {
 
+    public interface OnPreferenceChangeListener {
+        void onChanged(String key, Object value);
+    }
+
     public static final String ACTION_PREF_CHANGE_PREFIX = PackageNames.L_TWEAKS + ".ACTION_PREF_CHANGE.";
     private Context mContext;
     private android.content.SharedPreferences mOriginal;
     private Set<String> mRegisteredChangeKeys;
     private Map<String, Object> mChangedValues; // Receive changed values from broadcast
+    private Map<String, List<OnPreferenceChangeListener>> mChangeListeners;
     private BroadcastReceiver mValueChangeReceiver;
 
     public SharedPreferences(Context context, android.content.SharedPreferences original) {
@@ -159,13 +166,22 @@ public class SharedPreferences implements android.content.SharedPreferences {
     }
 
     public void registerPreferenceChangeKey(@StringRes int key) {
-        registerPreferenceChangeKey(getKeyById(key));
+        registerPreferenceChangeKey(key, null);
+    }
+
+    public void registerPreferenceChangeKey(@StringRes int key, final OnPreferenceChangeListener changeListener) {
+        registerPreferenceChangeKey(getKeyById(key), changeListener);
     }
 
     public void registerPreferenceChangeKey(String key) {
+        registerPreferenceChangeKey(key, null);
+    }
+
+    public void registerPreferenceChangeKey(String key, final OnPreferenceChangeListener changeListener) {
         if (mContext.getPackageName().equals(PackageNames.L_TWEAKS)) {
             return;
         }
+
         if (mValueChangeReceiver == null) {
             mValueChangeReceiver = new BroadcastReceiver() {
                 @Override
@@ -173,11 +189,13 @@ public class SharedPreferences implements android.content.SharedPreferences {
                     if (mChangedValues == null) {
                         mChangedValues = new HashMap<>();
                     }
+
                     String key = intent.getStringExtra("key");
                     Object originalValue = mOriginal.getAll().get(key);
                     if (originalValue != null) {
                         Object value = null;
                         Class valueCls = originalValue.getClass();
+
                         if (valueCls == Boolean.class) {
                             value = intent.getBooleanExtra("value", false);
                         } else if (valueCls == Integer.class) {
@@ -201,10 +219,32 @@ public class SharedPreferences implements android.content.SharedPreferences {
                             Logger.w("Unhandled pref type " + valueCls);
                         }
                         mChangedValues.put(key, value);
+
+                        if (mChangeListeners != null) {
+                            List<OnPreferenceChangeListener> listeners = mChangeListeners.get(key);
+                            if (listeners != null) {
+                                for (OnPreferenceChangeListener listener : listeners) {
+                                    listener.onChanged(key, value);
+                                }
+                            }
+                        }
                     }
                 }
             };
         }
+
+        if (changeListener != null) {
+            if (mChangeListeners == null) {
+                mChangeListeners = new HashMap<>();
+            }
+            List<OnPreferenceChangeListener> listeners = mChangeListeners.get(key);
+            if (listeners == null) {
+                listeners = new ArrayList<>(1);
+                mChangeListeners.put(key, listeners);
+            }
+            listeners.add(changeListener);
+        }
+
         if (mRegisteredChangeKeys == null) {
             mRegisteredChangeKeys = new HashSet<>();
         }

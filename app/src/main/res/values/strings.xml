@@ -233,6 +233,9 @@ Open source on github: \n
 May not work on all places</string>
     <string name="pref_text_selectable_text">Selectable Text</string>
     <string name="pref_text_selectable_text_summary">Add a item in share menu, to display or reprocess shared text</string>
+    <string name="pref_text_actions_enable">Enable floating menu management</string>
+    <string name="pref_text_actions_enable_summary">Block and sort</string>
+    <string name="pref_text_actions">Manage floating menu</string>
     <string name="pref_category_youdao">Youdao Dict</string>
     <string name="pref_youdao_quick_query_shortcut">Create shortcut for quick query</string>
     <string name="pref_youdao_quick_query_shortcut_summary">Activity for word query, nothing more</string>
@@ -296,6 +299,24 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
 
     <!-- Text -->
     <string name="text_selectable">Selectable Text</string>
+    <string name="text_actions_all">All</string>
+    <string name="text_action_cut">Cut</string>
+    <string name="text_action_copy">Copy</string>
+    <string name="text_action_paste">Paste</string>
+    <string name="text_action_share">Share</string>
+    <string name="text_action_select_all">Select all</string>
+    <string name="text_action_replace">Replace\u2026</string>
+    <string name="text_actions_system">System action</string>
+    <string name="text_actions_custom">Custom</string>
+    <string name="text_actions_menu_add_custom">Add Custom</string>
+    <string name="text_actions_custom_title">Menu item name</string>
+    <string name="text_actions_menu_usage">Usage</string>
+    <string name="text_actions_usage">
+        ⋅ Toggle on to block.\n
+        ⋅ Long click and drag to sort.\n
+        ⋅ App can add additional menu items by itself, those are not listed here, you can add it manually.\n
+        ⋅ Comparison is based on name, you need reconfigure this list if system language changed.
+    </string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>

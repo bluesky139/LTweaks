@@ -19,6 +19,14 @@
             android:key="@string/key_text_selectable_text"
             android:title="@string/pref_text_selectable_text"
             android:summary="@string/pref_text_selectable_text_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_text_actions_enable"
+            android:title="@string/pref_text_actions_enable"
+            android:summary="@string/pref_text_actions_enable_summary" />
+        <Preference
+            android:key="@string/key_text_actions"
+            android:title="@string/pref_text_actions" />
     </PreferenceCategory>
 
     <PreferenceCategory

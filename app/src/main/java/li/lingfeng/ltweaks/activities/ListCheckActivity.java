@@ -13,7 +13,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +28,8 @@ import android.widget.Toast;
 
 import com.buildware.widget.indeterm.IndeterminateCheckBox;
 import com.buildware.widget.indeterm.IndeterminateCheckable;
+
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.lang.reflect.Constructor;
 
@@ -93,8 +98,30 @@ public class ListCheckActivity extends AppCompatActivity {
         public void onCheckedChanged(ListItem item, Boolean isChecked) {
         }
 
+        protected boolean allowMove() {
+            return false;
+        }
+
+        protected boolean allowSwipe() {
+            return false;
+        }
+
+        protected void onMove(int fromPosition, int toPosition) {
+            throw new NotImplementedException(getClass() + ".onMove()");
+        }
+
+        protected void onSwiped(int position) {
+            throw new NotImplementedException(getClass() + ".onSwiped()");
+        }
+
         protected void notifyDataSetChanged() {
             mActivity.notifyDataSetChanged();
+        }
+
+        protected void onCreateOptionsMenu(Menu menu) {
+        }
+
+        protected void onOptionsItemSelected(MenuItem item) {
         }
     }
 
@@ -130,6 +157,18 @@ public class ListCheckActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(new ListFragmentPageChangeListener());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mDataProvider.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mDataProvider.onOptionsItemSelected(item);
+        return true;
     }
 
     protected Class<? extends DataProvider> getDataProviderClass() {
@@ -192,6 +231,7 @@ public class ListCheckActivity extends AppCompatActivity {
 
         private RecyclerView mListView;
         private ListAdapter mListAdapter;
+        private ItemTouchHelper mItemTouchHelper;
 
         public static ListFragment newInstance(int tab) {
             ListFragment fragment = new ListFragment();
@@ -212,17 +252,22 @@ public class ListCheckActivity extends AppCompatActivity {
             mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
             mListAdapter = new ListAdapter();
             mListView.setAdapter(mListAdapter);
+
+            if (getDataProvider().allowMove() || getDataProvider().allowSwipe()) {
+                mItemTouchHelper = new ItemTouchHelper(new ItemTouchCallback());
+                mItemTouchHelper.attachToRecyclerView(mListView);
+            }
             return view;
+        }
+
+        private DataProvider getDataProvider() {
+            return ((ListCheckActivity) getActivity()).mDataProvider;
         }
 
         private class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
             private ListCheckActivity getActivity() {
                 return (ListCheckActivity) ListFragment.this.getActivity();
-            }
-
-            private DataProvider getDataProvider() {
-                return getActivity().mDataProvider;
             }
 
             @Override
@@ -285,6 +330,31 @@ public class ListCheckActivity extends AppCompatActivity {
                     mDescription = (TextView) view.findViewById(R.id.description);
                     mEnabler = (IndeterminateCheckBox) view.findViewById(R.id.enabler);
                 }
+            }
+        }
+
+        private class ItemTouchCallback extends ItemTouchHelper.Callback {
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(getDataProvider().allowMove() ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0,
+                        getDataProvider().allowSwipe() ? ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT : 0);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int from = viewHolder.getAdapterPosition();
+                int to = target.getAdapterPosition();
+                getDataProvider().onMove(from, to);
+                mListAdapter.notifyItemMoved(from, to);
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                getDataProvider().onSwiped(position);
+                mListAdapter.notifyItemRemoved(position);
             }
         }
 

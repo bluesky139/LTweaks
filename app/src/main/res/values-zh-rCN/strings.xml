@@ -283,6 +283,13 @@ Open source on github: \n
 
     <!-- Text -->
     <string name="text_selectable">查看文本</string>
+    <string name="text_actions_all">所有</string>
+    <string name="text_action_cut">剪切</string>
+    <string name="text_action_copy">复制</string>
+    <string name="text_action_paste">粘贴</string>
+    <string name="text_action_share">分享</string>
+    <string name="text_action_select_all">全选</string>
+    <string name="text_action_replace">替换...</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>

@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 public @interface XposedLoad {
     String[] packages(); // Load for all packages if empty.
     int[] prefs();  // Always load if empty.
+    String[] excludedPackages() default {};
     String loadAtActivityCreate() default ""; // Activity name.
     boolean useRemotePreferences() default false;
     boolean loadPrefsInZygote() default false;

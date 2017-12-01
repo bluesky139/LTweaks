@@ -246,6 +246,10 @@ public class ViewUtils {
         showDialog(context, message, null);
     }
 
+    public static void showDialog(Context context, @StringRes int messageId) {
+        showDialog(context, messageId, null);
+    }
+
     public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener) {
         new AlertDialog.Builder(context)
                 .setMessage(message)

@@ -28,6 +28,7 @@ import li.lingfeng.ltweaks.activities.SelectableTextActivity;
 import li.lingfeng.ltweaks.activities.SolidExplorerUrlReplacerSettings;
 import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
 import li.lingfeng.ltweaks.fragments.sub.system.PreventListDataProvider;
+import li.lingfeng.ltweaks.fragments.sub.system.TextActionDataProvider;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
@@ -67,6 +68,11 @@ public class SystemPrefFragment extends BasePrefFragment {
     @PreferenceChange(prefs = R.string.key_text_selectable_text)
     private void enableSelectableText(Preference preference, boolean enabled) {
         ComponentUtils.enableComponent(SelectableTextActivity.class, enabled);
+    }
+
+    @PreferenceClick(prefs = R.string.key_text_actions)
+    private void manageTextActions(Preference preference) {
+        ListCheckActivity.create(getActivity(), TextActionDataProvider.class);
     }
 
     @PreferenceClick(prefs = R.string.key_youdao_quick_query_shortcut)
