@@ -234,7 +234,7 @@ May not work on all places</string>
     <string name="pref_text_selectable_text">Selectable Text</string>
     <string name="pref_text_selectable_text_summary">Add a item in share menu, to display or reprocess shared text</string>
     <string name="pref_text_actions">Manage floating menu</string>
-    <string name="pref_text_actions_summary">Block and sort</string>
+    <string name="pref_text_actions_summary">Block and sort\nFor Android 6.0+</string>
     <string name="pref_category_youdao">Youdao Dict</string>
     <string name="pref_youdao_quick_query_shortcut">Create shortcut for quick query</string>
     <string name="pref_youdao_quick_query_shortcut_summary">Activity for word query, nothing more</string>

@@ -221,7 +221,7 @@ Open source on github: \n
     <string name="pref_text_selectable_text">查看文本</string>
     <string name="pref_text_selectable_text_summary">在分享菜单中添加一个菜单, 用于查看当前分享的文本或对文本进行简单的二次处理</string>
     <string name="pref_text_actions">管理浮动菜单</string>
-    <string name="pref_text_actions_summary">屏蔽和排序</string>
+    <string name="pref_text_actions_summary">屏蔽和排序\n仅 Android 6.0+</string>
     <string name="pref_category_youdao">有道词典</string>
     <string name="pref_youdao_quick_query_shortcut">为快速查询创建快捷方式</string>
     <string name="pref_youdao_quick_query_shortcut_summary">进入纯粹的单词查询界面，没有多余的功能</string>
