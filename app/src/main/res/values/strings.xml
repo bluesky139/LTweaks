@@ -233,8 +233,10 @@ Open source on github: \n
 May not work on all places</string>
     <string name="pref_text_selectable_text">Selectable Text</string>
     <string name="pref_text_selectable_text_summary">Add a item in share menu, to display or reprocess shared text</string>
-    <string name="pref_text_actions">Manage floating menu</string>
+    <string name="pref_text_actions">Manage floating menus</string>
     <string name="pref_text_actions_summary">Block and sort\nFor Android 6.0+</string>
+    <string name="pref_text_actions_original">Show all floating menus</string>
+    <string name="pref_text_actions_original_summary">Some menus may be hidden by app itself\nFor Android 6.0+</string>
     <string name="pref_category_youdao">Youdao Dict</string>
     <string name="pref_youdao_quick_query_shortcut">Create shortcut for quick query</string>
     <string name="pref_youdao_quick_query_shortcut_summary">Activity for word query, nothing more</string>
@@ -279,9 +281,6 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_category_solid_explorer">Solid Explorer (Not Classic)</string>
     <string name="pref_solid_explorer_replace_url">Replace Streaming Url</string>
     <string name="pref_solid_explorer_replace_url_summary">When playing video from network, Solid Explorer will streaming video to local url (eg: \"http://127.0.0.1:12345/public/a.mp4\"), it has performance loss.\nReplace \"127.0.0.1:12345\" to server url for accessing video directly (If server supports it).\nSupport smb, dav, ftp, sftp.</string>
-    <string name="pref_category_selection_action_mode">Selection Floating Menu</string>
-    <string name="pref_selection_action_mode_original">Show all menu items</string>
-    <string name="pref_selection_action_mode_original_summary">Some items may be hidden by app itself\nFor Android 6.0+</string>
     <string name="pref_category_app_info">App Info</string>
     <string name="pref_app_info_open_app_data_folder">Open App Data Folder</string>
     <string name="pref_app_info_open_app_data_folder_summary">Generally, it will open \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" or \"/data/user_de/0/[package_name]\", you need a file explorer which supports root access, tested with Solid Explorer\nAdd as menu</string>

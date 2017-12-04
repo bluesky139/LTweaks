@@ -23,6 +23,11 @@
             android:key="@string/key_text_actions"
             android:title="@string/pref_text_actions"
             android:summary="@string/pref_text_actions_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_selection_action_mode_original"
+            android:title="@string/pref_text_actions_original"
+            android:summary="@string/pref_text_actions_original_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -113,15 +118,6 @@
             android:key="@string/key_solid_explorer_url_replacers"
             android:title="@string/pref_solid_explorer_replace_url"
             android:summary="@string/pref_solid_explorer_replace_url_summary" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/pref_category_selection_action_mode">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_selection_action_mode_original"
-            android:title="@string/pref_selection_action_mode_original"
-            android:summary="@string/pref_selection_action_mode_original_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
