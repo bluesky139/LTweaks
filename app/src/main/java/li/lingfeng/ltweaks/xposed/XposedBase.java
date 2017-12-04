@@ -60,10 +60,12 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
                         }
                     }
 
-                    if (enabledPrefs.size() > 0) {
+                    if (enabledPrefs.size() > 0 || xposedLoad.prefs().length == 0) {
                         try {
-                            Logger.i("Load " + XposedBase.this.getClass().getName() + " for " + lpparam.packageName
-                                    + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                            if (xposedLoad.packages().length > 0) {
+                                Logger.i("Load " + XposedBase.this.getClass().getName() + " for " + lpparam.packageName
+                                        + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                            }
                             handleLoadPackage();
                         } catch (Throwable e) {
                             Logger.e("Can't handleLoadPackage, " + e.getMessage());

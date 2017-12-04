@@ -220,6 +220,8 @@ Open source on github: \n
 也许在某些地方无法使用</string>
     <string name="pref_text_selectable_text">查看文本</string>
     <string name="pref_text_selectable_text_summary">在分享菜单中添加一个菜单, 用于查看当前分享的文本或对文本进行简单的二次处理</string>
+    <string name="pref_text_actions">管理浮动菜单</string>
+    <string name="pref_text_actions_summary">屏蔽和排序</string>
     <string name="pref_category_youdao">有道词典</string>
     <string name="pref_youdao_quick_query_shortcut">为快速查询创建快捷方式</string>
     <string name="pref_youdao_quick_query_shortcut_summary">进入纯粹的单词查询界面，没有多余的功能</string>
@@ -290,6 +292,17 @@ Open source on github: \n
     <string name="text_action_share">分享</string>
     <string name="text_action_select_all">全选</string>
     <string name="text_action_replace">替换...</string>
+    <string name="text_actions_system">系统自带</string>
+    <string name="text_actions_custom">自定义</string>
+    <string name="text_actions_menu_add_custom">添加</string>
+    <string name="text_actions_custom_title">菜单名</string>
+    <string name="text_actions_menu_usage">使用说明</string>
+    <string name="text_actions_usage">
+        ⋅ 勾选表示屏蔽.\n
+        ⋅ 长按并上下拖动进行排序.\n
+        ⋅ 应用可额外添加一些菜单项, 这些菜单项不会默认列在此列表内, 你可以手动添加.\n
+        ⋅ 此功能直接通过菜单文本进行比较, 如果你改了系统语言，你需要重新配置.
+    </string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>

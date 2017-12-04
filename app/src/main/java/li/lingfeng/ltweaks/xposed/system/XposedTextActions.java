@@ -1,6 +1,5 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.app.Application;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,9 +25,9 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by lilingfeng on 2017/11/29.
  */
-@XposedLoad(packages = {}, prefs = R.string.key_text_actions_enable,
-        excludedPackages = PackageNames.ANDROID/*,
-        loadAtActivityCreate = ClassNames.ACTIVITY*/)
+@XposedLoad(packages = {}, prefs = {},
+        excludedPackages = PackageNames.ANDROID,
+        loadAtActivityCreate = ClassNames.ACTIVITY)
 public class XposedTextActions extends XposedBase {
 
     private static final String FLOATING_TOOLBAR = "com.android.internal.widget.FloatingToolbar";
@@ -36,22 +35,22 @@ public class XposedTextActions extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        /*Prefs.instance().registerPreferenceChangeKey(R.string.key_text_actions_set, new SharedPreferences.OnPreferenceChangeListener() {
+        Prefs.instance().registerPreferenceChangeKey(R.string.key_text_actions_set, new SharedPreferences.OnPreferenceChangeListener() {
             @Override
             public void onChanged(String key, Object value) {
                 mSavedItems = null;
             }
-        });*/
+        });
 
         findAndHookMethod(FLOATING_TOOLBAR, "getVisibleAndEnabledMenuItems", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Set<String> savedItems = Prefs.instance().getStringSet(R.string.key_text_actions_set, null);
-                if (savedItems == null || savedItems.size() == 0) {
-                    return;
-                }
-
                 if (mSavedItems == null) {
+                    Set<String> savedItems = Prefs.instance().getStringSet(R.string.key_text_actions_set, null);
+                    if (savedItems == null || savedItems.size() == 0) {
+                        return;
+                    }
+
                     mSavedItems = new HashMap<>(savedItems.size());
                     for (String item : savedItems) {
                         String[] strs = Utils.splitMax(item, ':', 4);

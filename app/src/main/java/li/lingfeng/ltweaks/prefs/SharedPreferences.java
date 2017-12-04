@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.prefs;
 
+import android.app.AndroidAppHelper;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,10 @@ public class SharedPreferences implements android.content.SharedPreferences {
     public SharedPreferences(Context context, android.content.SharedPreferences original) {
         mContext = context;
         mOriginal = original;
+    }
+
+    private Context getContext() {
+        return mContext != null ? mContext : AndroidAppHelper.currentApplication();
     }
 
     private String getKeyById(int id) {
@@ -178,7 +183,7 @@ public class SharedPreferences implements android.content.SharedPreferences {
     }
 
     public void registerPreferenceChangeKey(String key, final OnPreferenceChangeListener changeListener) {
-        if (mContext.getPackageName().equals(PackageNames.L_TWEAKS)) {
+        if (getContext().getPackageName().equals(PackageNames.L_TWEAKS)) {
             return;
         }
 
@@ -252,7 +257,7 @@ public class SharedPreferences implements android.content.SharedPreferences {
             mRegisteredChangeKeys.add(key);
             IntentFilter filter = new IntentFilter(ACTION_PREF_CHANGE_PREFIX + key);
             filter.setPriority(999);
-            mContext.registerReceiver(mValueChangeReceiver, filter);
+            getContext().registerReceiver(mValueChangeReceiver, filter);
         }
     }
 

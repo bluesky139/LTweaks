@@ -19,7 +19,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
-import li.lingfeng.ltweaks.prefs.SharedPreferences;
 import li.lingfeng.ltweaks.utils.Logger;
 
 /**
@@ -97,9 +96,6 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         for (Class<?> cls : modules) {
             try {
                 XposedLoad xposedLoad = cls.getAnnotation(XposedLoad.class);
-                if (ArrayUtils.contains(xposedLoad.excludedPackages(), lpparam.packageName)) {
-                    continue;
-                }
                 if (xposedLoad.loadPrefsInZygote()) {
                     Prefs.useZygotePreferences();
                 }
@@ -118,18 +114,23 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
 
                 if (enabledPrefs.size() > 0 || xposedLoad.prefs().length == 0
                         || !xposedLoad.loadAtActivityCreate().isEmpty()) {
-                    IXposedHookLoadPackage module = (IXposedHookLoadPackage) cls.newInstance();
+                    if (mModulesForAll.contains(cls)) {
+                        if (lpparam.packageName.equals(PackageNames.ANDROID)) {
+                            Logger.i("Load " + cls.getName() + " for all packages"
+                                    + (xposedLoad.excludedPackages().length == 0 ? "" : (" (exclude " + xposedLoad.excludedPackages().length + ")"))
+                                    + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                        }
+                    }
                     if (xposedLoad.loadAtActivityCreate().isEmpty()) {
-                        if (mModulesForAll.contains(cls)) {
-                            if (lpparam.packageName.equals(PackageNames.ANDROID)) {
-                                Logger.i("Load " + cls.getName() + " for all packages"
-                                        + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
-                            }
-                        } else {
+                        if (!mModulesForAll.contains(cls)) {
                             Logger.i("Load " + cls.getName() + " for " + lpparam.packageName
                                     + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
                         }
                     }
+                    if (ArrayUtils.contains(xposedLoad.excludedPackages(), lpparam.packageName)) {
+                        continue;
+                    }
+                    IXposedHookLoadPackage module = (IXposedHookLoadPackage) cls.newInstance();
                     module.handleLoadPackage(lpparam);
                     mLoaded.add(module);
                 }
