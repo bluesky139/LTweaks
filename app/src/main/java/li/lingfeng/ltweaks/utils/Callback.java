@@ -5,6 +5,10 @@ package li.lingfeng.ltweaks.utils;
  */
 
 public class Callback {
+    public static interface C0 {
+        void onResult();
+    }
+
     public static interface C1<A> {
         void onResult(A a);
     }

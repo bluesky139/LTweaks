@@ -112,6 +112,11 @@
             android:key="@string/key_chrome_open_with"
             android:title="@string/pref_chrome_open_with"
             android:summary="@string/pref_chrome_open_with_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_chrome_ip_info"
+            android:title="@string/pref_chrome_ip_info"
+            android:summary="@string/pref_chrome_ip_info_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

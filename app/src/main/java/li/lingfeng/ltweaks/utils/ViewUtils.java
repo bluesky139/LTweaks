@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -9,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.Display;
@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -242,7 +243,7 @@ public class ViewUtils {
         parent.removeView(view);
     }
 
-    public static void showDialog(Context context, String message) {
+    public static void showDialog(Context context, CharSequence message) {
         showDialog(context, message, null);
     }
 
@@ -250,17 +251,32 @@ public class ViewUtils {
         showDialog(context, messageId, null);
     }
 
-    public static void showDialog(Context context, String message, DialogInterface.OnClickListener positiveListener) {
+    public static void showDialog(Context context, CharSequence message, DialogInterface.OnClickListener positiveListener) {
         new AlertDialog.Builder(context)
                 .setMessage(message)
-                .setPositiveButton(R.string.app_ok, positiveListener)
+                .setPositiveButton(ContextUtils.getLString(R.string.app_ok), positiveListener)
                 .show();
     }
 
     public static void showDialog(Context context, @StringRes int messageId, DialogInterface.OnClickListener positiveListener) {
         new AlertDialog.Builder(context)
                 .setMessage(messageId)
-                .setPositiveButton(R.string.app_ok, positiveListener)
+                .setPositiveButton(ContextUtils.getLString(R.string.app_ok), positiveListener)
+                .show();
+    }
+
+    public static AlertDialog showProgressingDialog(Context context, final boolean cancelable, final Callback.C0 cancelCallback) {
+        return new AlertDialog.Builder(context)
+                .setView(new ProgressBar(context))
+                .setCancelable(cancelable)
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        if (cancelable && cancelCallback != null) {
+                            cancelCallback.onResult();
+                        }
+                    }
+                })
                 .show();
     }
 

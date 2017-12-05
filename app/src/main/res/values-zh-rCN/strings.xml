@@ -85,6 +85,8 @@ Open source on github: \n
     <string name="pref_chrome_go_top_or_bottom_summary">在 Chrome 和 Custom Tab 中添加 \"转到顶部\" 和 \"转到底部\" 菜单</string>
     <string name="pref_chrome_open_with">用其它应用打开...</string>
     <string name="pref_chrome_open_with_summary">选择一个其它支持该网址的应用来打开</string>
+    <string name="pref_chrome_ip_info">IP 信息</string>
+    <string name="pref_chrome_ip_info_summary">查找当前网站的 IP 信息</string>
     <string name="pref_category_youtube">Youtube</string>
     <string name="pref_youtube_remove_bottom_bar">去底栏</string>
     <string name="pref_youtube_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
@@ -116,6 +118,12 @@ Open source on github: \n
     <string name="chrome_go_top">回到顶部</string>
     <string name="chrome_go_bottom">转到底部</string>
     <string name="chrome_open_with">使用其它应用打开...</string>
+    <string name="chrome_ip_info">IP 信息</string>
+    <string name="chrome_ip_ip">IP</string>
+    <string name="chrome_ip_domain">域名</string>
+    <string name="chrome_ip_geo">地理位置</string>
+    <string name="chrome_ip_isp">ISP</string>
+    <string name="chrome_ip_asn">ASN</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>

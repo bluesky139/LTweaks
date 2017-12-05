@@ -85,6 +85,8 @@ Open source on github: \n
     <string name="pref_chrome_go_top_or_bottom_summary">Menu \"Go Top\" and \"Go Bottom\" in Chrome and Custom Tab</string>
     <string name="pref_chrome_open_with">Open with...</string>
     <string name="pref_chrome_open_with_summary">Open url by other supported apps</string>
+    <string name="pref_chrome_ip_info">IP info</string>
+    <string name="pref_chrome_ip_info_summary">Menu to lookup ip info of current website</string>
     <string name="pref_category_youtube">Youtube</string>
     <string name="pref_youtube_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_youtube_remove_bottom_bar_summary">Put them into drawer menu</string>
@@ -129,6 +131,12 @@ Open source on github: \n
     <string name="chrome_go_top">Go Top</string>
     <string name="chrome_go_bottom">Go Bottom</string>
     <string name="chrome_open_with">Open With...</string>
+    <string name="chrome_ip_info">IP Info</string>
+    <string name="chrome_ip_domain">Domain</string>
+    <string name="chrome_ip_ip">IP</string>
+    <string name="chrome_ip_geo">GeoLocation</string>
+    <string name="chrome_ip_isp">ISP</string>
+    <string name="chrome_ip_asn">ASN</string>
 
     <!--Shopping-->
     <string name="pref_header_shopping">Shopping</string>
