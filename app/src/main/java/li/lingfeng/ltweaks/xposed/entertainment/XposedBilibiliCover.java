@@ -77,7 +77,8 @@ public class XposedBilibiliCover extends XposedBase {
                 textView.setTextSize(14);
                 textView.setTextColor(ContextUtils.getColor("theme_color_text_primary"));
                 textView.setGravity(Gravity.CENTER);
-                textView.setBackgroundResource(ContextUtils.getThemeValue("selectableItemBackground"));
+                textView.setBackgroundResource(ContextUtils.getResIdFromTheme("android:selectableItemBackground"));
+                textView.setClickable(true);
                 contentView.addView(textView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(40)));
 
                 textView.setOnClickListener(new View.OnClickListener() {
