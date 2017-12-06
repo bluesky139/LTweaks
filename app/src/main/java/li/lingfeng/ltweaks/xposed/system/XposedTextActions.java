@@ -38,6 +38,7 @@ public class XposedTextActions extends XposedBase {
             return;
         }
 
+        Prefs.instance().registerPreferenceChangeKey(R.string.key_text_actions_set);
         findAndHookMethod(FLOATING_TOOLBAR, "getVisibleAndEnabledMenuItems", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
