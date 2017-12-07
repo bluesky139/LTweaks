@@ -53,13 +53,13 @@ public class XposedTextActions extends XposedBase {
                     String name = strs[3];
                     int order = Integer.parseInt(strs[0]);
                     boolean block = Boolean.parseBoolean(strs[1]);
-                    savedItemMap.put(name, Pair.create(order, block));
+                    savedItemMap.put(name.toUpperCase(), Pair.create(order, block));
                 }
 
                 List<MenuItem> items = (List<MenuItem>) param.getResult();
                 for (int i = items.size() - 1; i >= 0; --i) {
                     MenuItem item = items.get(i);
-                    Pair<Integer, Boolean> pair = savedItemMap.get(item.getTitle());
+                    Pair<Integer, Boolean> pair = savedItemMap.get(item.getTitle().toString().toUpperCase());
                     if (pair != null && pair.second) {
                         Logger.d("Remove floating menu " + item.getTitle());
                         items.remove(i);
@@ -70,9 +70,9 @@ public class XposedTextActions extends XposedBase {
                 Collections.sort(items, new Comparator<MenuItem>() {
                     @Override
                     public int compare(MenuItem i1, MenuItem i2) {
-                        Pair<Integer, Boolean> pair = savedItemMap.get(i1.getTitle());
+                        Pair<Integer, Boolean> pair = savedItemMap.get(i1.getTitle().toString().toUpperCase());
                         Integer order1 = pair == null ? null : pair.first;
-                        pair = savedItemMap.get(i2.getTitle());
+                        pair = savedItemMap.get(i2.getTitle().toString().toUpperCase());
                         Integer order2 = pair == null ? null : pair.first;
                         if (order1 == null && order2 == null) {
                             return 0;
