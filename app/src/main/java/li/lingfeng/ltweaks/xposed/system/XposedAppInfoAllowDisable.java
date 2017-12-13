@@ -4,9 +4,11 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.util.Pair;
+import android.view.View;
 import android.widget.Button;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
@@ -22,22 +24,23 @@ import li.lingfeng.ltweaks.utils.Logger;
 public class XposedAppInfoAllowDisable extends XposedAppInfo {
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookMethod(INSTALLED_APP_DETAILS, "handleDisableable", Button.class, new XC_MethodHook() {
+        findAndHookMethod(INSTALLED_APP_DETAILS, "initUninstallButtons", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if ((boolean) param.getResult()) {
+                Button button = (Button) XposedHelpers.getObjectField(param.thisObject, "mUninstallButton");
+                if (button.isEnabled()) {
                     return;
                 }
 
-                Logger.i("handleDisableable return true.");
-                Button button = (Button) param.args[0];
+                Logger.i("initUninstallButtons enable uninstall button.");
                 button.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+                button.setEnabled(true);
+                button.setOnClickListener((View.OnClickListener) param.thisObject);
 
                 ApplicationInfo info = getApplicationInfo(param);
                 if (!info.enabled) {
                     button.setText(ContextUtils.getString("enable_text"));
                 }
-                param.setResult(true);
             }
         });
     }
