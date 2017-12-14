@@ -302,6 +302,8 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_lineage_os_live_display_time_summary">Manually set Live Display time, not calculate sunrise/sunset from location</string>
     <string name="pref_lineage_os_live_display_time_sunrise">Set Live Display sunrise</string>
     <string name="pref_lineage_os_live_display_time_sunset">Set Live Display sunset</string>
+    <string name="pref_category_keys">Keys</string>
+    <string name="pref_keys_long_press_back_to_kill">Long press back key to kill current app</string>
 
     <!-- Text -->
     <string name="text_selectable">Selectable Text</string>
@@ -350,4 +352,7 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
     <string name="solid_explorer_url_replacer_dialog_instruction_from">Server:</string>
     <string name="solid_explorer_url_replacer_dialog_instruction_to">Replace To (eg: http://10.0.0.4/download):</string>
+
+    <!-- Buttons -->
+    <string name="keys_long_press_back_kill_hint">%s is killed.</string>
 </resources>

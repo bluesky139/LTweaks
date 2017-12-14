@@ -289,6 +289,8 @@ Open source on github: \n
     <string name="pref_lineage_os_live_display_time_summary">手动设置 Live Display 时间, 而不是通过位置来计算日出/日落</string>
     <string name="pref_lineage_os_live_display_time_sunrise">设置 Live Display 日出时间</string>
     <string name="pref_lineage_os_live_display_time_sunset">设置 Live Display 日落时间</string>
+    <string name="pref_category_keys">按键</string>
+    <string name="pref_keys_long_press_back_to_kill">长按返回键终止当前应用</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文本</string>
@@ -337,4 +339,7 @@ Open source on github: \n
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
     <string name="solid_explorer_url_replacer_dialog_instruction_from">服务器:</string>
     <string name="solid_explorer_url_replacer_dialog_instruction_to">替换为 (比如: http://10.0.0.4/download):</string>
+
+    <!-- Buttons -->
+    <string name="keys_long_press_back_kill_hint">%s 已终止.</string>
 </resources>

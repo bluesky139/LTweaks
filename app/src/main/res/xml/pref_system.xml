@@ -155,4 +155,12 @@
             android:key="@string/key_lineage_os_live_display_time_sunset"
             android:title="@string/pref_lineage_os_live_display_time_sunset" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_keys">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_keys_long_press_back_to_kill"
+            android:title="@string/pref_keys_long_press_back_to_kill" />
+    </PreferenceCategory>
 </PreferenceScreen>
