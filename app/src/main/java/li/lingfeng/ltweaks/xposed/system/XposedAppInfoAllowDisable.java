@@ -32,12 +32,12 @@ public class XposedAppInfoAllowDisable extends XposedAppInfo {
                     return;
                 }
 
-                Logger.i("initUninstallButtons enable uninstall button.");
+                ApplicationInfo info = getApplicationInfo(param);
+                Logger.i("Enable disable button for " + info.packageName);
                 button.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
                 button.setEnabled(true);
                 button.setOnClickListener((View.OnClickListener) param.thisObject);
 
-                ApplicationInfo info = getApplicationInfo(param);
                 if (!info.enabled) {
                     button.setText(ContextUtils.getString("enable_text"));
                 }
