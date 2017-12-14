@@ -137,6 +137,11 @@
             android:key="@string/key_app_info_allow_disable"
             android:title="@string/pref_app_info_allow_disable"
             android:summary="@string/pref_app_info_allow_disable_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_app_info_app_ops"
+            android:title="@string/pref_app_info_app_ops"
+            android:summary="@string/pref_app_info_app_ops_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
