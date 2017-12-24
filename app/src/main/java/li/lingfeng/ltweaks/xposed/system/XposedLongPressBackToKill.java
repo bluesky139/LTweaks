@@ -1,10 +1,12 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.ActivityManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Handler;
 import android.os.Process;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.ANDROID, prefs = R.string.key_keys_long_press_back_to_kill)
 public class XposedLongPressBackToKill extends XposedBase {
 
+    private static final String PHONE_WINDOW_MANAGER = "com.android.server.policy.PhoneWindowManager";
     private Context mContext;
     private Handler mHandler;
 
@@ -30,6 +33,9 @@ public class XposedLongPressBackToKill extends XposedBase {
         @Override
         public void run() {
             try {
+                Vibrator vibrator = (Vibrator) mContext.getSystemService(Service.VIBRATOR_SERVICE);
+                vibrator.vibrate(new long[] { 0, 10, 40, 10 }, -1);
+
                 ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
                 String packageName = activityManager.getRunningTasks(1).get(0).topActivity.getPackageName();
                 ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(packageName, 0);
@@ -52,7 +58,7 @@ public class XposedLongPressBackToKill extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        hookAllMethods("com.android.server.policy.PhoneWindowManager", "interceptKeyBeforeDispatching", new XC_MethodHook() {
+        hookAllMethods(PHONE_WINDOW_MANAGER, "interceptKeyBeforeDispatching", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (mContext == null) {
