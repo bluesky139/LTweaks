@@ -3,20 +3,17 @@ package li.lingfeng.ltweaks.xposed.system;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Handler;
-import android.os.Process;
 import android.os.Vibrator;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
-import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PackageUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -34,22 +31,11 @@ public class XposedLongPressBackToKill extends XposedBase {
         public void run() {
             try {
                 Vibrator vibrator = (Vibrator) mContext.getSystemService(Service.VIBRATOR_SERVICE);
-                vibrator.vibrate(new long[] { 0, 10, 40, 10 }, -1);
+                vibrator.vibrate(10);
 
                 ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
                 String packageName = activityManager.getRunningTasks(1).get(0).topActivity.getPackageName();
-                ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(packageName, 0);
-                if (info.uid >= Process.FIRST_APPLICATION_UID && info.uid <= Process.LAST_APPLICATION_UID) {
-                    Logger.i("Long pressed back to kill " + packageName);
-                    XposedHelpers.callMethod(activityManager, "forceStopPackage", packageName);
-
-                    CharSequence label = info.loadLabel(mContext.getPackageManager());
-                    String toastStr = ContextUtils.getLString(R.string.keys_long_press_back_kill_hint);
-                    toastStr = String.format(toastStr, label);
-                    Toast.makeText(mContext, toastStr, Toast.LENGTH_SHORT).show();
-                } else {
-                    Logger.i("Long pressed back should not kill system app " + packageName);
-                }
+                PackageUtils.killPackage(mContext, packageName);
             } catch (Throwable e) {
                 Logger.e("Failed to kill process, " + e);
             }

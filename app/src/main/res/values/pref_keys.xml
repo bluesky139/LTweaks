@@ -105,4 +105,5 @@
     <string name="key_lineage_os_live_display_time_sunrise">key_lineage_os_live_display_time_sunrise</string>
     <string name="key_lineage_os_live_display_time_sunset">key_lineage_os_live_display_time_sunset</string>
     <string name="key_keys_long_press_back_to_kill">key_keys_long_press_back_to_kill</string>
+    <string name="key_recent_task_swipe_to_kill">key_recent_task_swipe_to_kill</string>
 </resources>
