@@ -272,6 +272,7 @@ public class SystemPrefFragment extends BasePrefFragment {
         ListCheckActivity.create(getActivity(), PreventListDataProvider.class);
     }
 
+    @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)
     private void setSmartLockWifiList(Preference preference) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
