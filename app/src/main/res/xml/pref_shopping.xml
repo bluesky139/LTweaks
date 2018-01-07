@@ -36,13 +36,4 @@
             android:title="@string/pref_suning_history"
             android:summary="@string/pref_suning_history_summary" />
     </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/pref_category_smzdm">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_smzdm_open_link_in_jd_app"
-            android:title="@string/pref_smzdm_open_link_in_jd_app"
-            android:summary="@string/pref_smzdm_open_link_in_jd_app_summary" />
-    </PreferenceCategory>
 </PreferenceScreen>

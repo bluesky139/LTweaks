@@ -144,8 +144,6 @@ Open source on github: \n
     <string name="pref_suning_history_summary">配合上面的分享功能来使用</string>
     <string name="pref_category_taobao">淘宝</string>
     <string name="pref_category_smzdm">什么值得买</string>
-    <string name="pref_smzdm_open_link_in_jd_app">更好的跳转京东</string>
-    <string name="pref_smzdm_open_link_in_jd_app_summary">在京东页面上去除什么值得买的悬浮图标，按返回键的时候返回什么值得买</string>
 
     <!-- JD -->
     <string name="jd_app">京东</string>

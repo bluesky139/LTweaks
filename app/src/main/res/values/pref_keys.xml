@@ -28,7 +28,7 @@
     <string name="key_jd_share_item">key_jd_share_item</string>
     <string name="key_jd_history">key_jd_history</string>
     <string name="key_jd_basic_share_activity">key_jd_basic_share_activity</string>
-    <string name="key_smzdm_open_link_in_jd_app">key_smzdm_open_link_in_jd_app</string>
+    <!-- Removed "key_smzdm_open_link_in_jd_app" -->
     <string name="key_suning_share_item">key_suning_share_item</string>
     <string name="key_suning_history">key_suning_history</string>
     <!-- Removed "key_taobao_share_item" -->
