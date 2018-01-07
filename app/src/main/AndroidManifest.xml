@@ -84,43 +84,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.JDActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.AppCompat.Dialog"
-            android:label="@string/jd_app"
-            android:taskAffinity="li.lingfeng.ltweaks.activities.JDActivity"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="item.jd.com" android:pathPattern="/.*\\.html" android:scheme="http"/>
-                <data android:host="item.jd.com" android:pathPattern="/.*\\.html" android:scheme="https"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="re.jd.com" android:pathPattern="/cps/item/.*\\.html" android:scheme="http"/>
-                <data android:host="re.jd.com" android:pathPattern="/cps/item/.*\\.html" android:scheme="https"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="item.m.jd.com" android:pathPattern="/product/.*\\.html" android:scheme="http"/>
-                <data android:host="item.m.jd.com" android:pathPattern="/product/.*\\.html" android:scheme="https"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="m.jd.com" android:pathPattern="/product/.*\\.html" android:scheme="http"/>
-                <data android:host="m.jd.com" android:pathPattern="/product/.*\\.html" android:scheme="https"/>
-            </intent-filter>
-        </activity>
-
         <activity android:name=".activities.JDHistoryActivity" android:excludeFromRecents="true"
             android:label="@string/jd_history"
             android:icon="@mipmap/ic_price_history"

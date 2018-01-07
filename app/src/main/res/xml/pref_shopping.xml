@@ -3,11 +3,6 @@
         android:title="@string/pref_category_jd">
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_jd_open_link_in_app"
-            android:title="@string/pref_jd_open_link_in_app"
-            android:summary="@string/pref_jd_open_link_in_app_summary" />
-        <SwitchPreference
-            android:defaultValue="false"
             android:key="@string/key_jd_share_item"
             android:title="@string/pref_jd_share_item"
             android:summary="@string/pref_jd_share_item_summary" />
