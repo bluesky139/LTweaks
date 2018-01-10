@@ -49,6 +49,7 @@ Open source on github: \n
     <string name="pref_category_google_play_services">Google Play Services</string>
     <string name="pref_google_dismiss_location_checker">Dismiss location settings checker</string>
     <string name="pref_google_dismiss_location_checker_summary">Dismiss dialog \"To continue, let your device turn on location using Google\'s location service.\"</string>
+    <string name="pref_google_block_system_update_notification">Block system update notificaton</string>
     <string name="pref_category_google">Google Search App</string>
     <string name="pref_google_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_remove_bottom_bar_summary">Put them into drawer menu</string>

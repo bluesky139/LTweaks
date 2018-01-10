@@ -6,6 +6,10 @@
             android:key="@string/key_google_dismiss_location_checker"
             android:title="@string/pref_google_dismiss_location_checker"
             android:summary="@string/pref_google_dismiss_location_checker_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_google_block_system_update_notification"
+            android:title="@string/pref_google_block_system_update_notification" />
     </PreferenceCategory>
 
     <PreferenceCategory

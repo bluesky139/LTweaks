@@ -3,6 +3,7 @@
     <!-- The values below are used for pref keys, should never be changed. -->
     <!--Google-->
     <string name="key_google_dismiss_location_checker">key_google_dismiss_location_checker</string>
+    <string name="key_google_block_system_update_notification">key_google_block_system_update_notification</string>
     <string name="key_google_remove_bottom_bar">key_google_remove_bottom_bar</string>
     <string name="key_google_com_domain">key_google_com_domain</string>
     <string name="key_google_keyboard_suggestion">key_google_keyboard_suggestion</string>
