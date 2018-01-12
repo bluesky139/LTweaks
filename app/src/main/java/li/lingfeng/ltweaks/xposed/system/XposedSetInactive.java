@@ -78,7 +78,8 @@ public class XposedSetInactive extends XposedPreventRunning {
             Field field = mUsageStatsManager.getClass().getDeclaredField("this$0");
             field.setAccessible(true);
             mUsageStatsService = field.get(mUsageStatsManager);
-            mMethodSetAppIdle = mUsageStatsService.getClass().getDeclaredMethod("setAppIdle", String.class, boolean.class, int.class);
+            String methodName = Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1 ? "setAppIdleAsync" : "setAppIdle";
+            mMethodSetAppIdle = mUsageStatsService.getClass().getDeclaredMethod(methodName, String.class, boolean.class, int.class);
             mMethodSetAppIdle.setAccessible(true);
 
             mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
