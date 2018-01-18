@@ -2,17 +2,12 @@ package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,24 +17,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import li.lingfeng.ltweaks.activities.LoadingDialog;
-import li.lingfeng.ltweaks.prefs.PackageNames;
-import li.lingfeng.ltweaks.utils.Callback;
-import li.lingfeng.ltweaks.utils.ContextUtils;
-import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ContextUtils;
+import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by smallville on 2017/1/5.
@@ -51,6 +36,7 @@ public class XposedGooglePlay extends XposedBase {
     private static String MENU_APKPURE;
     private static String MENU_MOBILISM;
     private static String MENU_APKMIRROR;
+    private static String MENU_APP_INFO;
     private HashMap<String, String> markets;
 
     private Field fNavigationMgr;
@@ -67,6 +53,7 @@ public class XposedGooglePlay extends XposedBase {
                     MENU_APKPURE = ContextUtils.getLString(R.string.google_play_view_in_apkpure);
                     MENU_MOBILISM = ContextUtils.getLString(R.string.google_play_search_in_mobilism);
                     MENU_APKMIRROR = ContextUtils.getLString(R.string.google_play_search_in_apkmirror);
+                    MENU_APP_INFO = ContextUtils.getLString(R.string.google_play_view_in_app_info);
                 }
 
                 Menu menu = (Menu) param.args[0];
@@ -74,6 +61,7 @@ public class XposedGooglePlay extends XposedBase {
                 menu.add(MENU_APKPURE);
                 menu.add(MENU_MOBILISM);
                 menu.add(MENU_APKMIRROR);
+                menu.add(MENU_APP_INFO);
                 markets = new HashMap<String, String>(2) {{
                     put(MENU_COOLAPK, PackageNames.COOLAPK);
                     put(MENU_APKPURE, PackageNames.APKPURE);
@@ -88,7 +76,8 @@ public class XposedGooglePlay extends XposedBase {
                 MenuItem item = (MenuItem) param.args[0];
                 CharSequence menuName = item.getTitle();
                 if (!MENU_COOLAPK.equals(menuName) && !MENU_APKPURE.equals(menuName)
-                        && !MENU_MOBILISM.equals(menuName) && !MENU_APKMIRROR.equals(menuName)) {
+                        && !MENU_MOBILISM.equals(menuName) && !MENU_APKMIRROR.equals(menuName)
+                        && !MENU_APP_INFO.equals(menuName)) {
                     return;
                 }
 
@@ -150,6 +139,8 @@ public class XposedGooglePlay extends XposedBase {
 
                         if (MENU_APKMIRROR.equals(menuName)) {
                             ContextUtils.searchInApkMirror(activity, maxStr);
+                        } else if (MENU_APP_INFO.equals(menuName)) {
+                            ContextUtils.openAppInfo(activity, maxStr);
                         } else {
                             ContextUtils.openAppInMarket(activity, maxStr, markets.get(menuName));
                         }

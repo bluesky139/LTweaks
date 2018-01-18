@@ -372,6 +372,13 @@ public class ContextUtils {
         }
     }
 
+    public static void openAppInfo(Activity activity, String packageName) {
+        Logger.v("openAppInfo " + packageName);
+        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + packageName));
+        activity.startActivity(intent);
+    }
+
     public static void openAppInMarket(Activity activity,
                                        String app, // app package name
                                        String market // market package name

@@ -71,8 +71,8 @@ Open source on github: \n
     <string name="pref_google_newsstand_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_newsstand_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_google_play">Google Play</string>
-    <string name="pref_google_play_view_in_coolapk">Add menu \"View in CoolApk / ApkPure / Mobilism\"</string>
-    <string name="pref_google_play_view_in_coolapk_summary">Jump to CoolApk / ApkPure, just like jump to Google Play from CoolApk, or search in Mobilism</string>
+    <string name="pref_google_play_view_in_coolapk">Add menu \"View in CoolApk / ApkPure / Mobilism / App Info\"</string>
+    <string name="pref_google_play_view_in_coolapk_summary">Jump to CoolApk / ApkPure, just like jump to Google Play from CoolApk, search in Mobilism, jump to App Info page of system</string>
     <string name="pref_category_google_messenger">Google Messenger</string>
     <string name="pref_google_messenger_disable_direct_share">Disable direct share</string>
     <string name="pref_google_messenger_disable_direct_share_summary">For Android 6.0+</string>
@@ -125,6 +125,7 @@ Open source on github: \n
     <string name="google_play_view_in_apkpure">View in ApkPure</string>
     <string name="google_play_search_in_mobilism">Search in Mobilism</string>
     <string name="google_play_search_in_apkmirror">Search in ApkMirror</string>
+    <string name="google_play_view_in_app_info">View in App Info</string>
 
     <!-- Chrome -->
     <string name="chrome_open_in_incognito">Open in Incognito</string>

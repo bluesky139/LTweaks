@@ -71,8 +71,8 @@ Open source on github: \n
     <string name="pref_google_newsstand_remove_bottom_bar">去底栏</string>
     <string name="pref_google_newsstand_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_google_play">Google Play</string>
-    <string name="pref_google_play_view_in_coolapk">添加菜单\"去酷安 / ApkPure / Mobilism 查看\"</string>
-    <string name="pref_google_play_view_in_coolapk_summary">酷安有个\"去 Play 查看\"，这个恰好相反，也可以去 ApkPure，或者去 Mobilism 搜索</string>
+    <string name="pref_google_play_view_in_coolapk">添加菜单\"去酷安 / ApkPure / Mobilism / 应用详情 查看\"</string>
+    <string name="pref_google_play_view_in_coolapk_summary">酷安有个\"去 Play 查看\"，这个恰好相反，也可以去 ApkPure，去 Mobilism 搜索，去系统的应用详情页面</string>
     <string name="pref_category_google_messenger">Google Messenger</string>
     <string name="pref_google_messenger_disable_direct_share">禁用 direct share</string>
     <string name="pref_google_messenger_disable_direct_share_summary">仅 Android 6.0+</string>
@@ -113,6 +113,7 @@ Open source on github: \n
     <string name="google_play_view_in_apkpure">去 ApkPure 查看</string>
     <string name="google_play_search_in_mobilism">去 Mobilism 搜索</string>
     <string name="google_play_search_in_apkmirror">去 ApkMirror 搜索</string>
+    <string name="google_play_view_in_app_info">去系统详情页面</string>
 
     <string name="chrome_open_in_incognito">隐身模式打开此页面</string>
     <string name="chrome_google_cache">查看 Google 缓存</string>
