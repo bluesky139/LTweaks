@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import li.lingfeng.ltweaks.MyApplication;
+import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.LoadingDialog;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import okhttp3.Call;
@@ -39,6 +40,10 @@ import okhttp3.Response;
 public class ContextUtils {
 
     public static Context createPackageContext(String packageName) {
+        if (MyApplication.instance().getPackageName().equals(PackageNames.L_TWEAKS)
+                && packageName.equals(PackageNames.L_TWEAKS)) {
+            return MyApplication.instance();
+        }
         try {
             return MyApplication.instance().createPackageContext(packageName, Context.CONTEXT_IGNORE_SECURITY);
         } catch (PackageManager.NameNotFoundException e) {
@@ -347,16 +352,12 @@ public class ContextUtils {
 
     public static void selectPicture(final Activity activity, final int requestCode) {
         Logger.v("selectPicture with requestCode " + requestCode);
-        PermissionUtils.requestPermissions(activity, new PermissionUtils.ResultCallback() {
-            @Override
-            public void onResult(boolean ok) {
-                if (ok) {
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("image/*");
-                    activity.startActivityForResult(intent, requestCode);
-                }
-            }
-        }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (!PermissionUtils.tryPermissions(activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void openFolder(Context context, String path) {

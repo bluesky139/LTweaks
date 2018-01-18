@@ -12,10 +12,13 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import java.io.Serializable;
 
 import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.prefs.PackageNames;
 
 /**
  * Created by smallville on 2017/2/2.
@@ -42,9 +45,9 @@ public class PermissionUtils {
     }
 
     public static boolean tryPermissions(Activity activity, String... permissions) {
-        if (!PermissionUtils.isPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            PermissionUtils.requestPermissions(activity, null, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            Toast.makeText(activity, R.string.app_retry_after_permission_granted, Toast.LENGTH_LONG).show();
+        if (!PermissionUtils.isPermissionGranted(activity, permissions)) {
+            PermissionUtils.requestPermissions(activity, null, permissions);
+            Toast.makeText(activity, ContextUtils.getLString(R.string.app_retry_after_permission_granted), Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -56,6 +59,9 @@ public class PermissionUtils {
                 callback.onResult(true);
             }
             return;
+        }
+        if (callback != null && !activity.getPackageName().equals(PackageNames.L_TWEAKS)) {
+            throw new NotImplementedException("requestPermissions from other package with callback is not implemented.");
         }
         mCallback = callback;
         ActivityCompat.requestPermissions(activity, permissions, 0);

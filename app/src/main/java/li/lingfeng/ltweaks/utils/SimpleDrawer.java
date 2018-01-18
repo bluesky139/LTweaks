@@ -1,21 +1,20 @@
 package li.lingfeng.ltweaks.utils;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
+import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,8 +23,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.List;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
+import li.lingfeng.ltweaks.prefs.ActivityRequestCode;
 
 import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
 
@@ -45,13 +51,23 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
     protected NavItem[] mNavItems;
     protected NavItem mHeaderItem;
 
-    public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem) {
-        this(context, mainView, navItems, headerItem, false, null);
+    protected int mHeaderBackgrondRequestCode = ActivityRequestCode.DRAWER_SELECT_HEADER_BACKGROUND;
+    protected Callback.C0 mHeaderBackgroundChangeCallback;
+    protected boolean mIsCustomHeaderBackground = false;
+    protected int mDefaultBackgroundColor = Color.parseColor("#4CAF50");
+
+    public SimpleDrawer(Activity activity, View mainView, NavItem[] navItems, NavItem headerItem) {
+        this(activity, mainView, navItems, headerItem, false);
     }
 
-    public SimpleDrawer(Context context, View mainView, NavItem[] navItems, NavItem headerItem,
+    public SimpleDrawer(Activity activity, View mainView, NavItem[] navItems, NavItem headerItem,
+                        boolean useCircleHeaderImage) {
+        this(activity, mainView, navItems, headerItem, useCircleHeaderImage, null);
+    }
+
+    public SimpleDrawer(Activity activity, View mainView, NavItem[] navItems, NavItem headerItem,
                         boolean useCircleHeaderImage, Object headerBackgroundClick) {
-        super(context);
+        super(activity);
         mNavItems = navItems;
         mHeaderItem = headerItem;
 
@@ -67,6 +83,9 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
         params.gravity = Gravity.LEFT;
         addView(mNavLayout, params);
         addDrawerListener(this);
+
+        updateCustomHeaderBackground();
+        hookOnActivityResult();
     }
 
     protected void createHeaderView(boolean useCircleHeaderImage, final Object headerBackgroundClick) {
@@ -99,6 +118,7 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
             public void onClick(View v) {
                 Logger.i("Drawer header background is clicked.");
                 if (headerBackgroundClick == null) {
+                    defaultHeaderBackgroundClick();
                     return;
                 }
                 if (headerBackgroundClick instanceof View) {
@@ -125,12 +145,31 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
         mNavLayout.addView(mNavList, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
+    protected void updateCustomHeaderBackground() {
+        String headerBackgroundPath = getDrawerHeaderBackgroundPath();
+        if (new File(headerBackgroundPath).exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(headerBackgroundPath);
+            BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+            updateHeaderBackground(drawable);
+            mIsCustomHeaderBackground = true;
+        }
+    }
+
+    protected String getDrawerHeaderBackgroundPath() {
+        return getContext().getFilesDir() + "/ltweaks_drawer_header_background";
+    }
+
     public void updateHeaderBackground(Drawable drawable) {
-        mHeaderLayout.setBackgroundDrawable(drawable);
+        if (!mIsCustomHeaderBackground) {
+            mHeaderLayout.setBackgroundDrawable(drawable);
+        }
     }
 
     public void updateHeaderBackground(@ColorInt int color) {
-        mHeaderLayout.setBackgroundColor(color);
+        mDefaultBackgroundColor = color;
+        if (!mIsCustomHeaderBackground) {
+            mHeaderLayout.setBackgroundColor(color);
+        }
     }
 
     public void updateNavListBackground(@ColorInt int color) {
@@ -145,6 +184,95 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
         for (int i = 0; i < clickObjs.length; ++i) {
             mNavItems[i].mClickObj = clickObjs[i];
         }
+    }
+
+    public void setHeaderBackgroundRequestCode(int code) {
+        mHeaderBackgrondRequestCode = code;
+    }
+
+    public void setHeaderBackgroundChangeCallback(Callback.C0 callback) {
+        mHeaderBackgroundChangeCallback = callback;
+    }
+
+    protected void defaultHeaderBackgroundClick() {
+        new AlertDialog.Builder(getContext())
+                .setItems(new String[]{"Use default background", "Select a custom background"},
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    mIsCustomHeaderBackground = false;
+                                    Bitmap oldBitmap = null;
+                                    if (mHeaderLayout.getBackground() instanceof BitmapDrawable) {
+                                        oldBitmap = ((BitmapDrawable) mHeaderLayout.getBackground()).getBitmap();
+                                    }
+                                    //int color = ContextUtils.getColorFromTheme(getContext().getTheme(), "colorPrimary");
+                                    updateHeaderBackground(mDefaultBackgroundColor);
+                                    if (oldBitmap != null) {
+                                        oldBitmap.recycle();
+                                    }
+                                    File file = new File(getDrawerHeaderBackgroundPath());
+                                    if (file.exists()) {
+                                        file.delete();
+                                    }
+                                } else {
+                                    ContextUtils.selectPicture(getActivity(), ActivityRequestCode.DRAWER_SELECT_HEADER_BACKGROUND);
+                                }
+                            }
+                        })
+                .create()
+                .show();
+    }
+
+    protected void hookOnActivityResult() {
+        XposedHelpers.findAndHookMethod(Activity.class, "dispatchActivityResult", String.class, int.class, int.class, Intent.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                String who = (String) param.args[0];
+                int requestCode = (int) param.args[1];
+                if (who == null && requestCode == mHeaderBackgrondRequestCode) {
+                    Object fragments = XposedHelpers.getObjectField(param.thisObject, "mFragments");
+                    XposedHelpers.callMethod(fragments, "noteStateNotSaved");
+
+                    int resultCode = (int) param.args[2];
+                    Intent data = (Intent) param.args[3];
+                    if (resultCode == Activity.RESULT_OK) {
+                        Uri uri = data.getData();
+                        String filepath = getDrawerHeaderBackgroundPath();
+                        File file = new File(filepath);
+                        Logger.i("Crop and save image " + uri + " to " + filepath);
+                        try {
+                            Bitmap oldBitmap = null;
+                            if (mHeaderLayout.getBackground() instanceof BitmapDrawable) {
+                                oldBitmap = ((BitmapDrawable) mHeaderLayout.getBackground()).getBitmap();
+                            }
+                            Bitmap bitmap = IOUtils.createCenterCropBitmapFromUri(uri,
+                                    mHeaderLayout.getWidth(), mHeaderLayout.getHeight());
+                            byte[] bytes = IOUtils.bitmap2bytes(bitmap, Bitmap.CompressFormat.JPEG);
+                            FileUtils.writeByteArrayToFile(file, bytes);
+                            BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+                            updateHeaderBackground(drawable);
+                            mIsCustomHeaderBackground = true;
+                            if (oldBitmap != null) {
+                                oldBitmap.recycle();
+                            }
+                            if (mHeaderBackgroundChangeCallback != null) {
+                                mHeaderBackgroundChangeCallback.onResult();
+                            }
+                        } catch (Throwable e) {
+                            Logger.e("Error to crop and save image, " + e);
+                            Logger.stackTrace(e);
+                            Toast.makeText(getActivity(), "Error.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    param.setResult(null);
+                }
+            }
+        });
+    }
+
+    protected Activity getActivity() {
+        return (Activity) getContext();
     }
 
     public ImageView getHeaderImage() {
