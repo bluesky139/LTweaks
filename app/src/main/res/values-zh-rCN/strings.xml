@@ -275,8 +275,8 @@ Open source on github: \n
     <string name="pref_solid_explorer_replace_url">替换视频流地址</string>
     <string name="pref_solid_explorer_replace_url_summary">当通过网络播放视频时, Solid Explorer 会中转视频流到本地 (比如: \"http://127.0.0.1:12345/public/a.mp4\"), 这会引起性能损失.\n把 \"127.0.0.1:12345\" 替换为服务器的地址，让播放器直连服务器 (如果服务器支持).\n支持 smb, dav, ftp, sftp.</string>
     <string name="pref_category_app_info">应用信息</string>
-    <string name="pref_app_info_open_app_data_folder">打开应用数据文件夹</string>
-    <string name="pref_app_info_open_app_data_folder_summary">通常情况下会打开 \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" 或 \"/data/user_de/0/[package_name]\", 你需要一个支持 root 的文件管理器, 配合 Solid Explorer 测试过\n以菜单的形式添加</string>
+    <string name="pref_app_info_open_app_data_folder">打开应用数据/APK文件夹</string>
+    <string name="pref_app_info_open_app_data_folder_summary">通常情况下会打开 \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\", \"/data/user_de/0/[package_name]\" 或 \"/data/app/[package_name]\", 你需要一个支持 root 的文件管理器, 配合 Solid Explorer 测试过\n以菜单的形式添加</string>
     <string name="pref_app_info_go_market">跳转到市场</string>
     <string name="pref_app_info_go_market_summary">跳转到 Google Play, 酷市场, ApkPure, Mobilism\n以菜单的形式添加</string>
     <string name="pref_app_info_allow_disable">允许禁用系统核心应用</string>

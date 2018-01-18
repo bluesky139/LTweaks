@@ -26,13 +26,15 @@ public class XposedAppInfoGoAppData extends XposedAppInfo {
     private static final String MENU_APP_DATA_FOLDER = "Open App Data Folder";
     private static final String MENU_APP_EXTERNAL_DATA_FOLDER = "Open App External Data Folder";
     private static final String MENU_APP_DEVICE_ENCRYPTED_STORAGE = "Open Device Encrypted Storage";
+    private static final String MENU_APP_APK_FOLDER = "Open APK Folder";
 
     @Override
     protected Pair<String, Integer>[] newMenuNames() {
         return new Pair[] {
                 Pair.create(MENU_APP_DATA_FOLDER, 1000),
                 Pair.create(MENU_APP_EXTERNAL_DATA_FOLDER, 1001),
-                Pair.create(MENU_APP_DEVICE_ENCRYPTED_STORAGE, 1002)
+                Pair.create(MENU_APP_DEVICE_ENCRYPTED_STORAGE, 1002),
+                Pair.create(MENU_APP_APK_FOLDER, 1003)
         };
     }
 
@@ -57,6 +59,9 @@ public class XposedAppInfoGoAppData extends XposedAppInfo {
             } else {
                 Toast.makeText(activity, "Android 7.0+ only.", Toast.LENGTH_SHORT).show();
             }
+        } else if (MENU_APP_APK_FOLDER.equals(menuName)) {
+            ApplicationInfo info = activity.getPackageManager().getApplicationInfo(packageName, 0);
+            ContextUtils.openFolder(activity, new File(info.sourceDir).getParent());
         } else {
             throw new Exception("Unknown menu " + menuName);
         }

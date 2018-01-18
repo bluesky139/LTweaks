@@ -288,8 +288,8 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_solid_explorer_replace_url">Replace Streaming Url</string>
     <string name="pref_solid_explorer_replace_url_summary">When playing video from network, Solid Explorer will streaming video to local url (eg: \"http://127.0.0.1:12345/public/a.mp4\"), it has performance loss.\nReplace \"127.0.0.1:12345\" to server url for accessing video directly (If server supports it).\nSupport smb, dav, ftp, sftp.</string>
     <string name="pref_category_app_info">App Info</string>
-    <string name="pref_app_info_open_app_data_folder">Open App Data Folder</string>
-    <string name="pref_app_info_open_app_data_folder_summary">Generally, it will open \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\" or \"/data/user_de/0/[package_name]\", you need a file explorer which supports root access, tested with Solid Explorer\nAdd as menu</string>
+    <string name="pref_app_info_open_app_data_folder">Open App Data/APK Folder</string>
+    <string name="pref_app_info_open_app_data_folder_summary">Generally, it will open \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\", \"/data/user_de/0/[package_name]\" or \"/data/app/[package_name]\", you need a file explorer which supports root access, tested with Solid Explorer\nAdd as menu</string>
     <string name="pref_app_info_go_market">Go to market</string>
     <string name="pref_app_info_go_market_summary">Go to Google Play, CoolApk, ApkPure, Mobilism\nAdd as menu</string>
     <string name="pref_app_info_allow_disable">Allow core system apps to be disabled</string>
