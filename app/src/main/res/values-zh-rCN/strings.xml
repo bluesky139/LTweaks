@@ -344,4 +344,18 @@ Open source on github: \n
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
     <string name="solid_explorer_url_replacer_dialog_instruction_from">服务器:</string>
     <string name="solid_explorer_url_replacer_dialog_instruction_to">替换为 (比如: http://10.0.0.4/download):</string>
+
+    <!-- Donate -->
+    <string name="pref_header_doate">捐赠</string>
+    <string name="pref_header_doate_summary">如果这个模块真心对你有用，请进行捐赠</string>
+    <string name="pref_donate_alipay">支付宝</string>
+    <string name="pref_donate_alipay_summary">推荐\n点击此菜单打开支付宝</string>
+    <string name="pref_donate_wechat">微信</string>
+    <string name="pref_donate_wechat_summary">点击此菜单打开微信扫一扫, 从相册选取二维码, 通常情况下会是第一张图, 你可以从缩略图看到应用名</string>
+
+    <!-- Alipay -->
+    <string name="alipay_not_installed">未安装支付宝.</string>
+
+    <!-- WeChat -->
+    <string name="wechat_not_installed">未安装微信.</string>
 </resources>

@@ -357,4 +357,18 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
     <string name="solid_explorer_url_replacer_dialog_instruction_from">Server:</string>
     <string name="solid_explorer_url_replacer_dialog_instruction_to">Replace To (eg: http://10.0.0.4/download):</string>
+
+    <!-- Donate -->
+    <string name="pref_header_doate">Donate</string>
+    <string name="pref_header_doate_summary">Please donate if this module is really useful for you</string>
+    <string name="pref_donate_alipay">Alipay</string>
+    <string name="pref_donate_alipay_summary">Recommended\nSimply click this menu, Alipay will be opened</string>
+    <string name="pref_donate_wechat">WeChat</string>
+    <string name="pref_donate_wechat_summary">Click this menu, WeChat scanner will be opened, choose QrCode from gallery, the QrCode should at the first place, you can see my app name in that QrCode image</string>
+
+    <!-- Alipay -->
+    <string name="alipay_not_installed">Alipay is not installed.</string>
+
+    <!-- WeChat -->
+    <string name="wechat_not_installed">WeChat is not installed.</string>
 </resources>

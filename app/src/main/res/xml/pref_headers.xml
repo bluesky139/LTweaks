@@ -27,4 +27,10 @@
         android:icon="@drawable/ic_tools"
         android:title="@string/pref_header_system" />
 
+    <header
+        android:fragment="li.lingfeng.ltweaks.fragments.DonateFragment"
+        android:icon="@drawable/ic_coin"
+        android:title="@string/pref_header_doate"
+        android:summary="@string/pref_header_doate_summary" />
+
 </preference-headers>

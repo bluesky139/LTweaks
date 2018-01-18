@@ -107,4 +107,8 @@
     <string name="key_lineage_os_live_display_time_sunset">key_lineage_os_live_display_time_sunset</string>
     <string name="key_keys_long_press_back_to_kill">key_keys_long_press_back_to_kill</string>
     <string name="key_recent_task_swipe_to_kill">key_recent_task_swipe_to_kill</string>
+
+    <!--Donate-->
+    <string name="key_donate_alipay">key_donate_alipay</string>
+    <string name="key_donate_wechat">key_donate_wechat</string>
 </resources>

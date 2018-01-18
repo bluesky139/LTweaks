@@ -130,6 +130,6 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        PermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtils.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }
