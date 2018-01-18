@@ -87,14 +87,18 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
     private void hookBottomBar(final Activity activity) throws Throwable {
         int idPivotBar = ContextUtils.getIdId("pivot_bar_container");
         final ViewGroup pivotBar = (ViewGroup) activity.findViewById(idPivotBar);
-        List<LinearLayout> buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, LinearLayout.class, 4);
+        final Class clsConstraintLayout = findClass(ClassNames.CONSTRAINT_LAYOUT);
+        List buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, clsConstraintLayout, 4);
+        if (buttons.size() == 0) {
+            buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, LinearLayout.class, 4);
+        }
         Logger.d("pivotBar with " + buttons.size() + " buttons.");
 
         SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[buttons.size()];
         for (int i = 0; i < buttons.size(); ++i) {
-            LinearLayout button = buttons.get(i);
-            ImageView imageView = ViewUtils.findViewByType(button, ImageView.class);
-            TextView textView = ViewUtils.findViewByType(button, TextView.class);
+            View button = (View) buttons.get(i);
+            ImageView imageView = ViewUtils.findViewByType((ViewGroup) button, ImageView.class);
+            TextView textView = ViewUtils.findViewByType((ViewGroup) button, TextView.class);
             SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(imageView.getDrawable(), textView.getText(), button);
             navItems[i] = navItem;
         }
@@ -121,7 +125,10 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 Logger.i("pivotBar onLayoutChange.");
                 try {
-                    List<LinearLayout> buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, LinearLayout.class, 4);
+                    List buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, clsConstraintLayout, 4);
+                    if (buttons.size() == 0) {
+                        buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, LinearLayout.class, 4);
+                    }
                     mDrawerLayout.updateClickObjs(buttons.toArray());
                     updatePaneContainerHeight(pivotBar, paneContainer);
                 } catch (Throwable e) {
