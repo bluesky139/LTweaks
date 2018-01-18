@@ -56,7 +56,7 @@ public class XposedWeChatScanQr extends XposedBase {
                 }
 
                 final Activity activity = (Activity) param.thisObject;
-                new Handler().post(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -68,7 +68,7 @@ public class XposedWeChatScanQr extends XposedBase {
                             mScannableImage = null;
                         }
                     }
-                });
+                }, 1000);
             }
         });
     }
