@@ -80,6 +80,7 @@ public class WeChatDonate {
             Intent intent = new Intent();
             intent.setComponent(new ComponentName(PackageNames.WE_CHAT, ClassNames.WE_CHAT_LAUNCHER_UI));
             intent.putExtra("LauncherUI.From.Scaner.Shortcut", true);
+            intent.putExtra("ltweaks_scannable_image", file.getAbsolutePath());
             intent.setFlags(335544320);
             intent.setAction("android.intent.action.VIEW");
             activity.startActivity(intent);

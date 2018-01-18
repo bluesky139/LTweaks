@@ -364,7 +364,7 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_donate_alipay">Alipay</string>
     <string name="pref_donate_alipay_summary">Recommended\nSimply click this menu, Alipay will be opened</string>
     <string name="pref_donate_wechat">WeChat</string>
-    <string name="pref_donate_wechat_summary">Click this menu, WeChat scanner will be opened, choose QrCode from gallery, the QrCode should at the first place, you can see my app name in that QrCode image</string>
+    <string name="pref_donate_wechat_summary">Click this menu, WeChat scanner will be opened, QrCode of donate will be scanned automatically.\nIf nothing happened in scanner, choose QrCode from gallery, the QrCode should at the first place, you can see my app name in that QrCode image</string>
 
     <!-- Alipay -->
     <string name="alipay_not_installed">Alipay is not installed.</string>
