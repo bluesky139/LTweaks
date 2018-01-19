@@ -3,13 +3,13 @@ package li.lingfeng.ltweaks.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
@@ -34,6 +34,8 @@ public class ZXingUtils {
             multiFormatReader = new MultiFormatReader();
             multiFormatReader.setHints(new EnumMap<DecodeHintType, Object>(DecodeHintType.class) {{
                 put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.of(BarcodeFormat.QR_CODE));
+                put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+                put(DecodeHintType.CHARACTER_SET, "utf-8");
             }});
             multiFormatReaderRef = new WeakReference<>(multiFormatReader);
             Logger.d("New multiFormatReader is created.");
@@ -44,14 +46,33 @@ public class ZXingUtils {
         try {
             Logger.i("Decoding qrcode " + uri.toString());
             stream = MyApplication.instance().getContentResolver().openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(stream);
-            int[] bitmapArray = new int[bitmap.getWidth() * bitmap.getHeight()];
-            bitmap.getPixels(bitmapArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-            LuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), bitmapArray);
-            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
-            result = multiFormatReader.decodeWithState(binaryBitmap);
-        } catch (Exception e) {
-            Logger.e("Can't decode qrcode from uri " + uri.toString() + ", " + e.getMessage());
+            Bitmap originalBitmap = BitmapFactory.decodeStream(stream);
+
+            for (int scale : new int[] { 1, 2, 4 }) {
+                Bitmap bitmap;
+                if (scale == 1) {
+                    bitmap = originalBitmap;
+                } else {
+                    bitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.getWidth() / scale,
+                            originalBitmap.getHeight() / scale, false);
+                }
+
+                Logger.v("Try " + bitmap.getWidth() + "x" + bitmap.getHeight());
+                int[] bitmapArray = new int[bitmap.getWidth() * bitmap.getHeight()];
+                bitmap.getPixels(bitmapArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+                LuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), bitmapArray);
+                BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+                try {
+                    result = multiFormatReader.decodeWithState(binaryBitmap);
+                    break;
+                } catch (NotFoundException qrNotFound) {}
+            }
+
+            if (result == null) {
+                throw new RuntimeException("QrCodeNotFoundException");
+            }
+        } catch (Throwable e) {
+            Logger.e("Can't decode qrcode from uri " + uri.toString() + ", " + e);
             Logger.stackTrace(e);
         } finally {
             try {
