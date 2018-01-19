@@ -72,6 +72,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/pref_category_google_books">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_google_books_remove_bottom_bar"
+            android:title="@string/pref_google_books_remove_bottom_bar"
+            android:summary="@string/pref_google_books_remove_bottom_bar_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/pref_category_google_play">
         <SwitchPreference
             android:defaultValue="false"

@@ -70,6 +70,9 @@ Open source on github: \n
     <string name="pref_category_google_newsstand">Google Newsstand</string>
     <string name="pref_google_newsstand_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_google_newsstand_remove_bottom_bar_summary">Put them into drawer menu</string>
+    <string name="pref_category_google_books">Google Play Books</string>
+    <string name="pref_google_books_remove_bottom_bar">Remove bottom bar</string>
+    <string name="pref_google_books_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_google_play">Google Play</string>
     <string name="pref_google_play_view_in_coolapk">Add menu \"View in CoolApk / ApkPure / Mobilism / App Info\"</string>
     <string name="pref_google_play_view_in_coolapk_summary">Jump to CoolApk / ApkPure, just like jump to Google Play from CoolApk, search in Mobilism, jump to App Info page of system</string>

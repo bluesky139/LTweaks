@@ -70,6 +70,9 @@ Open source on github: \n
     <string name="pref_category_google_newsstand">Google 报亭</string>
     <string name="pref_google_newsstand_remove_bottom_bar">去底栏</string>
     <string name="pref_google_newsstand_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_category_google_books">Google Play Books</string>
+    <string name="pref_google_books_remove_bottom_bar">去底栏</string>
+    <string name="pref_google_books_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_google_play">Google Play</string>
     <string name="pref_google_play_view_in_coolapk">添加菜单\"去酷安 / ApkPure / Mobilism / 应用详情 查看\"</string>
     <string name="pref_google_play_view_in_coolapk_summary">酷安有个\"去 Play 查看\"，这个恰好相反，也可以去 ApkPure，去 Mobilism 搜索，去系统的应用详情页面</string>

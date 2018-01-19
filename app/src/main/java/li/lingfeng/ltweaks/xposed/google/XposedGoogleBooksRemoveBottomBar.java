@@ -18,6 +18,7 @@ import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
+import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
@@ -32,10 +33,11 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
 /**
  * Created by lilingfeng on 2018/1/19.
  */
-@XposedLoad(packages = PackageNames.GOOGLE_BOOKS, prefs = {})
+@XposedLoad(packages = PackageNames.GOOGLE_BOOKS, prefs = R.string.key_google_books_remove_bottom_bar)
 public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
 
     private static final String HOME_ACTIVITY = "com.google.android.apps.books.app.HomeActivity";
+    private ViewGroup mBottomNav;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -47,19 +49,26 @@ public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
                 rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        boolean end = true;
-                        try {
-                            end = hookBottomBar(activity);
-                        } catch (Throwable e) {
-                            Logger.e("Can't hook bottom bar, " + e);
-                            Logger.stackTrace(e);
-                        } finally {
-                            if (end) {
-                                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        if (mBottomNav == null) {
+                            try {
+                                hookBottomBar(activity);
+                            } catch (Throwable e) {
+                                Logger.e("Can't hook bottom bar, " + e);
+                                Logger.stackTrace(e);
                             }
+                        } else if (mBottomNav.getVisibility() == View.VISIBLE) {
+                            Logger.d("Set bottom nav gone.");
+                            mBottomNav.setVisibility(View.GONE);
                         }
                     }
                 });
+            }
+        });
+
+        findAndHookActivity(HOME_ACTIVITY, "onDestroy", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                mBottomNav = null;
             }
         });
     }
@@ -132,6 +141,7 @@ public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
         });
 
         bottomNav.setVisibility(View.GONE);
+        mBottomNav = bottomNav;
         Logger.i("Bottom buttons are added into drawer.");
         return true;
     }
