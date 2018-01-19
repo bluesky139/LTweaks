@@ -14,6 +14,7 @@ public class PackageNames {
     public static final String GOOGLE_PLUS = "com.google.android.apps.plus";
     public static final String GOOGLE_PHOTOS = "com.google.android.apps.photos";
     public static final String GOOGLE_NEWSSTAND = "com.google.android.apps.magazines";
+    public static final String GOOGLE_BOOKS = "com.google.android.apps.books";
     public static final String GOOGLE_PLAY = "com.android.vending";
     public static final String GOOGLE_MESSENGER = "com.google.android.apps.messaging";
     public static final String CHROME = "com.android.chrome";

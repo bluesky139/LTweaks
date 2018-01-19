@@ -171,6 +171,12 @@ public class ViewUtils {
     }
 
     public static void traverseViews(ViewGroup rootView, ViewTraverseCallback2 callback) {
+        traverseViews(rootView, callback, -1);
+    }
+
+    public static void traverseViews(ViewGroup rootView, ViewTraverseCallback2 callback,
+                                     int maxDeep // start from 0
+                                     ) {
         Queue<Pair<View, Integer>> views = new LinkedList<>();
         for (int i = 0; i < rootView.getChildCount(); ++i) {
             View child = rootView.getChildAt(i);
@@ -185,7 +191,7 @@ public class ViewUtils {
                 return;
             }
 
-            if (view instanceof ViewGroup) {
+            if (view instanceof ViewGroup && (maxDeep < 0 || deep < maxDeep)) {
                 ViewGroup viewGroup = (ViewGroup) view;
                 for (int i = 0; i < viewGroup.getChildCount(); ++i) {
                     View child = viewGroup.getChildAt(i);
@@ -193,6 +199,24 @@ public class ViewUtils {
                 }
             }
         }
+    }
+
+    public static void traverseViewsByType(ViewGroup rootView, final Class<? extends View> type,
+                                           ViewTraverseCallback2 callback) {
+        traverseViewsByType(rootView, type, callback, -1);
+    }
+
+    public static void traverseViewsByType(ViewGroup rootView, final Class<? extends View> type,
+                                           final ViewTraverseCallback2 callback, int maxDeep) {
+        traverseViews(rootView, new ViewTraverseCallback2() {
+            @Override
+            public boolean onView(View view, int deep) {
+                if (type.isAssignableFrom(view.getClass())) {
+                    return callback.onView(view, deep);
+                }
+                return false;
+            }
+        }, maxDeep);
     }
 
     public interface ViewTraverseCallback {
@@ -231,6 +255,11 @@ public class ViewUtils {
             allView.addView(view);
         }
         return allView;
+    }
+
+    public static View prevView(View view) {
+        ViewGroup parent = (ViewGroup) view.getParent();
+        return parent.getChildAt(parent.indexOfChild(view) - 1);
     }
 
     public static View nextView(View view) {
