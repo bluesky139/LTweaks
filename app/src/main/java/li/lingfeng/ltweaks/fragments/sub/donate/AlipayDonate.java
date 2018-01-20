@@ -15,7 +15,7 @@ import li.lingfeng.ltweaks.utils.Logger;
 public class AlipayDonate {
 
     private static final String INTENT_URL_FORMAT = "intent://platformapi/startapp?saId=10000007&" +
-            "clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2Fa6x010265uiyqqthwbugk79%3F_s" +
+            "clientVersion=3.7.0.0718&qrcode=https%3A%2F%2Fqr.alipay.com%2FFKX04627JKYY7PCL2BFOFF%3F_s" +
             "%3Dweb-other&_t=1472443966571#Intent;" +
             "scheme=alipayqr;package=com.eg.android.AlipayGphone;end";
 
