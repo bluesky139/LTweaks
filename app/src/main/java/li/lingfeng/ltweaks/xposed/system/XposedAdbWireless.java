@@ -1,17 +1,18 @@
 package li.lingfeng.ltweaks.xposed.system;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.text.format.Formatter;
 import android.widget.Toast;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -20,6 +21,7 @@ import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Callback;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.Shell;
 import li.lingfeng.ltweaks.xposed.XposedBase;
@@ -146,5 +148,33 @@ public class XposedAdbWireless extends XposedBase {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         intent.putExtra("onClick", pendingIntent);
         mContext.sendBroadcast(intent);
+
+        try {
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            Class cls = findClass("com.android.internal.R.string");
+            int id = XposedHelpers.getStaticIntField(cls, "adb_active_notification_message");
+            if (!isWireless) {
+                cls = findClass("com.android.internal.R.drawable");
+                Notification.Builder builder = new Notification.Builder(mContext)
+                        .setSmallIcon(XposedHelpers.getStaticIntField(cls, "stat_sys_adb"))
+                        .setWhen(0)
+                        .setOngoing(true)
+                        .setTicker(ContextUtils.getLString(R.string.adb_wireless_notification_title))
+                        .setDefaults(0)
+                        .setPriority(Notification.PRIORITY_LOW)
+                        .setContentTitle(ContextUtils.getLString(R.string.adb_wireless_notification_title))
+                        .setContentText(ContextUtils.getLString(R.string.adb_wireless_notification_text))
+                        .setContentIntent(pendingIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+                }
+                Notification notification = builder.build();
+                notificationManager.notify(id, notification);
+            } else {
+                notificationManager.cancel(id /* com.android.internal.R.string.adb_active_notification_message */);
+            }
+        } catch (Throwable e) {
+            Logger.e("Can't set notification for adb wireless, " + e);
+        }
     }
 }

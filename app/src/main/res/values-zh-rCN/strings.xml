@@ -348,6 +348,10 @@ Open source on github: \n
     <string name="solid_explorer_url_replacer_dialog_instruction_from">服务器:</string>
     <string name="solid_explorer_url_replacer_dialog_instruction_to">替换为 (比如: http://10.0.0.4/download):</string>
 
+    <!-- Adb Wireless -->
+    <string name="adb_wireless_notification_title">ADB over network enabled</string>
+    <string name="adb_wireless_notification_text">Touch to disable debugging</string>
+
     <!-- Donate -->
     <string name="pref_header_doate">捐赠</string>
     <string name="pref_header_doate_summary">如果这个模块真心对你有用，请进行捐赠</string>

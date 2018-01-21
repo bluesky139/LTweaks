@@ -360,6 +360,10 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
     <string name="solid_explorer_url_replacer_dialog_instruction_from">Server:</string>
     <string name="solid_explorer_url_replacer_dialog_instruction_to">Replace To (eg: http://10.0.0.4/download):</string>
+    
+    <!-- Adb Wireless -->
+    <string name="adb_wireless_notification_title">ADB over network enabled</string>
+    <string name="adb_wireless_notification_text">Touch to disable debugging</string>
 
     <!-- Donate -->
     <string name="pref_header_doate">Donate</string>
