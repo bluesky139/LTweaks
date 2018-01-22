@@ -95,6 +95,7 @@
     <string name="key_prevent_list_prevent_receiver">key_prevent_list_prevent_receiver</string>
     <string name="key_shadowsocks_precise_route">key_shadowsocks_precise_route</string>
     <string name="key_quick_settings_tile_adb_wireless">key_quick_settings_tile_adb_wireless</string>
+    <string name="key_nav_bar_input_cursor_control">key_nav_bar_input_cursor_control</string>
     <string name="key_native_clipboard_fix_chrome">key_native_clipboard_fix_chrome</string>
     <string name="key_trust_agent_wifi_aps">key_google_smart_lock_with_wifi_aps</string>
     <string name="key_solid_explorer_url_replacers">key_solid_explorer_url_replacers</string>

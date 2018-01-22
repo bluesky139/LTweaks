@@ -96,6 +96,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/pref_category_nav_bar">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_nav_bar_input_cursor_control"
+            android:title="@string/pref_nav_bar_input_cursor_control"
+            android:summary="@string/pref_nav_bar_input_cursor_control_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/pref_category_native_clipboard">
         <SwitchPreference
             android:defaultValue="false"
