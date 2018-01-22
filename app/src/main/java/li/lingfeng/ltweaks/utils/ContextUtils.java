@@ -123,6 +123,14 @@ public class ContextUtils {
         return getResId(name, "mipmap", context);
     }
 
+    public static int getRawId(String name) {
+        return getRawId(name, MyApplication.instance());
+    }
+
+    public static int getRawId(String name, Context context) {
+        return getResId(name, "raw", context);
+    }
+
     public static String getString(String name) {
         return getString(name, MyApplication.instance());
     }

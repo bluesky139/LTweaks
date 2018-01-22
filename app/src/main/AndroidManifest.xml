@@ -39,6 +39,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <provider
+            android:name=".services.ResourceProvider"
+            android:authorities="li.lingfeng.ltweaks.resourceProvider"
+            android:exported="true" />
 			
         <activity
             android:name=".SettingsActivity"
