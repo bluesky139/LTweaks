@@ -46,7 +46,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2017/2/5.
  */
-@XposedLoad(packages = PackageNames.COOLAPK, prefs = R.string.key_coolapk_remove_bottom_bar)
+@XposedLoad(packages = { PackageNames.COOLAPK, PackageNames.COOLAPK_VN }, prefs = R.string.key_coolapk_remove_bottom_bar)
 public class XposedCoolapk extends XposedBase {
 
     private static final String MAIN_ACTIVITY = "com.coolapk.market.view.main.MainActivity";
