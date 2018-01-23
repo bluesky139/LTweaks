@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -36,9 +40,10 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
         PackageNames.QQ_INTERNATIONAL,
         PackageNames.TIM
 }, prefs = R.string.key_qq_collapse_chat_buttons)
-public class XposedQQCollaseChatButtons extends XposedBase {
+public class XposedQQCollapseChatButtons extends XposedBase {
 
     private static final String CHAT_LIST_VIEW = "com.tencent.mobileqq.bubble.ChatXListView";
+    private Map<Activity, OneActivity> mActivities = new HashMap<>();
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -46,13 +51,38 @@ public class XposedQQCollaseChatButtons extends XposedBase {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 final Activity activity = (Activity) param.thisObject;
-                new OneActivity(activity);
+                OneActivity oneActivity = new OneActivity(activity);
+                mActivities.put(activity, oneActivity);
+                Logger.i("Collapse chat buttons for activity " + activity.hashCode());
+            }
+        });
+
+        findAndHookActivity(ClassNames.QQ_CHAT_ACTIVITY, "onResume", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                final Activity activity = (Activity) param.thisObject;
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mActivities.get(activity).hideButtonsIfVisible();
+                    }
+                });
+            }
+        });
+
+        findAndHookActivity(ClassNames.QQ_CHAT_ACTIVITY, "onDestroy", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                final Activity activity = (Activity) param.thisObject;
+                mActivities.remove(activity);
             }
         });
     }
 
     private class OneActivity {
         private int mHeight = 0;
+        private LinearLayout mInputBar;
+        private ViewGroup mButtons;
 
         OneActivity(final Activity activity) {
             final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
@@ -97,6 +127,9 @@ public class XposedQQCollaseChatButtons extends XposedBase {
         }
 
         private void handleButtons(Activity activity, final LinearLayout inputBar, final ViewGroup buttons) {
+            mInputBar = inputBar;
+            mButtons = buttons;
+
             if (mHeight <= 0) {
                 mHeight = buttons.getMeasuredHeight();
                 Logger.d("check height " + mHeight);
@@ -146,6 +179,17 @@ public class XposedQQCollaseChatButtons extends XposedBase {
             View listView = ViewUtils.findViewByType((ViewGroup) inputBar.getParent(), clsChatListView);
             RelativeLayout.LayoutParams listLayoutParams = (RelativeLayout.LayoutParams) listView.getLayoutParams();
             listLayoutParams.bottomMargin = visible ? dp2px(90) : dp2px(50);
+        }
+
+        public void hideButtonsIfVisible() {
+            if (mButtons == null) {
+                return;
+            }
+            int height = mButtons.getMeasuredHeight();
+            if (height > 0) {
+                Logger.i("hideButtonsIfVisible");
+                toggleButtonsVisibility(false, mInputBar, mButtons);
+            }
         }
     }
 }
