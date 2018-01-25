@@ -308,6 +308,9 @@ Open source on github: \n
     <string name="pref_category_recent_task">最近任务</string>
     <string name="pref_recent_task_swipe_to_kill">右滑清除任务时终止应用</string>
     <string name="pref_recent_task_swipe_to_kill_summary">对系统应用无效</string>
+    <string name="pref_category_phone">电话</string>
+    <string name="pref_phone_deny_access_phone_number">拒绝读取 SIM 卡中的手机号</string>
+    <string name="pref_phone_deny_access_phone_number_summary">有些 SIM 卡保存了此卡所对应的手机号, 禁止非系统应用读取</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文本</string>

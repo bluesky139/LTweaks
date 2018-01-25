@@ -321,6 +321,9 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_category_recent_task">Recent Tasks</string>
     <string name="pref_recent_task_swipe_to_kill">Right swipe to kill app</string>
     <string name="pref_recent_task_swipe_to_kill_summary">Exclude system apps</string>
+    <string name="pref_category_phone">Phone</string>
+    <string name="pref_phone_deny_access_phone_number">Deny access phone number</string>
+    <string name="pref_phone_deny_access_phone_number_summary">Your phone number may be stored in SIM card, deny access it for non-system apps</string>
 
     <!-- Text -->
     <string name="text_selectable">Selectable Text</string>
