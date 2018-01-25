@@ -291,11 +291,13 @@ Open source on github: \n
 \"禁用\"按钮会变为红色来给以警告</string>
     <string name="pref_app_info_app_ops">转到 App Ops</string>
     <string name="pref_app_info_app_ops_summary">在 Lineage OS 上有效</string>
-    <string name="pref_category_lineage_os">Lineage OS</string>
+    <string name="pref_category_lineage_os">Lineage OS (Android 7.0+)</string>
     <string name="pref_lineage_os_live_display_time">自定义 Live Display 时间</string>
     <string name="pref_lineage_os_live_display_time_summary">手动设置 Live Display 时间, 而不是通过位置来计算日出/日落</string>
     <string name="pref_lineage_os_live_display_time_sunrise">设置 Live Display 日出时间</string>
     <string name="pref_lineage_os_live_display_time_sunset">设置 Live Display 日落时间</string>
+    <string name="pref_lineage_os_gallery_remove_bottom_bar">去除图库底栏</string>
+    <string name="pref_lineage_os_gallery_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_category_keys">按键</string>
     <string name="pref_keys_long_press_back_to_kill">长按返回键终止当前应用</string>
     <string name="pref_keys_long_press_back_to_kill_summary">对系统应用无效</string>

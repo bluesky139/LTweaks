@@ -168,6 +168,11 @@
             android:defaultValue="19:00"
             android:key="@string/key_lineage_os_live_display_time_sunset"
             android:title="@string/pref_lineage_os_live_display_time_sunset" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_lineage_os_gallery_remove_bottom_bar"
+            android:title="@string/pref_lineage_os_gallery_remove_bottom_bar"
+            android:summary="@string/pref_lineage_os_gallery_remove_bottom_bar_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

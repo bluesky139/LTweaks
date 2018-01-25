@@ -304,11 +304,13 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
 \"DISABLE\" button will become red to warn you</string>
     <string name="pref_app_info_app_ops">Go to App Ops</string>
     <string name="pref_app_info_app_ops_summary">For Lineage OS</string>
-    <string name="pref_category_lineage_os">Lineage OS</string>
+    <string name="pref_category_lineage_os">Lineage OS (Android 7.0+)</string>
     <string name="pref_lineage_os_live_display_time">Customize Live Display time</string>
     <string name="pref_lineage_os_live_display_time_summary">Manually set Live Display time, not calculate sunrise/sunset from location</string>
     <string name="pref_lineage_os_live_display_time_sunrise">Set Live Display sunrise</string>
     <string name="pref_lineage_os_live_display_time_sunset">Set Live Display sunset</string>
+    <string name="pref_lineage_os_gallery_remove_bottom_bar">Remove Gallery bottom bar</string>
+    <string name="pref_lineage_os_gallery_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_category_keys">Keys</string>
     <string name="pref_keys_long_press_back_to_kill">Long press back key to kill current app</string>
     <string name="pref_keys_long_press_back_to_kill_summary">Exclude system apps</string>

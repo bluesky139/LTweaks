@@ -58,6 +58,7 @@ public class PackageNames {
     public static final String ANDROID_SYSTEM = "system";
     public static final String SHADOWSOCKS = "com.github.shadowsocks";
     public static final String SOLID_EXPLORER = "pl.solidexplorer2";
+    public static final String GALLERY = "com.android.gallery3d";
 
     public static final String[] _SYSTEM_BOOT_PACKAGES = new String[] {
             ANDROID,
