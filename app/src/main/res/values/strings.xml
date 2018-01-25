@@ -162,8 +162,8 @@ Open source on github: \n
     <string name="pref_suning_history_summary">Use with above share function</string>
     <string name="pref_category_taobao">Taobao</string>
     <string name="pref_category_smzdm">SMZDM</string>
-    <string name="pref_smzdm_open_link_in_jd_app">A better way to redirect to JD</string>
-    <string name="pref_smzdm_open_link_in_jd_app_summary">Remove smzdm floating button from JD, back to smzdm if back button is pressed</string>
+    <string name="pref_smzdm_open_link_in_jd_app">Open link in JD app</string>
+    <string name="pref_smzdm_open_link_in_jd_app_summary">Of course only for JD link</string>
 
     <!-- JD -->
     <string name="jd_app">JD App</string>
