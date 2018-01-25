@@ -134,6 +134,8 @@ Open source on github: \n
     <!--Shopping-->
     <string name="pref_header_shopping">购物</string>
     <string name="pref_category_jd">京东</string>
+    <string name="pref_jd_open_link_in_app">京东的链接直接由京东客户端打开</string>
+    <string name="pref_jd_open_link_in_app_summary">比如 http://item.jd.com/123.html</string>
     <string name="pref_jd_share_item">使用系统分享来分享商品</string>
     <string name="pref_jd_share_item_summary">在自带的分享菜单中使用\"复制链接\"，之后会浮现一个分享按钮给你</string>
     <string name="pref_jd_history">查询历史价格</string>
