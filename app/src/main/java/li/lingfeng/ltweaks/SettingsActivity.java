@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.List;
 
+import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -102,7 +103,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * Make sure to deny any unknown fragments here.
      */
     protected boolean isValidFragment(String fragmentName) {
-        return true;
+        return fragmentName.startsWith(PackageNames.L_TWEAKS + ".fragments.");
     }
 
     @Override
