@@ -111,6 +111,7 @@
     <string name="key_keys_long_press_back_to_kill">key_keys_long_press_back_to_kill</string>
     <string name="key_recent_task_swipe_to_kill">key_recent_task_swipe_to_kill</string>
     <string name="key_phone_deny_access_phone_number">key_phone_deny_access_phone_number</string>
+    <string name="key_display_light_amber_in_daylight">key_display_light_amber_in_daylight</string>
 
     <!--Donate-->
     <string name="key_donate_alipay">key_donate_alipay</string>

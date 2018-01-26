@@ -201,4 +201,13 @@
             android:title="@string/pref_phone_deny_access_phone_number"
             android:summary="@string/pref_phone_deny_access_phone_number_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_display">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_display_light_amber_in_daylight"
+            android:title="@string/pref_display_light_amber_in_daylight"
+            android:summary="@string/pref_display_light_amber_in_daylight_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

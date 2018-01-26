@@ -311,6 +311,9 @@ Open source on github: \n
     <string name="pref_category_phone">电话</string>
     <string name="pref_phone_deny_access_phone_number">拒绝读取 SIM 卡中的手机号</string>
     <string name="pref_phone_deny_access_phone_number_summary">有些 SIM 卡保存了此卡所对应的手机号, 禁止非系统应用读取</string>
+    <string name="pref_category_display">显示</string>
+    <string name="pref_display_light_amber_in_daylight">白天使用轻微的琥珀色</string>
+    <string name="pref_display_light_amber_in_daylight_summary">色温大概为 5500K\n仅 Android 7.1+</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文本</string>
