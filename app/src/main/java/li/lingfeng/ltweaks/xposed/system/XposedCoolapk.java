@@ -38,6 +38,7 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Callback;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.PackageUtils;
 import li.lingfeng.ltweaks.utils.ReflectedGlide;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
 import li.lingfeng.ltweaks.utils.ViewUtils;
@@ -46,7 +47,10 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 /**
  * Created by smallville on 2017/2/5.
  */
-@XposedLoad(packages = { PackageNames.COOLAPK, PackageNames.COOLAPK_VN }, prefs = R.string.key_coolapk_remove_bottom_bar)
+@XposedLoad(
+        packages = { PackageNames.COOLAPK, PackageNames.COOLAPK_VN },
+        prefs = R.string.key_coolapk_remove_bottom_bar,
+        loadAtActivityCreate = ClassNames.ACTIVITY)
 public class XposedCoolapk extends XposedBase {
 
     private static final String MAIN_ACTIVITY = "com.coolapk.market.view.main.MainActivity";
@@ -67,6 +71,10 @@ public class XposedCoolapk extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
+        if (lpparam.packageName.equals(PackageNames.COOLAPK) && PackageUtils.isPackageInstalled(PackageNames.COOLAPK_VN)) {
+            return;
+        }
+
         findAndHookMethod("android.app.SharedPreferencesImpl", "getBoolean", String.class, boolean.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
