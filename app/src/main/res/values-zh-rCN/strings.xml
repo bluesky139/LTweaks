@@ -336,6 +336,7 @@ Open source on github: \n
         ⋅ 应用可额外添加一些菜单项, 这些菜单项不会默认列在此列表内, 你可以手动添加.\n
         ⋅ 此功能直接通过菜单文本进行比较, 如果你改了系统语言，你需要重新配置.
     </string>
+    <string name="text_actions_rename">重命名</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>

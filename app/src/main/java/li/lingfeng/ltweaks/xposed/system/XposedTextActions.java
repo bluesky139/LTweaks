@@ -1,9 +1,10 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.os.Build;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.Triple;
 import li.lingfeng.ltweaks.utils.Utils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -47,20 +49,21 @@ public class XposedTextActions extends XposedBase {
                     return;
                 }
 
-                final Map<String, Pair<Integer, Boolean>> savedItemMap = new HashMap<>(savedItems.size());
+                final Map<String, Triple<Integer, Boolean, String>> savedItemMap = new HashMap<>(savedItems.size());
                 for (String savedItem : savedItems) {
-                    String[] strs = Utils.splitMax(savedItem, ':', 4);
+                    String[] strs = Utils.splitReach(savedItem, ':', 5);
                     String name = strs[3];
+                    String rename = strs[4];
                     int order = Integer.parseInt(strs[0]);
                     boolean block = Boolean.parseBoolean(strs[1]);
-                    savedItemMap.put(name.toUpperCase(), Pair.create(order, block));
+                    savedItemMap.put(name.toUpperCase(), new Triple(order, block, rename));
                 }
 
                 List<MenuItem> items = (List<MenuItem>) param.getResult();
                 for (int i = items.size() - 1; i >= 0; --i) {
                     MenuItem item = items.get(i);
-                    Pair<Integer, Boolean> pair = savedItemMap.get(item.getTitle().toString().toUpperCase());
-                    if (pair != null && pair.second) {
+                    Triple<Integer, Boolean, String> triple = savedItemMap.get(item.getTitle().toString().toUpperCase());
+                    if (triple != null && triple.second) {
                         Logger.d("Remove floating menu " + item.getTitle());
                         items.remove(i);
                     }
@@ -70,10 +73,10 @@ public class XposedTextActions extends XposedBase {
                 Collections.sort(items, new Comparator<MenuItem>() {
                     @Override
                     public int compare(MenuItem i1, MenuItem i2) {
-                        Pair<Integer, Boolean> pair = savedItemMap.get(i1.getTitle().toString().toUpperCase());
-                        Integer order1 = pair == null ? null : pair.first;
-                        pair = savedItemMap.get(i2.getTitle().toString().toUpperCase());
-                        Integer order2 = pair == null ? null : pair.first;
+                        Triple<Integer, Boolean, String> triple = savedItemMap.get(i1.getTitle().toString().toUpperCase());
+                        Integer order1 = triple == null ? null : triple.first;
+                        triple = savedItemMap.get(i2.getTitle().toString().toUpperCase());
+                        Integer order2 = triple == null ? null : triple.first;
                         if (order1 == null && order2 == null) {
                             return 0;
                         }
@@ -86,6 +89,13 @@ public class XposedTextActions extends XposedBase {
                         return order1 - order2;
                     }
                 });
+
+                for (MenuItem item : items) {
+                    Triple<Integer, Boolean, String> triple = savedItemMap.get(item.getTitle().toString().toUpperCase());
+                    if (triple != null && !StringUtils.isBlank(triple.third)) {
+                        item.setTitle(triple.third);
+                    }
+                }
             }
         });
     }

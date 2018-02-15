@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.support.v7.app.AlertDialog;
-import android.util.Pair;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -26,6 +24,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ListCheckActivity;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.Triple;
 import li.lingfeng.ltweaks.utils.Utils;
 import li.lingfeng.ltweaks.utils.ViewUtils;
 
@@ -54,7 +53,8 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
 
         int type;
         Object value;
-        CharSequence name;
+        String name;
+        String rename;
         boolean block = false;
 
         CharSequence getName() {
@@ -69,7 +69,7 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
                         break;
                     case Action.TYPE_CLASS:
                         ActivityInfo info = (ActivityInfo) value;
-                        name = info.loadLabel(mActivity.getPackageManager());
+                        name = info.loadLabel(mActivity.getPackageManager()).toString();
                         break;
                     default:
                         throw new RuntimeException("Unhandled action type " + type);
@@ -97,9 +97,10 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
             return str + getName();
         }
 
-        // order:block:type:name
+        // order:block:type:name:rename
+        // There's problem if ":" in name.
         String toSaveString(int order, boolean block) {
-            return order + ":" + block + ":" + toUniqueString();
+            return order + ":" + block + ":" + toUniqueString() + ":" + (rename == null ? "" : rename);
         }
     }
 
@@ -110,14 +111,15 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
         final Set<String> savedSet = Prefs.instance().getStringSet(R.string.key_text_actions_set, new HashSet<String>());
         mActions = new ArrayList<>(savedSet.size());
 
-        final Map<String, Pair<Integer, Boolean>> itemMap = new HashMap<>(savedSet.size());
+        final Map<String, Triple<Integer, Boolean, String>> itemMap = new HashMap<>(savedSet.size());
         for (String savedItem : savedSet) {
-            String[] strs = Utils.splitMax(savedItem, ':', 4);
+            String[] strs = Utils.splitReach(savedItem, ':', 5);
             int order = Integer.parseInt(strs[0]);
             boolean block = Boolean.parseBoolean(strs[1]);
             String type = strs[2];
             String name = strs[3];
-            itemMap.put(type + ':' + name, Pair.create(order, block));
+            String rename = strs[4];
+            itemMap.put(type + ':' + name, new Triple(order, block, rename));
 
             // Custom
             if (type.equals("custom")) {
@@ -125,6 +127,7 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
                 action.type = Action.TYPE_CUSTOM;
                 action.value = name;
                 action.block = block;
+                action.rename = rename;
                 mActions.add(action);
             }
         }
@@ -134,9 +137,10 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
             Action action = new Action();
             action.type = Action.TYPE_INTERNAL;
             action.value = mActivity.getString(INTERNAL_STRINGS[i]);
-            Pair<Integer, Boolean> pair = itemMap.get(action.toUniqueString());
-            if (pair != null) {
-                action.block = pair.second;
+            Triple<Integer, Boolean, String> triple = itemMap.get(action.toUniqueString());
+            if (triple != null) {
+                action.block = triple.second;
+                action.rename = triple.third;
             }
             mActions.add(action);
         }
@@ -149,9 +153,10 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
             Action action = new Action();
             action.type = Action.TYPE_CLASS;
             action.value = info.activityInfo;
-            Pair<Integer, Boolean> pair = itemMap.get(action.toUniqueString());
-            if (pair != null) {
-                action.block = pair.second;
+            Triple<Integer, Boolean, String> triple = itemMap.get(action.toUniqueString());
+            if (triple != null) {
+                action.block = triple.second;
+                action.rename = triple.third;
             }
             mActions.add(action);
         }
@@ -161,10 +166,10 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
         Collections.sort(mActions, new Comparator<Action>() {
             @Override
             public int compare(Action a1, Action a2) {
-                Pair<Integer, Boolean> pair = itemMap.get(a1.toUniqueString());
-                Integer order1 = pair == null ? null : pair.first;
-                pair = itemMap.get(a2.toUniqueString());
-                Integer order2 = pair == null ? null : pair.first;
+                Triple<Integer, Boolean, String> triple = itemMap.get(a1.toUniqueString());
+                Integer order1 = triple == null ? null : triple.first;
+                triple = itemMap.get(a2.toUniqueString());
+                Integer order2 = triple == null ? null : triple.first;
                 if (order1 == null && order2 == null) {
                     return 0;
                 }
@@ -199,7 +204,7 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
         Action action = mActions.get(position);
         ListItem item = new ListItem();
         item.mData = action;
-        item.mTitle = action.getName();
+        item.mTitle = action.getName() + (StringUtils.isEmpty(action.rename) ? "" : " -> " + action.rename);
         item.mChecked = action.block;
         switch (action.type) {
             case Action.TYPE_INTERNAL:
@@ -224,6 +229,36 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
     @Override
     protected boolean reload() {
         return false;
+    }
+
+    @Override
+    protected boolean linkItemClickToCheckBox() {
+        return false;
+    }
+
+    @Override
+    public void onItemClick(final ListItem item) {
+        final Action action = item.getData(Action.class);
+        final EditText editText = new EditText(mActivity);
+        editText.setHint(action.name);
+        new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.text_actions_rename)
+                .setView(editText)
+                .setPositiveButton(R.string.app_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        rename(action, editText.getText().toString());
+                    }
+                })
+                .setNegativeButton(R.string.app_cancel, null)
+                .create()
+                .show();
+    }
+
+    private void rename(Action action, String rename) {
+        action.rename = rename;
+        save();
+        notifyDataSetChanged();
     }
 
     @Override

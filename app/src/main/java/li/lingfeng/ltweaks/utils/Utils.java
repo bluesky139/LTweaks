@@ -2,22 +2,17 @@ package li.lingfeng.ltweaks.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +46,16 @@ public class Utils {
         }
         String[] array = new String[list.size()];
         return list.toArray(array);
+    }
+
+    public static String[] splitReach(String str, char ch, int reach) {
+        String[] strs = StringUtils.split(str, ch);
+        if (strs.length >= reach) {
+            return strs;
+        }
+        String[] newStrs = Arrays.copyOf(strs, reach);
+        Arrays.fill(newStrs, strs.length, reach, "");
+        return newStrs;
     }
 
     public static String[] splitByLastChar(String str, char ch) {

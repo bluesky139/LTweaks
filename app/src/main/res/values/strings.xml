@@ -349,6 +349,7 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
         ⋅ App can add additional menu items by itself, those are not listed here, you can add it manually.\n
         ⋅ Comparison is based on name, you need reconfigure this list if system language changed.
     </string>
+    <string name="text_actions_rename">Rename</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
