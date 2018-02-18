@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,6 +12,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -109,6 +111,15 @@ public class Xposed4G3G extends XposedTile {
     }
 
     @Override
-    protected void onSwitch(Context context, boolean isOn) {
+    protected void onSwitch(Context context, boolean isOn) throws Throwable {
+    }
+
+    @Override
+    protected void onLongClick(Context context) throws Throwable {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setComponent(new ComponentName(PackageNames.ANDROID_SETTINGS, ClassNames.RADIO_INFO));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        collapseStatusBar();
     }
 }

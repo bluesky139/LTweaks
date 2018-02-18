@@ -1,6 +1,8 @@
 package li.lingfeng.ltweaks.xposed.system;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.widget.Toast;
@@ -10,6 +12,7 @@ import java.util.List;
 import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Callback;
 import li.lingfeng.ltweaks.utils.ContextUtils;
@@ -49,7 +52,7 @@ public class XposedAdbWireless extends XposedTile {
     }
 
     @Override
-    protected void onSwitch(final Context context, final boolean isOn) {
+    protected void onSwitch(final Context context, final boolean isOn) throws Throwable {
         new Shell("su", new String[] {
                 "setprop service.adb.tcp.port " + (isOn ? "5555" : "-1"),
                 "stop adbd",
@@ -67,6 +70,15 @@ public class XposedAdbWireless extends XposedTile {
                 }
             }
         }).execute();
+    }
+
+    @Override
+    protected void onLongClick(Context context) throws Throwable {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setComponent(new ComponentName(PackageNames.ANDROID_SETTINGS, ClassNames.DEVELOPMENT_SETTINGS));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        collapseStatusBar();
     }
 
     @Override

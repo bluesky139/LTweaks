@@ -29,6 +29,7 @@ public abstract class XposedTile extends XposedBase {
 
     private final String ACTION_UPDATE_STATE = getClass().getName() + ".ACTION_UPDATE_STATE";
     protected final String ACTION_SWITCH = getClass().getName() + ".ACTION_SWITCH";
+    protected final String ACTION_LONG_CLICK = getClass().getName() + ".ACTION_LONG_CLICK";
     protected Context mContext;
     private SwitchReceiver mReceiver;
 
@@ -54,7 +55,9 @@ public abstract class XposedTile extends XposedBase {
                 if (mReceiver == null) {
                     Logger.i("Register " + XposedTile.this.getClass().getSimpleName() + " switch receiver.");
                     mReceiver = new SwitchReceiver();
-                    IntentFilter filter = new IntentFilter(ACTION_SWITCH);
+                    IntentFilter filter = new IntentFilter();
+                    filter.addAction(ACTION_SWITCH);
+                    filter.addAction(ACTION_LONG_CLICK);
                     mContext.registerReceiver(mReceiver, filter);
                 }
             }
@@ -91,19 +94,37 @@ public abstract class XposedTile extends XposedBase {
 
         @Override
         public void onReceive(final Context context, Intent intent) {
-            if (!intent.getAction().equals(ACTION_SWITCH)) {
-                return;
+            if (intent.getAction().equals(ACTION_SWITCH)) {
+                onActionSwitch(context, intent);
+            } else if (intent.getAction().equals(ACTION_LONG_CLICK)) {
+                onActionLongClick(context, intent);
             }
+        }
+
+        private void onActionSwitch(Context context, Intent intent) {
             final boolean isOn = intent.getBooleanExtra("is_on", true);
-            onSwitch(context, isOn);
+            try {
+                onSwitch(context, isOn);
+            } catch (Throwable e) {
+                Logger.e("onSwitch error, " + e);
+            }
             updateTileState(!isOn);
+        }
+
+        private void onActionLongClick(Context context, Intent intent) {
+            try {
+                onLongClick(context);
+            } catch (Throwable e) {
+                Logger.e("onLongClick error, " + e);
+            }
         }
     }
 
     protected abstract String getTileName(boolean isOn);
     protected abstract String getTileDesc();
     protected abstract @DrawableRes int getTileIcon(boolean isOn);
-    protected abstract void onSwitch(Context context, boolean isOn);
+    protected abstract void onSwitch(Context context, boolean isOn) throws Throwable;
+    protected abstract void onLongClick(Context context) throws Throwable;
 
     @SuppressWarnings("MissingPermission")
     protected void updateTileState(boolean isOn) {
@@ -119,6 +140,9 @@ public abstract class XposedTile extends XposedBase {
         clickIntent.putExtra("is_on", isOn);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         intent.putExtra("onClick", pendingIntent);
+        Intent longClickIntent = new Intent(ACTION_LONG_CLICK);
+        PendingIntent longPendingIntent = PendingIntent.getBroadcast(mContext, 0, longClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.putExtra("onLongClick", longPendingIntent);
         mContext.sendBroadcast(intent);
 
         if (enableNotification()) {
@@ -148,6 +172,11 @@ public abstract class XposedTile extends XposedBase {
                 Logger.e("Can't set notification for " + getClass().getSimpleName() + ", " + e);
             }
         }
+    }
+
+    protected void collapseStatusBar() {
+        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        mContext.sendBroadcast(intent);
     }
 
     protected boolean enableNotification() {
