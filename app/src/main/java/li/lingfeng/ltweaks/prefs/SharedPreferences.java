@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import li.lingfeng.ltweaks.utils.Logger;
-
 /**
  * Created by smallville on 2017/1/21.
  */
@@ -194,43 +192,21 @@ public class SharedPreferences implements android.content.SharedPreferences {
                     if (mChangedValues == null) {
                         mChangedValues = new HashMap<>();
                     }
-
                     String key = intent.getStringExtra("key");
-                    Object originalValue = mOriginal.getAll().get(key);
-                    if (originalValue != null) {
-                        Object value = null;
-                        Class valueCls = originalValue.getClass();
+                    Object value = intent.getExtras().get("value");
+                    if (value instanceof String[]) {
+                        String[] array = (String[]) value;
+                        Set<String> set = new HashSet<>(array.length);
+                        Collections.addAll(set, array);
+                        value = set;
+                    }
+                    mChangedValues.put(key, value);
 
-                        if (valueCls == Boolean.class) {
-                            value = intent.getBooleanExtra("value", false);
-                        } else if (valueCls == Integer.class) {
-                            value = intent.getIntExtra("value", 0);
-                        } else if (valueCls == Long.class) {
-                            value = intent.getLongExtra("value", 0L);
-                        } else if (valueCls == Float.class) {
-                            value = intent.getFloatExtra("value", 0f);
-                        } else if (valueCls == String.class) {
-                            value = intent.getStringExtra("value");
-                        } else if (Set.class.isAssignableFrom(valueCls)) {
-                            String[] array = intent.getStringArrayExtra("value");
-                            if (array == null) {
-                                value = null;
-                            } else {
-                                Set<String> set = new HashSet<>(array.length);
-                                Collections.addAll(set, array);
-                                value = set;
-                            }
-                        } else {
-                            Logger.w("Unhandled pref type " + valueCls);
-                        }
-                        mChangedValues.put(key, value);
-
-                        if (mChangeListeners != null) {
-                            List<OnPreferenceChangeListener> listeners = mChangeListeners.get(key);
-                            if (listeners != null) {
-                                for (OnPreferenceChangeListener listener : listeners) {
-                                    listener.onChanged(key, value);
-                                }
+                    if (mChangeListeners != null) {
+                        List<OnPreferenceChangeListener> listeners = mChangeListeners.get(key);
+                        if (listeners != null) {
+                            for (OnPreferenceChangeListener listener : listeners) {
+                                listener.onChanged(key, value);
                             }
                         }
                     }
