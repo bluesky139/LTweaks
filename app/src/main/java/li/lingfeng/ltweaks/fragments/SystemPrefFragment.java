@@ -2,23 +2,18 @@ package li.lingfeng.ltweaks.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.activities.ImageSearchActivity;
@@ -27,15 +22,15 @@ import li.lingfeng.ltweaks.activities.QrCodeActivity;
 import li.lingfeng.ltweaks.activities.SelectableTextActivity;
 import li.lingfeng.ltweaks.activities.SolidExplorerUrlReplacerSettings;
 import li.lingfeng.ltweaks.activities.TrustAgentWifiSettings;
+import li.lingfeng.ltweaks.fragments.base.Extra;
 import li.lingfeng.ltweaks.fragments.sub.system.PreventListDataProvider;
+import li.lingfeng.ltweaks.fragments.sub.system.ShareFilterDataProvider;
 import li.lingfeng.ltweaks.fragments.sub.system.TextActionDataProvider;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
-import li.lingfeng.ltweaks.lib.PreferenceLongClick;
 import li.lingfeng.ltweaks.prefs.ActivityRequestCode;
-import li.lingfeng.ltweaks.prefs.IntentActions;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
-import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ComponentUtils;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -135,141 +130,48 @@ public class SystemPrefFragment extends BasePrefFragment {
         ListCheckActivity.create(getActivity(), ShareFilterDataProvider.class);
     }
 
-    public static class ShareFilterDataProvider extends ListCheckActivity.DataProvider {
-
-        public class ActivityInfo {
-            public ResolveInfo mInfo;
-            public boolean mDisabled;
-
-            public ActivityInfo(ResolveInfo info, boolean disabled) {
-                mInfo = info;
-                mDisabled = disabled;
-            }
-        }
-
-        private Map<String, ActivityInfo> mMapAllInfos = new TreeMap<>();
-        private Map<String, ActivityInfo> mMapDisabledInfos = new TreeMap<>();
-        private Map<String, ActivityInfo> mMapEnabledInfos = new TreeMap<>();
-        private List<ActivityInfo> mAllInfos;
-        private List<ActivityInfo> mDisabledInfos;
-        private List<ActivityInfo> mEnabledInfos;
-        private Set<String> mDisabledActivities;
-        private boolean mNeedReload = true;
-
-        public ShareFilterDataProvider(ListCheckActivity activity) {
-            super(activity);
-            mDisabledActivities = new HashSet<>(
-                    Prefs.instance().getStringSet(R.string.key_system_share_filter_activities, new HashSet<String>())
-            );
-            for (String action : IntentActions.sSendActions) {
-                Intent intent = new Intent(action);
-                intent.setType("*/*");
-                List<ResolveInfo> infos = mActivity.getPackageManager().queryIntentActivities(intent, 0);
-                for (ResolveInfo info : infos) {
-                    String fullActivityName = info.activityInfo.applicationInfo.packageName + "/" + info.activityInfo.name;
-                    ActivityInfo activityInfo = new ActivityInfo(info, mDisabledActivities.contains(fullActivityName));
-                    mMapAllInfos.put(fullActivityName, activityInfo);
-                    if (activityInfo.mDisabled) {
-                        mMapDisabledInfos.put(fullActivityName, activityInfo);
-                    } else {
-                        mMapEnabledInfos.put(fullActivityName, activityInfo);
-                    }
-                }
-            }
-            reload();
-        }
-
-        @Override
-        protected String getActivityTitle() {
-            return mActivity.getString(R.string.pref_system_share_filter);
-        }
-
-        @Override
-        protected String[] getTabTitles() {
-            return new String[] {
-                    mActivity.getString(R.string.all),
-                    mActivity.getString(R.string.disabled),
-                    mActivity.getString(R.string.enabled)
-            };
-        }
-
-        @Override
-        protected int getListItemCount(int tab) {
-            if (tab == 0) {
-                return mAllInfos.size();
-            } else if (tab == 1) {
-                return mDisabledInfos.size();
-            } else if (tab == 2) {
-                return mEnabledInfos.size();
-            } else {
-                throw new RuntimeException("Unknown tab " + tab);
-            }
-        }
-
-        @Override
-        protected ListItem getListItem(int tab, int position) {
-            List<ActivityInfo> infos;
-            if (tab == 0) {
-                infos = mAllInfos;
-            } else if (tab == 1) {
-                infos = mDisabledInfos;
-            } else if (tab == 2) {
-                infos = mEnabledInfos;
-            } else {
-                throw new RuntimeException("Unknown tab " + tab);
-            }
-
-            ListItem item = new ListItem();
-            final ActivityInfo activityInfo = infos.get(position);
-            item.mData = activityInfo;
-            item.mIcon = activityInfo.mInfo.loadIcon(mActivity.getPackageManager());
-            item.mTitle = activityInfo.mInfo.activityInfo.applicationInfo.loadLabel(mActivity.getPackageManager());
-            item.mDescription = activityInfo.mInfo.loadLabel(mActivity.getPackageManager());
-            item.mChecked = activityInfo.mDisabled;
-            return item;
-        }
-
-        @Override
-        protected boolean reload() {
-            if (!mNeedReload) {
-                return false;
-            }
-
-            mNeedReload = false;
-            mAllInfos = new ArrayList<>(mMapAllInfos.values());
-            mDisabledInfos = new ArrayList<>(mMapDisabledInfos.values());
-            mEnabledInfos = new ArrayList<>(mMapEnabledInfos.values());
-            Logger.d("mAllInfos " + mAllInfos.size() + ", mDisabledInfos " + mDisabledInfos.size() + ", mEnabledInfos " + mEnabledInfos.size());
-            return true;
-        }
-
-        @Override
-        public void onCheckedChanged(ListItem item, Boolean isChecked) {
-            ActivityInfo activityInfo = (ActivityInfo) item.mData;
-            String fullActivityName = activityInfo.mInfo.activityInfo.applicationInfo.packageName + "/" + activityInfo.mInfo.activityInfo.name;
-            Logger.i((isChecked ? "Disabled" : "Enabled") + " share activity " + fullActivityName);
-
-            activityInfo.mDisabled = isChecked;
-            if (isChecked) {
-                mMapDisabledInfos.put(fullActivityName, activityInfo);
-                mMapEnabledInfos.remove(fullActivityName);
-                mDisabledActivities.add(fullActivityName);
-            } else {
-                mMapDisabledInfos.remove(fullActivityName);
-                mMapEnabledInfos.put(fullActivityName, activityInfo);
-                mDisabledActivities.remove(fullActivityName);
-            }
-            mNeedReload = true;
-
-            Prefs.instance().edit()
-                    .putStringSet(R.string.key_system_share_filter_activities, mDisabledActivities)
-                    .commit();
-        }
-    }
-
     @PreferenceClick(prefs = R.string.key_prevent_running_set_list)
     private void setPreventList(Preference preference) {
         ListCheckActivity.create(getActivity(), PreventListDataProvider.class);
+    }
+
+    @PreferenceChange(prefs = R.string.key_quick_settings_tile_4g3g, refreshAtStart = true)
+    private void tile4G3G(SwitchPreference preference, boolean enabled, Extra extra) {
+        ListPreference pref4g = findListPreference(R.string.key_quick_settings_tile_4g);
+        ListPreference pref3g = findListPreference(R.string.key_quick_settings_tile_3g);
+        pref4g.setEnabled(enabled);
+        pref3g.setEnabled(enabled);
+
+        if (extra.refreshAtStart) {
+            Logger.d("Try get network types.");
+            try {
+                Context context = getActivity().createPackageContext(PackageNames.ANDROID_SETTINGS, Context.CONTEXT_IGNORE_SECURITY | Context.CONTEXT_INCLUDE_CODE);
+                Class cls = Class.forName(ClassNames.RADIO_INFO, true, context.getClassLoader());
+                Field field = cls.getDeclaredField("mPreferredNetworkLabels");
+                field.setAccessible(true);
+                String[] types = (String[]) field.get(Modifier.isStatic(field.getModifiers()) ? null : cls.newInstance());
+                setTypesForListPreference(types, pref4g);
+                setTypesForListPreference(types, pref3g);
+            } catch (Throwable e) {
+                Logger.e("Failed to get network types, " + e);
+                Logger.stackTrace(e);
+                pref4g.setEnabled(false);
+                pref3g.setEnabled(false);
+                preference.setEnabled(false);
+                preference.setChecked(false);
+                preference.setSummary(R.string.not_supported);
+            }
+        }
+    }
+
+    private void setTypesForListPreference(String[] types, ListPreference listPreference) {
+        listPreference.setEntries(types);
+        String[] entryValues = new String[types.length];
+        for (int i = 0; i < types.length; ++i) {
+            entryValues[i] = String.valueOf(i);
+        }
+        listPreference.setEntryValues(entryValues);
+        listPreference.setSummary("%s");
     }
 
     @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)

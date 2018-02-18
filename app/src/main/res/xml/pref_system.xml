@@ -93,6 +93,17 @@
             android:key="@string/key_quick_settings_tile_adb_wireless"
             android:title="@string/pref_quick_settings_tile_adb_wireless"
             android:summary="@string/pref_quick_settings_tile_adb_wireless_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_quick_settings_tile_4g3g"
+            android:title="@string/pref_quick_settings_tile_4g3g"
+            android:summary="@string/pref_quick_settings_tile_4g3g_summary" />
+        <ListPreference
+            android:key="@string/key_quick_settings_tile_4g"
+            android:title="@string/pref_quick_settings_tile_4g" />
+        <ListPreference
+            android:key="@string/key_quick_settings_tile_3g"
+            android:title="@string/pref_quick_settings_tile_3g" />
     </PreferenceCategory>
 
     <PreferenceCategory

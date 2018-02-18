@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -12,12 +13,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import li.lingfeng.ltweaks.fragments.base.Extra;
 import li.lingfeng.ltweaks.lib.PreferenceChange;
 import li.lingfeng.ltweaks.lib.PreferenceClick;
 import li.lingfeng.ltweaks.lib.PreferenceLongClick;
@@ -73,21 +76,27 @@ public class BasePrefFragment extends PreferenceFragment
                 listenPreferenceChange(pref);
 
                 if (preferenceChange.refreshAtStart()) {
+                    Extra extra = new Extra();
+                    extra.refreshAtStart = true;
                     try {
                         method.setAccessible(true);
                         Preference preference = findPreference(pref);
-                        if (method.getParameterTypes().length == 2) {
+                        int paramsLen = method.getParameterTypes().length;
+                        if (method.getParameterTypes()[paramsLen - 1] == Extra.class) {
+                            --paramsLen;
+                        }
+                        if (paramsLen == 2) {
                             Class secondType = method.getParameterTypes()[1];
                             if (secondType == boolean.class) {
-                                method.invoke(this, preference, ((SwitchPreference) preference).isChecked());
+                                InvokeMethod(method, this, extra, preference, ((SwitchPreference) preference).isChecked());
                             } else if (secondType == String.class) {
                                 String path = Prefs.instance().getString(pref, "");
-                                method.invoke(this, preference, path);
+                                InvokeMethod(method, this, extra, preference, path);
                             } else {
                                 throw new Exception("Not implemented.");
                             }
-                        } else if (method.getParameterTypes().length == 1) {
-                            method.invoke(this, preference);
+                        } else if (paramsLen == 1) {
+                            InvokeMethod(method, this, extra, preference);
                         } else {
                             throw new Exception("Not implemented.");
                         }
@@ -159,7 +168,7 @@ public class BasePrefFragment extends PreferenceFragment
             for (Method method : changeMethods) {
                 try {
                     method.setAccessible(true);
-                    method.invoke(this, preference, newValue);
+                    InvokeMethod(method, this, null, preference, newValue);
                 } catch (Exception e) {
                     Logger.e("Can't invoke preference change method " + method + ", " + e.getMessage());
                     Logger.stackTrace(e);
@@ -204,6 +213,17 @@ public class BasePrefFragment extends PreferenceFragment
         return true;
     }
 
+    private void InvokeMethod(Method method, Object receiver, Extra extra, Object... args) throws InvocationTargetException, IllegalAccessException {
+        if (method.getParameterTypes().length == args.length) {
+            method.invoke(receiver, args);
+        } else {
+            Object[] params = new Object[args.length + 1];
+            System.arraycopy(args, 0, params, 0, args.length);
+            params[args.length] = extra != null ? extra : new Extra();
+            method.invoke(receiver, params);
+        }
+    }
+
     public Preference findPreference(@StringRes int key) {
         return findPreference(getString(key));
     }
@@ -214,6 +234,14 @@ public class BasePrefFragment extends PreferenceFragment
             throw new RuntimeException("Preference " + getString(key) + " is not SwitchPreference.");
         }
         return (SwitchPreference) preference;
+    }
+
+    public ListPreference findListPreference(@StringRes int key) {
+        Preference preference = findPreference(key);
+        if (!(preference instanceof ListPreference)) {
+            throw new RuntimeException("Preference " + getString(key) + " is not ListPreference.");
+        }
+        return (ListPreference) preference;
     }
 
     protected void listenPreferenceChange(@StringRes int key) {

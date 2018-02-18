@@ -56,6 +56,7 @@ public class PackageNames {
     public static final String ANDROID = "android";
     public static final String ANDROID_SETTINGS = "com.android.settings";
     public static final String ANDROID_SYSTEM = "system";
+    public static final String ANDROID_PHONE = "com.android.phone";
     public static final String SHADOWSOCKS = "com.github.shadowsocks";
     public static final String SOLID_EXPLORER = "pl.solidexplorer2";
     public static final String GALLERY = "com.android.gallery3d";
