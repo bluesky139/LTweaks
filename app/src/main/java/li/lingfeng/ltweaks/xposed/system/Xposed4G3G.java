@@ -1,6 +1,5 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,11 +36,11 @@ public class Xposed4G3G extends XposedTile {
     }
 
     private void handleLoadAndroidPhone() {
-        findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+        findAndHookMethod(PHONE_FACTORY, "makeDefaultPhone", Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Application application = (Application) param.thisObject;
-                initAndroidPhone(application);
+                Context context = (Context) param.args[0];
+                initAndroidPhone(context);
             }
         });
     }
