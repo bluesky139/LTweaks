@@ -31,6 +31,7 @@ public abstract class XposedTile extends XposedBase {
     protected final String ACTION_SWITCH = getClass().getName() + ".ACTION_SWITCH";
     protected final String ACTION_LONG_CLICK = getClass().getName() + ".ACTION_LONG_CLICK";
     protected Context mContext;
+    private Object mQsTileHost;
     private SwitchReceiver mReceiver;
 
     @Override
@@ -52,6 +53,7 @@ public abstract class XposedTile extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 mContext = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                mQsTileHost = param.thisObject;
                 if (mReceiver == null) {
                     Logger.i("Register " + XposedTile.this.getClass().getSimpleName() + " switch receiver.");
                     mReceiver = new SwitchReceiver();
@@ -175,8 +177,12 @@ public abstract class XposedTile extends XposedBase {
     }
 
     protected void collapseStatusBar() {
-        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        mContext.sendBroadcast(intent);
+        if (mQsTileHost != null) {
+            XposedHelpers.callMethod(mQsTileHost, "collapsePanels");
+        } else {
+            Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            mContext.sendBroadcast(intent);
+        }
     }
 
     protected boolean enableNotification() {
