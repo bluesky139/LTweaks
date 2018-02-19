@@ -12,6 +12,7 @@ import android.support.annotation.DrawableRes;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -30,6 +31,10 @@ public abstract class XposedTile extends XposedBase {
     private final String ACTION_UPDATE_STATE = getClass().getName() + ".ACTION_UPDATE_STATE";
     protected final String ACTION_SWITCH = getClass().getName() + ".ACTION_SWITCH";
     protected final String ACTION_LONG_CLICK = getClass().getName() + ".ACTION_LONG_CLICK";
+
+    private static int sTileSpecCount = 0;
+    private static List<String> sTileSpecs;
+
     protected Context mContext;
     private Object mQsTileHost;
     private SwitchReceiver mReceiver;
@@ -72,10 +77,21 @@ public abstract class XposedTile extends XposedBase {
 
         hookAllMethods(clsQsTileHost, "loadTileSpecs", new XC_MethodHook() {
             @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                ++sTileSpecCount;
+            }
+            @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Logger.i("loadTileSpecs return tile " + XposedTile.this.getClass().getSimpleName());
-                List<String> tiles = (List<String>) param.getResult();
-                tiles.add(XposedTile.this.getClass().getSimpleName());
+                if (sTileSpecs == null) {
+                    sTileSpecs = new ArrayList<>(sTileSpecCount);
+                }
+                sTileSpecs.add(getPriority() <= sTileSpecs.size() ? getPriority() : sTileSpecs.size(),
+                        XposedTile.this.getClass().getSimpleName());
+                if (sTileSpecs.size() == sTileSpecCount) {
+                    List<String> tiles = (List<String>) param.getResult();
+                    tiles.addAll(sTileSpecs);
+                }
             }
         });
 
@@ -122,6 +138,7 @@ public abstract class XposedTile extends XposedBase {
         }
     }
 
+    protected abstract int getPriority();
     protected abstract String getTileName(boolean isOn);
     protected abstract String getTileDesc();
     protected abstract @DrawableRes int getTileIcon(boolean isOn);

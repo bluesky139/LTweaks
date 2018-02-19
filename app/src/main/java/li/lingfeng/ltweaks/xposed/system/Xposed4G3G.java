@@ -96,6 +96,11 @@ public class Xposed4G3G extends XposedTile {
     }
 
     @Override
+    protected int getPriority() {
+        return 1;
+    }
+
+    @Override
     protected String getTileName(boolean isOn) {
         return "4G/3G";
     }

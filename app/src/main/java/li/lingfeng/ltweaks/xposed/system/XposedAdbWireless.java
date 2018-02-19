@@ -26,6 +26,11 @@ import li.lingfeng.ltweaks.utils.Shell;
 public class XposedAdbWireless extends XposedTile {
 
     @Override
+    protected int getPriority() {
+        return 0;
+    }
+
+    @Override
     protected String getTileName(boolean isOn) {
         if (!isOn) {
             try {
