@@ -73,7 +73,7 @@ public class Xposed4G3G extends XposedTile {
                 Class cls = findClass(PHONE_FACTORY);
                 Object phone = XposedHelpers.callStaticMethod(cls, "getDefaultPhone");
                 Message msg = mHandler.obtainMessage(0);
-                XposedHelpers.callMethod(phone, "setPreferredNetworkType", 0, msg);
+                XposedHelpers.callMethod(phone, "setPreferredNetworkType", type, msg);
             } catch (Throwable e) {
                 Logger.e("SwitchNetTypeReceiver error, " + e);
                 Logger.stackTrace(e);
