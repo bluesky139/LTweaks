@@ -33,7 +33,7 @@ public class XposedBilibiliLightDescInNight extends XposedBase {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 final Activity activity = (Activity) param.thisObject;
                 final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
-                new Handler().post(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -42,7 +42,7 @@ public class XposedBilibiliLightDescInNight extends XposedBase {
                             Logger.e("Can't set desc text, " + e);
                         }
                     }
-                });
+                }, 500);
             }
         });
     }
