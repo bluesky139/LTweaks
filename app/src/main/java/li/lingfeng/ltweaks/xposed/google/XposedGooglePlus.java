@@ -1,7 +1,6 @@
 package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
-import android.app.Application;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,21 +20,18 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.Arrays;
 
 import de.robv.android.xposed.XC_MethodHook;
-
+import li.lingfeng.ltweaks.R;
+import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.R;
-import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -44,7 +40,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.GOOGLE_PLUS, prefs = R.string.key_google_plus_remove_bottom_bar)
 public class XposedGooglePlus extends XposedBase {
 
-    private static final String sActivityName = "com.google.android.apps.plus.phone.BinderHomeActivity";
+    private static final String sActivityName = "com.google.android.apps.plus.home.TikTokHomeActivity";
 
     private Activity activity;
     private View rootView;
@@ -54,15 +50,13 @@ public class XposedGooglePlus extends XposedBase {
     private TextView[] tabButtons = new TextView[4];
     private View tabBarCounter;
 
-    private LinearLayout drawerFragment;
-    private ListView navList;
+    private View accountView;
     private ListView barList;
     private BarListAdapter barListAdapter;
     private ImageView counter;
 
     private boolean done = false;
 
-    private View newPostsButtonContainer;
     private View newPostsButton;
     private MenuItem refreshMenu;
 
@@ -95,12 +89,12 @@ public class XposedGooglePlus extends XposedBase {
                         if (!done && isReady())
                             createBarList();
 
-                        if (newPostsButton != null && newPostsButtonContainer != null && refreshMenu != null) {
-                            Logger.i("newPostsButton's visibility " + newPostsButtonContainer.getVisibility());
-                            if (newPostsButtonContainer.getVisibility() == View.VISIBLE) {
+                        if (newPostsButton != null && refreshMenu != null) {
+                            Logger.i("newPostsButton's visibility " + newPostsButton.getVisibility());
+                            if (newPostsButton.getVisibility() == View.VISIBLE) {
                                 newPostsButton.setVisibility(View.INVISIBLE);
                                 refreshMenu.setVisible(true);
-                            } else if (newPostsButtonContainer.getVisibility() == View.GONE) {
+                            } else if (newPostsButton.getVisibility() == View.GONE) {
                                 refreshMenu.setVisible(false);
                             }
                         }
@@ -147,10 +141,9 @@ public class XposedGooglePlus extends XposedBase {
                 tabBarSpacerId = 0;
                 Arrays.fill(tabButtons, null);
                 tabBarCounter = null;
-                newPostsButtonContainer = null;
                 newPostsButton = null;
                 refreshMenu = null;
-                drawerFragment = null;
+                accountView = null;
                 barList = null;
                 barListAdapter = null;
                 counter = null;
@@ -160,7 +153,7 @@ public class XposedGooglePlus extends XposedBase {
     }
 
     private boolean isReady() {
-        if (activity != null && tabBar != null &&  drawerFragment != null && navList != null) {
+        if (activity != null && tabBar != null &&  accountView != null) {
             for (View button : tabButtons) {
                 if (button == null)
                     return false;
@@ -177,8 +170,8 @@ public class XposedGooglePlus extends XposedBase {
                 view = viewGroup.getChildAt(i);
                 //Logger.v("child view" + depth + " " + view + " id " + view.getId());
                 if (tabBar == null) {
-                    if (getResNameById(view.getId()).equals("bottom_navigation_container")) {
-                        Logger.i("got bottom_navigation_container.");
+                    if (getResNameById(view.getId()).equals("navigation_bottom_bar")) {
+                        Logger.i("got navigation_bottom_bar.");
                         tabBar = view;
                     }
                 }
@@ -217,19 +210,15 @@ public class XposedGooglePlus extends XposedBase {
                     }
                 }
                 if (view.getId() > 0) {
-                    if (getResNameById(view.getId()).equals("new_posts_button_container")) {
-                        Logger.i("got new_posts_button_container.");
-                        newPostsButtonContainer = view;
-                    } else if (getResNameById(view.getId()).equals("new_posts_button")) {
+                    if (getResNameById(view.getId()).equals("new_posts_button")) {
                         Logger.i("got new_posts_button.");
                         newPostsButton = view;
                     }
                 }
-                if (drawerFragment == null && view.getId() > 0) {
-                    if (getResNameById(view.getId()).equals("menu_items_view")) {
-                        Logger.i("got menu_items_view.");
-                        drawerFragment = (LinearLayout) view.getParent();
-                        navList = (ListView) view;
+                if (accountView == null && view.getId() > 0) {
+                    if (getResNameById(view.getId()).equals("account_switcher_view")) {
+                        Logger.i("got account_switcher_view.");
+                        accountView = view;
                     }
                 }
                 traverseViewChilds(view, depth + 1);
@@ -248,20 +237,6 @@ public class XposedGooglePlus extends XposedBase {
     }
 
     private void createBarList() {
-        ListAdapter adapter = navList.getAdapter();
-        if (adapter != null && adapter.getCount() > 4) {
-            int titleId = activity.getResources().getIdentifier("navigation_item_name", "id", "com.google.android.apps.plus");
-            View view = adapter.getView(0, null, null).findViewById(titleId);
-            if (view != null) {
-                TextView title = (TextView) view;
-                if (title.getText().toString().equals(tabButtons[0].getText().toString())) {
-                    Logger.i("Drawer menu has buttons of bottom bar, skip create.");
-                    done = true;
-                    return;
-                }
-            }
-        }
-
         barListAdapter = new BarListAdapter();
         View one = barListAdapter.getView(0, null, barList);
         one.measure(0, 0);
@@ -274,7 +249,14 @@ public class XposedGooglePlus extends XposedBase {
         barList.setDividerHeight(0);
         barList.setAdapter(barListAdapter);
         //barList.setOnItemClickListener(barListAdapter);
-        navList.addHeaderView(barList);
+        final ViewGroup drawerListContainer = (ViewGroup) accountView.getParent();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                drawerListContainer.addView(barList, drawerListContainer.indexOfChild(accountView) + 1);
+            }
+        }, 1000);
+
         done = true;
     }
 

@@ -31,7 +31,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.GOOGLE_PLUS, prefs = R.string.key_google_plus_hide_comment_edit)
 public class XposedGooglePlusComment extends XposedBase {
 
-    private static final String sOneActivity = "com.google.android.apps.plus.phone.HostStreamOneUpActivity";
+    private static final String sOneActivity = "com.google.android.apps.plus.stream.oneup.OneUpStreamActivity";
 
     private View mFooter;
     private SimpleFloatingButton mFloatingButton;
@@ -46,7 +46,7 @@ public class XposedGooglePlusComment extends XposedBase {
                 }
 
                 final Activity activity = (Activity) param.thisObject;
-                mFooter = activity.findViewById(ContextUtils.getIdId("footer"));
+                mFooter = activity.findViewById(ContextUtils.getIdId("comment_fragment_container"));
                 if (mFooter == null) {
                     Logger.e("mFooter is null, mFooter " + mFooter);
                     return;
@@ -66,7 +66,7 @@ public class XposedGooglePlusComment extends XposedBase {
                     public void onClick(View v) {
                         Logger.i("Floating button is clicked.");
                         mFooter.setVisibility(View.VISIBLE);
-                        View editText = activity.findViewById(ContextUtils.getIdId("footer_text_with_embeds"));
+                        View editText = activity.findViewById(ContextUtils.getIdId("comment_edit_text"));
                         editText.requestFocus();
                         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.showSoftInput(editText, 0);
@@ -82,7 +82,7 @@ public class XposedGooglePlusComment extends XposedBase {
                     return;
                 }
                 View view = (View) param.thisObject;
-                if (view instanceof EditText && view.getId() == ContextUtils.getIdId("footer_text_with_embeds")) {
+                if (view instanceof EditText && view.getId() == ContextUtils.getIdId("comment_edit_text")) {
                     Logger.i("footer_text_with_embeds requestFocus().");
                     mFooter.setVisibility(View.VISIBLE);
                     if (mFloatingButton != null) {
