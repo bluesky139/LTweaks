@@ -24,10 +24,11 @@ import android.widget.TextView;
 import java.util.Arrays;
 
 import de.robv.android.xposed.XC_MethodHook;
-import li.lingfeng.ltweaks.prefs.PackageNames;
-import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -37,7 +38,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedGooglePhotos extends XposedBase {
 
     Activity activity;
-    View rootView;
+    ViewGroup rootView;
 
     View tabBar;
     Button tabAssistant;
@@ -72,7 +73,7 @@ public class XposedGooglePhotos extends XposedBase {
                         if (!activity.getClass().getName().equals("com.google.android.apps.photos.home.HomeActivity"))
                             return;
                         XposedGooglePhotos.this.activity = activity;
-                        rootView = activity.findViewById(android.R.id.content);
+                        rootView = (ViewGroup) activity.findViewById(android.R.id.content);
                         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
@@ -238,10 +239,7 @@ public class XposedGooglePhotos extends XposedBase {
                     if (activity.getResources().getResourceEntryName(view.getId()).equals("tab_bar")) {
                         Logger.i("got tab_bar.");
                         tabBar = view;
-                        ViewGroup.LayoutParams tabBarParams = tabBar.getLayoutParams();
-                        tabBarParams.height = 0;
-                        tabBar.setLayoutParams(tabBarParams);
-                        tabBar.setVisibility(View.INVISIBLE);
+                        hideTabBar();
                     }
                 }
                 if (tabAssistant == null && view.getId() > 0) {
@@ -334,6 +332,27 @@ public class XposedGooglePhotos extends XposedBase {
         });
 
         done = true;
+        Logger.i("Tab bar buttons are added into drawer.");
+    }
+
+    void hideTabBar() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                int tabBarHeight = tabBar.getMeasuredHeight();
+                tabBar.setVisibility(View.INVISIBLE);
+                tabBar.getLayoutParams().height = 0;
+                View recyclerView = ViewUtils.findViewByName(rootView, "recycler_view");
+                int oldHeight = recyclerView.getMeasuredHeight();
+                Logger.d("Recycler view oldHeight " + oldHeight + ", tabBarHeight " + tabBarHeight);
+                if (oldHeight > 0 && tabBarHeight > 0) {
+                    int height = oldHeight + tabBarHeight;
+                    Logger.d("Set recycler view height " + height);
+                    recyclerView.getLayoutParams().height = height;
+                }
+                recyclerView.requestLayout();
+            }
+        });
     }
 
     class BarListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
