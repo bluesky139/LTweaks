@@ -388,11 +388,11 @@ public class XposedGooglePhotos extends XposedBase {
             title.setText(tabButtons[position].getText());
             int iconId = activity.getResources().getIdentifier("icon", "id", "com.google.android.apps.photos");
             ImageView icon = (ImageView) view.findViewById(iconId);
-            String strDrwable = "albums_drawable";
+            String strDrwable = "quantum_ic_collections_bookmark_grey600_24";
             if (getItem(position) == tabAssistant) {
                 strDrwable = "photos_drawermenu_navigation_ic_drawer_assistant";
             } else if (getItem(position) == tabPhotos) {
-                strDrwable = "photos_drawable";
+                strDrwable = "quantum_ic_photo_grey600_24";
             } else if (getItem(position) == tabSharing) {
                 strDrwable = "quantum_ic_people_grey600_24";
             }
