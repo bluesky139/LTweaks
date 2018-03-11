@@ -36,7 +36,7 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
 @XposedLoad(packages = PackageNames.GOOGLE_BOOKS, prefs = R.string.key_google_books_remove_bottom_bar)
 public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
 
-    private static final String HOME_ACTIVITY = "com.google.android.apps.books.app.HomeActivity";
+    private static final String HOME_ACTIVITY = "com.google.android.apps.play.books.app.HomeActivity";
     private ViewGroup mBottomNav;
 
     @Override
