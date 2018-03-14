@@ -370,7 +370,7 @@ public class ContextUtils {
 
     public static void openFolder(Context context, String path) {
         Logger.v("openFolder " + path);
-        Uri uri = Uri.parse(path);
+        Uri uri = Uri.parse("file://" + path);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(uri, "resource/folder");
         if (intent.resolveActivity(context.getPackageManager()) != null) {
