@@ -38,6 +38,8 @@ public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
 
     private static final String HOME_ACTIVITY = "com.google.android.apps.play.books.app.HomeActivity";
     private ViewGroup mBottomNav;
+    private static final int SKIP_LAYOUT_CHANGE = 2;
+    private int mSkipLayoutChange = 0;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -49,6 +51,10 @@ public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
                 rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
+                        if (mSkipLayoutChange < SKIP_LAYOUT_CHANGE) {
+                            ++mSkipLayoutChange;
+                            return;
+                        }
                         if (mBottomNav == null) {
                             try {
                                 hookBottomBar(activity);
@@ -76,7 +82,7 @@ public class XposedGoogleBooksRemoveBottomBar extends XposedBase {
     private boolean hookBottomBar(Activity activity) throws Throwable {
         int idBottomNav = ContextUtils.getIdId("bottom_navigation");
         ViewGroup bottomNav = (ViewGroup) activity.findViewById(idBottomNav);
-        List<FrameLayout> layouts = ViewUtils.findAllViewByTypeInSameHierarchy(bottomNav, FrameLayout.class, 4);
+        List<FrameLayout> layouts = ViewUtils.findAllViewByTypeInSameHierarchy(bottomNav, FrameLayout.class, 3);
         Logger.i("Got " + layouts.size() + " bottom buttons.");
         if (layouts.size() == 0) {
             return false;
