@@ -4,33 +4,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
@@ -38,9 +30,9 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Callback;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.utils.PackageUtils;
 import li.lingfeng.ltweaks.utils.ReflectedGlide;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
+import li.lingfeng.ltweaks.utils.SimpleFloatingButton;
 import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -48,7 +40,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
  * Created by smallville on 2017/2/5.
  */
 @XposedLoad(
-        packages = { PackageNames.COOLAPK, PackageNames.COOLAPK_VN },
+        packages = PackageNames.COOLAPK,
         prefs = R.string.key_coolapk_remove_bottom_bar,
         loadAtActivityCreate = ClassNames.ACTIVITY)
 public class XposedCoolapk extends XposedBase {
@@ -58,24 +50,26 @@ public class XposedCoolapk extends XposedBase {
     private static final String APP_MANAGER_ACTIVITY = "com.coolapk.market.view.appmanager.AppManagerActivity";
     private static final String THEME_ACTIVITY = "com.coolapk.market.view.theme.ThemeListActivity";
     private static final String SETTINGS_ACTIVITY = "com.coolapk.market.view.settings.SettingsActivity";
-    private static final String CENTER_FRAGMENT = "com.coolapk.market.view.center.CenterFragment";
     private static final String USER_SPACE_ACTIVITY = "com.coolapk.market.view.user.UserSpaceActivity";
+    private static final String FAST_RETURN_VIEW = "com.coolapk.market.widget.FastReturnView";
+    private static final String NIGHT_MODE_HELPER = "com.coolapk.market.util.NightModeHelper";
+    private static final String APP_HOLDER = "com.coolapk.market.AppHolder";
+    private static final String ACTION_MANAGER = "com.coolapk.market.manager.ActionManager";
 
     private Activity mActivity;
     private ViewGroup mRootView;
     private ViewGroup mContentView;
     private ViewGroup mTabContainer;
+    private View mPostButton;
+    private View mFastReturnView;
     private SimpleDrawer mDrawerLayout;
+    private SimpleFloatingButton mFloatingButton;
 
-    private Object mCenterFragmentB1; // CenterFragment$b$1 in Coolapk v7.3.2
+    private boolean mIsChangingNightMode = false;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        if (lpparam.packageName.equals(PackageNames.COOLAPK) && PackageUtils.isPackageInstalled(PackageNames.COOLAPK_VN)) {
-            return;
-        }
-
-        findAndHookMethod("android.app.SharedPreferencesImpl", "getBoolean", String.class, boolean.class, new XC_MethodHook() {
+        /*findAndHookMethod("android.app.SharedPreferencesImpl", "getBoolean", String.class, boolean.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (param.args[0].equals("DISABLE_XPOSED")) {
@@ -83,7 +77,7 @@ public class XposedCoolapk extends XposedBase {
                     Logger.i("Set DISABLE_XPOSED to false.");
                 }
             }
-        });
+        });*/
 
         findAndHookActivity(MAIN_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
@@ -92,6 +86,7 @@ public class XposedCoolapk extends XposedBase {
                 mRootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
                 final int idContentView = ContextUtils.getIdId("content_view");
                 final int idTabContainer = ContextUtils.getIdId("bottom_navigation");
+                final int idPostButton = ContextUtils.getIdId("post_button");
                 mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
@@ -120,12 +115,39 @@ public class XposedCoolapk extends XposedBase {
                                 mTabContainer.setVisibility(View.GONE);
                                 Logger.i("Set mTabContainer gone.");
                             }
+
+                            View postButton = mActivity.findViewById(idPostButton);
+                            if (mPostButton != postButton) {
+                                mPostButton = postButton;
+                                mPostButton.setVisibility(View.GONE);
+                                Logger.i("Set mPostButton gone.");
+                            }
+
+                            if (mFastReturnView != null && mFastReturnView.getParent() != null) {
+                                ((ViewGroup) mFastReturnView.getParent()).removeView(mFastReturnView);
+                                mFastReturnView = null;
+                                Logger.i("Remove mFastReturnView.");
+                            }
                         } catch (Throwable e) {
                             Logger.e("onGlobalLayout error, " + e.getMessage());
                             Logger.stackTrace(e);
                         }
                     }
                 });
+
+                mFloatingButton = SimpleFloatingButton.make(mActivity);
+                Drawable drawable = ContextUtils.getDrawable("ic_add_white_24dp");
+                mFloatingButton.setImageDrawable(drawable);
+                mFloatingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mPostButton != null) {
+                            Logger.i("Post button perform click.");
+                            mPostButton.performClick();
+                        }
+                    }
+                });
+                mFloatingButton.show();
             }
         });
 
@@ -137,8 +159,13 @@ public class XposedCoolapk extends XposedBase {
                 mRootView     = null;
                 mContentView  = null;
                 mTabContainer = null;
+                mPostButton   = null;
+                mFastReturnView = null;
                 mDrawerLayout = null;
-                mCenterFragmentB1 = null;
+                if (mFloatingButton != null) {
+                    mFloatingButton.destroy();
+                    mFloatingButton = null;
+                }
             }
         });
 
@@ -153,11 +180,20 @@ public class XposedCoolapk extends XposedBase {
             }
         });
 
+        findAndHookActivity(MAIN_ACTIVITY, "dispatchTouchEvent", MotionEvent.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (mFloatingButton != null) {
+                    mFloatingButton.getActivityTouchEventListener().onDispatch((MotionEvent) param.args[0]);
+                }
+            }
+        });
+
         findAndHookMethod(ContextThemeWrapper.class, "setTheme", int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 ContextThemeWrapper themeWrapper = (ContextThemeWrapper) param.thisObject;
-                updateDrawerColor(themeWrapper.getTheme());
+                updateColorByTheme(themeWrapper.getTheme());
             }
         });
 
@@ -175,6 +211,25 @@ public class XposedCoolapk extends XposedBase {
                         }
                     }
                 };
+            }
+        });
+
+        hookAllConstructors(FAST_RETURN_VIEW, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                mFastReturnView = (View) param.thisObject;
+                Logger.i("Got mFastReturnView.");
+            }
+        });
+
+        findAndHookMethod(NIGHT_MODE_HELPER, "shouldChangeNightMode", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (mIsChangingNightMode) {
+                    Logger.i("shouldChangeNightMode return true.");
+                    param.setResult(true);
+                    mIsChangingNightMode = false;
+                }
             }
         });
     }
@@ -198,6 +253,10 @@ public class XposedCoolapk extends XposedBase {
                 Drawable icon = iconView.getDrawable();
                 TextView textView = (TextView) tabView.findViewById(idTabText);
                 String text = textView.getText().toString();
+                if (text.isEmpty()) {
+                    Logger.w("Ignore tab " + tabView);
+                    continue;
+                }
                 SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(icon, text, tabView);
                 navItems.add(navItem);
                 Logger.i("Got tab " + text);
@@ -249,9 +308,7 @@ public class XposedCoolapk extends XposedBase {
             listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setClassName(PackageNames.COOLAPK, SETTINGS_ACTIVITY);
-                    mActivity.startActivity(intent);
+                    XposedHelpers.callStaticMethod(findClass(ACTION_MANAGER), "startV8SettingsActivity", mActivity);
                 }
             };
             navItem = new SimpleDrawer.NavItem(icon, text, listener);
@@ -280,7 +337,7 @@ public class XposedCoolapk extends XposedBase {
             SimpleDrawer.NavItem[] navItemArray = new SimpleDrawer.NavItem[navItems.size()];
             mDrawerLayout = new SimpleDrawer(mActivity, allView, navItems.toArray(navItemArray),
                     headerItem, true);
-            updateDrawerColor(mActivity.getTheme());
+            updateColorByTheme(mActivity.getTheme());
             mRootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
             mTabContainer.setVisibility(View.GONE);
@@ -313,12 +370,21 @@ public class XposedCoolapk extends XposedBase {
                 }
             });
         } else {
+            for (int i = tabViews.size() - 1; i >= 0; --i) {
+                View tabView = tabViews.get(i);
+                int idTabText = ContextUtils.getIdId("bottom_navigation_item_title");
+                TextView textView = (TextView) tabView.findViewById(idTabText);
+                String text = textView.getText().toString();
+                if (text.isEmpty()) {
+                    tabViews.remove(i);
+                }
+            }
             mDrawerLayout.updateClickObjs(tabViews.toArray());
             Logger.i("drawer click views are updated.");
         }
     }
 
-    private void updateDrawerColor(Resources.Theme theme) {
+    private void updateColorByTheme(Resources.Theme theme) {
         if (mDrawerLayout != null) {
             int color = ContextUtils.getColorFromTheme(theme, "colorPrimary");
             int listColor = ContextUtils.getColorFromTheme(theme, "mainBackgroundColor");
@@ -331,6 +397,10 @@ public class XposedCoolapk extends XposedBase {
             Logger.i("Drawer color is updated, " + String.format("%08X", color));
 
             updateHeaderFilter();
+        }
+        if (mFloatingButton != null) {
+            int color = ContextUtils.getColorFromTheme(theme, "colorPrimary");
+            mFloatingButton.setBackgroundColor(color);
         }
     }
 
@@ -348,85 +418,9 @@ public class XposedCoolapk extends XposedBase {
     }
 
     private void switchDayNight() {
-        try {
-            if (mCenterFragmentB1 == null) {
-                Class<?> clsCenterFragment = findClass(CENTER_FRAGMENT);
-                Object centerFragment = clsCenterFragment.newInstance();
-                Logger.i("centerFragment is created.");
-
-                Class<?> clsRebindReportingHolder = findClass(ClassNames.REBIND_REPORTING_HOLDER);
-                Class<?>[] classes = clsCenterFragment.getDeclaredClasses();
-                Class<?> clsB  = null;
-                Class<?> clsB1 = null;
-                for (Class<?> cls : classes) {
-                    if (!clsRebindReportingHolder.isAssignableFrom(cls))
-                        continue;
-                    for (int i = 1; i <= 5; ++i) {
-                        try {
-                            Class<?> cls2 = findClass(cls.getName() + "$" + i);
-                            if (!CompoundButton.OnCheckedChangeListener.class.isAssignableFrom(cls2))
-                                continue;
-                            clsB1 = cls2;
-                            clsB  = cls;
-                            break;
-                        } catch (Throwable t) {
-                            break;
-                        }
-                    }
-                    if (clsB != null)
-                        break;
-                }
-                if (clsB == null) {
-                    Logger.e("Can't find clsB and clsB1.");
-                    return;
-                }
-                Logger.i("Got clsB " + clsB + ", clsB1 " + clsB1);
-
-                Constructor<?> constructorB = clsB.getConstructors()[0];
-                constructorB.setAccessible(true);
-                View view = LayoutInflater.from(mActivity).inflate(ContextUtils.getLayoutId("main_me_setting"), null, false);
-                Object b = constructorB.newInstance(centerFragment, view, null);
-                Logger.i("b is created.");
-
-                if (clsB1.getDeclaredConstructors()[0].getParameterTypes().length == 2) {
-                    Method methodG = null; // com.coolapk.market.i.g.g() in v7.9.3
-                    Method[] methods = clsB.getSuperclass().getDeclaredMethods();
-                    for (Method method : methods) {
-                        if (method.getReturnType().getName().startsWith("android.databinding.")) {
-                            methodG = method;
-                            break;
-                        }
-                    }
-                    if (methodG == null) {
-                        throw new Exception("Can't find method g.");
-                    }
-                    Object g = methodG.invoke(b);
-                    Logger.d("g " + g);
-
-                    Constructor<?> constructorB1 = clsB1.getDeclaredConstructors()[0];
-                    constructorB1.setAccessible(true);
-                    mCenterFragmentB1 = constructorB1.newInstance(b, g);
-                } else {
-                    Constructor<?> constructorB1 = clsB1.getDeclaredConstructors()[0];
-                    constructorB1.setAccessible(true);
-                    mCenterFragmentB1 = constructorB1.newInstance(b);
-                }
-                Logger.i("b1 is created.");
-            }
-
-            SharedPreferences pref = mActivity.getSharedPreferences("coolapk_preferences_v7", 0);
-            String themeName = pref.getString("theme_name", "green");
-            boolean isNight = !themeName.equals("night");
-
-            Method method = CompoundButton.OnCheckedChangeListener.class.getDeclaredMethod("onCheckedChanged", CompoundButton.class, boolean.class);
-            method.invoke(mCenterFragmentB1, new Switch(mActivity), isNight);
-            Logger.i("Switched day/night, " + isNight);
-        } catch (Exception e) {
-            if (e instanceof InvocationTargetException) {
-                e = new Exception(e.getCause());
-            }
-            Logger.e("Can't switch day/night, " + e);
-            Logger.stackTrace(e);
-        }
+        Logger.i("switchDayNight");
+        mIsChangingNightMode = true;
+        Object appTheme = XposedHelpers.callStaticMethod(findClass(APP_HOLDER), "getAppTheme");
+        XposedHelpers.callMethod(appTheme, "checkAutoTheme", mActivity);
     }
 }

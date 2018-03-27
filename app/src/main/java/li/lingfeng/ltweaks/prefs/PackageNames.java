@@ -50,7 +50,6 @@ public class PackageNames {
     public static final String TEXT_AIDE = "com.arjerine.textxposed";
     public static final String YOUDAO_DICT = "com.youdao.dict";
     public static final String COOLAPK = "com.coolapk.market";
-    public static final String COOLAPK_VN = "com.coolapk.market.vn";
     public static final String APKPURE = "com.apkpure.aegon";
     public static final String ANDROID_SYSTEM_UI = "com.android.systemui";
     public static final String ANDROID = "android";

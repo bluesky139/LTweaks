@@ -181,6 +181,9 @@ public class SimpleDrawer extends DrawerLayout implements DrawerLayout.DrawerLis
     }
 
     public void updateClickObjs(Object[] clickObjs) {
+        if (mNavItems.length != clickObjs.length) {
+            Logger.w("Drawer updateClickObjs mNavItems.length " + mNavItems.length + ", clickObjs.length " + clickObjs.length);
+        }
         for (int i = 0; i < clickObjs.length; ++i) {
             mNavItems[i].mClickObj = clickObjs[i];
         }

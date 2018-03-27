@@ -252,7 +252,7 @@ Open source on github: \n
     <string name="pref_system_share_copy_to_share_summary">当你复制文本的时候, 会浮现一个按钮让你能直接分享文本.\n也许在某些应用中不工作</string>
     <string name="pref_category_coolapk">酷市场</string>
     <string name="pref_coolapk_remove_bottom_bar">去底栏</string>
-    <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
+    <string name="pref_coolapk_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单.\n你需要到设置里面关闭\"禁用 Xposed 模块\"</string>
     <string name="pref_category_prevent_running">阻止运行</string>
     <string name="pref_prevent_running_prevent_foreground_service">阻止前台服务</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">有些应用为避免被杀死会创建看不见的前台服务，阻止其变为前台服务.\n

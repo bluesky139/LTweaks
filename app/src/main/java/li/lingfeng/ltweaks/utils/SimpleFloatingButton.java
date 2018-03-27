@@ -1,7 +1,6 @@
 package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -64,7 +63,11 @@ public class SimpleFloatingButton extends ImageButton {
         GradientDrawable drawable = (GradientDrawable) getBackground();
         drawable.setColor(color);
 
-        ColorStateList tint = createColorStateList(Color.parseColor("#FFB5301F"), color);
+        float[] hsv = new float[3];
+        Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), hsv);
+        hsv[2] *= 0.7f;
+        int selectedColor = Color.HSVToColor(hsv);
+        ColorStateList tint = createColorStateList(selectedColor, color);
         DrawableCompat.setTintList(drawable, tint);
     }
 

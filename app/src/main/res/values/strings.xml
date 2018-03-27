@@ -265,7 +265,7 @@ May not work on all places</string>
     <string name="pref_system_share_copy_to_share_summary">When you copy text, a button will appear for you to trigger share action.\nMay not work in some app</string>
     <string name="pref_category_coolapk">Coolapk</string>
     <string name="pref_coolapk_remove_bottom_bar">Remove bottom bar</string>
-    <string name="pref_coolapk_remove_bottom_bar_summary">Put them into drawer menu</string>
+    <string name="pref_coolapk_remove_bottom_bar_summary">Put them into drawer menu.\nYou need disable \"Disable Xposed modules\" in settings</string>
     <string name="pref_category_prevent_running">Prevent Running</string>
     <string name="pref_prevent_running_prevent_foreground_service">Prevent foreground service</string>
     <string name="pref_prevent_running_prevent_foreground_service_summary">Prevent service becomes foreground service, some app will create invisible foreground service to avoid low memory kill.\n
