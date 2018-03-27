@@ -2,6 +2,7 @@ package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Pair;
@@ -27,6 +28,17 @@ public class XposedAppInfoGoAppData extends XposedAppInfo {
     private static final String MENU_APP_EXTERNAL_DATA_FOLDER = "Open App External Data Folder";
     private static final String MENU_APP_DEVICE_ENCRYPTED_STORAGE = "Open Device Encrypted Storage";
     private static final String MENU_APP_APK_FOLDER = "Open APK Folder";
+
+    @Override
+    protected void handleLoadPackage() throws Throwable {
+        super.handleLoadPackage();
+        findAndHookMethod(Uri.class, "checkFileUriExposed", String.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(null);
+            }
+        });
+    }
 
     @Override
     protected Pair<String, Integer>[] newMenuNames() {
