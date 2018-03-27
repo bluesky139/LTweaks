@@ -78,16 +78,16 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         }
         Prefs.zygotePrefs = new XSharedPreferences(file);
         Prefs.zygotePrefs.makeWorldReadable();
-    }
 
-    @Override
-    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (isEmptyModules()) {
             addModulesForAll();
             addModules();
             addModulePrefs();
         }
+    }
 
+    @Override
+    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         Set<Class<? extends XposedBase>> modules = getModules(lpparam.packageName);
         if (modules == null) {
             return;
