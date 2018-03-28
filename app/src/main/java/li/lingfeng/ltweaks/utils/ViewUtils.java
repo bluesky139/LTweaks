@@ -138,6 +138,11 @@ public class ViewUtils {
         return results;
     }
 
+    public static View findViewByName(Activity activity, String name) {
+        int id = ContextUtils.getIdId(name);
+        return id > 0 ? activity.findViewById(id) : null;
+    }
+
     public static View findViewByName(ViewGroup rootView, String name) {
         int id = ContextUtils.getIdId(name);
         return id > 0 ? rootView.findViewById(id) : null;

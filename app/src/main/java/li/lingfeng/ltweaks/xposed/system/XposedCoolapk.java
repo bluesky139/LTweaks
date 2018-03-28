@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -30,9 +29,9 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Callback;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.MarkView;
 import li.lingfeng.ltweaks.utils.ReflectedGlide;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
-import li.lingfeng.ltweaks.utils.SimpleFloatingButton;
 import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -49,7 +48,6 @@ public class XposedCoolapk extends XposedBase {
     private static final String MAIN_FRAGMENT = "com.coolapk.market.view.main.MainFragment";
     private static final String APP_MANAGER_ACTIVITY = "com.coolapk.market.view.appmanager.AppManagerActivity";
     private static final String THEME_ACTIVITY = "com.coolapk.market.view.theme.ThemeListActivity";
-    private static final String SETTINGS_ACTIVITY = "com.coolapk.market.view.settings.SettingsActivity";
     private static final String USER_SPACE_ACTIVITY = "com.coolapk.market.view.user.UserSpaceActivity";
     private static final String FAST_RETURN_VIEW = "com.coolapk.market.widget.FastReturnView";
     private static final String NIGHT_MODE_HELPER = "com.coolapk.market.util.NightModeHelper";
@@ -63,7 +61,7 @@ public class XposedCoolapk extends XposedBase {
     private View mPostButton;
     private View mFastReturnView;
     private SimpleDrawer mDrawerLayout;
-    private SimpleFloatingButton mFloatingButton;
+    private ImageView mPostButtonOnTopRight;
 
     private boolean mIsChangingNightMode = false;
 
@@ -81,7 +79,7 @@ public class XposedCoolapk extends XposedBase {
 
         findAndHookActivity(MAIN_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
                 mActivity = (Activity) param.thisObject;
                 mRootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
                 final int idContentView = ContextUtils.getIdId("content_view");
@@ -128,26 +126,35 @@ public class XposedCoolapk extends XposedBase {
                                 mFastReturnView = null;
                                 Logger.i("Remove mFastReturnView.");
                             }
+
+                            ViewGroup appBar = (ViewGroup) ViewUtils.findViewByName(mActivity, "app_bar");
+                            if (appBar != null && ViewUtils.findViewByType(appBar, MarkView.class) == null) {
+                                mPostButtonOnTopRight = (ImageView) ViewUtils.findViewByName(appBar, "menu_badge_icon");
+                                mPostButtonOnTopRight.setImageDrawable(ContextUtils.getDrawable("ic_add_white_24dp"));
+                                updatePostButtonFilter();
+                                ViewGroup parent = ((ViewGroup) mPostButtonOnTopRight.getParent());
+                                parent.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (mPostButton != null) {
+                                            Logger.i("Post button perform click.");
+                                            mPostButton.performClick();
+                                        }
+                                    }
+                                });
+                                View view = ViewUtils.findViewByName(parent, "menu_badge");
+                                if (view != null) {
+                                    parent.removeView(view);
+                                }
+                                parent.addView(new MarkView(mActivity));
+                                Logger.i("Add post button on top right.");
+                            }
                         } catch (Throwable e) {
                             Logger.e("onGlobalLayout error, " + e.getMessage());
                             Logger.stackTrace(e);
                         }
                     }
                 });
-
-                mFloatingButton = SimpleFloatingButton.make(mActivity);
-                Drawable drawable = ContextUtils.getDrawable("ic_add_white_24dp");
-                mFloatingButton.setImageDrawable(drawable);
-                mFloatingButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mPostButton != null) {
-                            Logger.i("Post button perform click.");
-                            mPostButton.performClick();
-                        }
-                    }
-                });
-                mFloatingButton.show();
             }
         });
 
@@ -162,10 +169,7 @@ public class XposedCoolapk extends XposedBase {
                 mPostButton   = null;
                 mFastReturnView = null;
                 mDrawerLayout = null;
-                if (mFloatingButton != null) {
-                    mFloatingButton.destroy();
-                    mFloatingButton = null;
-                }
+                mPostButtonOnTopRight = null;
             }
         });
 
@@ -180,20 +184,12 @@ public class XposedCoolapk extends XposedBase {
             }
         });
 
-        findAndHookActivity(MAIN_ACTIVITY, "dispatchTouchEvent", MotionEvent.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (mFloatingButton != null) {
-                    mFloatingButton.getActivityTouchEventListener().onDispatch((MotionEvent) param.args[0]);
-                }
-            }
-        });
-
         findAndHookMethod(ContextThemeWrapper.class, "setTheme", int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 ContextThemeWrapper themeWrapper = (ContextThemeWrapper) param.thisObject;
                 updateColorByTheme(themeWrapper.getTheme());
+                updatePostButtonFilter();
             }
         });
 
@@ -398,10 +394,6 @@ public class XposedCoolapk extends XposedBase {
 
             updateHeaderFilter();
         }
-        if (mFloatingButton != null) {
-            int color = ContextUtils.getColorFromTheme(theme, "colorPrimary");
-            mFloatingButton.setBackgroundColor(color);
-        }
     }
 
     private void updateHeaderFilter() {
@@ -422,5 +414,18 @@ public class XposedCoolapk extends XposedBase {
         mIsChangingNightMode = true;
         Object appTheme = XposedHelpers.callStaticMethod(findClass(APP_HOLDER), "getAppTheme");
         XposedHelpers.callMethod(appTheme, "checkAutoTheme", mActivity);
+    }
+
+    private void updatePostButtonFilter() {
+        if (mPostButtonOnTopRight == null) {
+            return;
+        }
+        Object appTheme = XposedHelpers.callStaticMethod(findClass(APP_HOLDER), "getAppTheme");
+        String themeId = (String) XposedHelpers.callMethod(appTheme, "getCurrentThemeId");
+        if ("white".equals(themeId) || "night".equals(themeId)) {
+            mPostButtonOnTopRight.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        } else {
+            mPostButtonOnTopRight.clearColorFilter();
+        }
     }
 }
