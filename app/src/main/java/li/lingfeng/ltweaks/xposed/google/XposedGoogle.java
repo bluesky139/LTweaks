@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +14,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.DrawerStruct;
+import li.lingfeng.ltweaks.utils.FinalWrapper;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
+import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
 import static li.lingfeng.ltweaks.utils.ContextUtils.getResId;
 
 /**
@@ -35,14 +39,53 @@ import static li.lingfeng.ltweaks.utils.ContextUtils.getResId;
 public class XposedGoogle extends XposedBase {
 
     private static final String MAIN_ACTIVITY = "com.google.android.apps.gsa.searchnow.SearchNowActivity";
+    private static final String MAIN_ACTIVITY2 = "com.google.android.apps.gsa.velour.dynamichosts.VelvetThemedDynamicHostActivity";
     private Map<Activity, HandleOneActivity> mActivities = new HashMap<>();
 
     @Override
     public void handleLoadPackage() throws Throwable {
-        findAndHookActivity(MAIN_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
+        hookMainActivity(MAIN_ACTIVITY);
+        hookMainActivity(MAIN_ACTIVITY2);
+
+        // This DrawerLayout is from app itself.
+        /*findAndHookMethod(ClassNames.DRAWER_LAYOUT, "closeDrawer", int.class, boolean.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(null);
+            }
+        });*/
+
+        findAndHookMethod(View.class, "setLayoutParams", ViewGroup.LayoutParams.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                Class cls = param.args[0].getClass();
+                if (cls != DrawerStruct.LayoutParams.class && cls.getName().startsWith("android.support.v4.widget.")) {
+                    View view = (View) param.thisObject;
+                    if (view.getContext() instanceof Activity) {
+                        Activity activity = (Activity) view.getContext();
+                        HandleOneActivity handleOneActivity = mActivities.get(activity);
+                        if (handleOneActivity != null && handleOneActivity.viewSetLayoutParams(view)) {
+                            param.setResult(null);
+                        }
+                    }
+                }
+            }
+        });
+
+        findAndHookMethod(ClassNames.DRAWER_LAYOUT, "setDrawerLockMode", int.class, int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                //Logger.d("setDrawerLockMode " + param.args[0]);
+                param.setResult(null);
+            }
+        });
+    }
+
+    private void hookMainActivity(String activityName) {
+        findAndHookActivity(activityName, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.i("SearchNowActivity onCreate.");
+                Logger.i("SearchNowActivity onCreate " + param.thisObject.hashCode());
                 if (!mActivities.containsKey(param.thisObject)) {
                     Activity activity = (Activity) param.thisObject;
                     mActivities.put(activity, new HandleOneActivity(activity));
@@ -50,14 +93,28 @@ public class XposedGoogle extends XposedBase {
             }
         });
 
-        findAndHookActivity(MAIN_ACTIVITY, "onDestroy", new XC_MethodHook() {
+        findAndHookActivity(activityName, "onDestroy", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.i("SearchNowActivity onDestroy.");
-                if (!mActivities.containsKey(param.thisObject)) {
-                    Activity activity = (Activity) param.thisObject;
-                    HandleOneActivity handleOneActivity = mActivities.remove(activity);
+                Logger.i("SearchNowActivity onDestroy " + param.thisObject.hashCode());
+                Activity activity = (Activity) param.thisObject;
+                HandleOneActivity handleOneActivity = mActivities.remove(activity);
+                if (handleOneActivity != null) {
                     handleOneActivity.onDestroy();
+                }
+            }
+        });
+
+        findAndHookActivity(activityName, "onBackPressed", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                Logger.i("SearchNowActivity onBackPressed.");
+                Activity activity = (Activity) param.thisObject;
+                HandleOneActivity handleOneActivity = mActivities.get(activity);
+                if (handleOneActivity != null) {
+                    if (handleOneActivity.onBackPressed()) {
+                        param.setResult(null);
+                    }
                 }
             }
         });
@@ -66,23 +123,28 @@ public class XposedGoogle extends XposedBase {
     private class HandleOneActivity {
 
         private Activity mActivity;
-        private View mNowTabs;
-        private View mFeed;
-        private View mUpcoming;
+        private ViewGroup mNowTabs;
+        private FinalWrapper<View> mFeed;
+        private FinalWrapper<View> mUpcoming;
         private ViewGroup mDrawerMenu;
-        private View mDrawerLayout;
-        private Method mMethodCloseDrawers;
+        private ViewGroup mDrawerLayout;
+        private View mNavView;
 
-        HandleOneActivity(Activity activity) {
+        HandleOneActivity(final Activity activity) {
             mActivity = activity;
-            final int idNowTabs = getResId("now_tabs", "id");
+            final int idNowTabs = getResId("lobby_tabs", "id");
 
-            View rootView = mActivity.findViewById(android.R.id.content);
+            final ViewGroup rootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
             rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     if (mNowTabs != null) {
+                        View view = mActivity.findViewById(idNowTabs);
+                        if (view != null) {
+                            mNowTabs = (ViewGroup) view;
+                        }
                         if (mNowTabs.getVisibility() != View.GONE) {
+                            traverseTabsAgain();
                             mNowTabs.setVisibility(View.GONE);
                             Logger.i("Set mNowTabs gone.");
                         }
@@ -92,12 +154,15 @@ public class XposedGoogle extends XposedBase {
                     try {
                         View view = mActivity.findViewById(idNowTabs);
                         if (view == null) {
+                            Logger.w("Can't find now tabs.");
                             return;
                         }
 
-                        mNowTabs = view;
-                        Logger.i("Got mNowTabs " + mNowTabs);
-                        handleWithNowTabs();
+                        Logger.i("Got mNowTabs " + view);
+                        if (handleWithNowTabs((ViewGroup) view)) {
+                            resizeDrawer();
+                            mNowTabs = (ViewGroup) view;
+                        }
                     } catch (Exception e) {
                         Logger.e("Can't handle with mNowTabs, " + e.getMessage());
                         Logger.stackTrace(e);
@@ -113,11 +178,40 @@ public class XposedGoogle extends XposedBase {
             mUpcoming = null;
             mDrawerMenu = null;
             mDrawerLayout = null;
-            mMethodCloseDrawers = null;
+            mNavView = null;
         }
 
-        private void handleWithNowTabs() throws Exception {
-            final int idStreamTab    = getResId("now_stream_tab", "id");
+        boolean onBackPressed() {
+            if (mDrawerLayout != null && (boolean) XposedHelpers.callMethod(mDrawerLayout, "isDrawerOpen", Gravity.LEFT)) {
+                Logger.i("Back is pressed for closing drawer.");
+                XposedHelpers.callMethod(mDrawerLayout, "closeDrawers");
+                return true;
+            }
+            return false;
+        }
+
+        boolean viewSetLayoutParams(View view) {
+            return view == mNavView;
+        }
+
+        private void resizeDrawer() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    final ViewGroup rootView = (ViewGroup) mActivity.findViewById(android.R.id.content);
+                    Class cls = findClass(ClassNames.DRAWER_LAYOUT);
+                    mDrawerLayout = (ViewGroup) ViewUtils.findViewByType(rootView, cls);
+                    mNavView = mDrawerLayout.getChildAt(1);
+                    mNavView.getLayoutParams().width = dp2px(280);
+                    mNavView.getLayoutParams().height = mDrawerLayout.getMeasuredHeight();
+                    mNavView.requestLayout();
+                    Logger.i("Nav view width is resized.");
+                }
+            }, 500);
+        }
+
+        private boolean handleWithNowTabs(ViewGroup nowTabs) throws Exception {
+            final int idStreamTab    = getResId("lobby_tab", "id");
             final int idDrawerMenu   = getResId("drawer_layout", "id");
             final int idDrawerEntry  = getResId("drawer_entry", "layout");
             final int idDrawerImage  = getResId("drawer_image_view", "id");
@@ -126,65 +220,52 @@ public class XposedGoogle extends XposedBase {
             final int idUpcomingIcon = getResId("lobby_tray_icon", "drawable");
             final int idFeedText     = getResId("now_interests_tab", "string");
             final int idUpcomingText = getResId("now_update_tab", "string");
-            final int idDrawerLayout = getResId("navigation_drawer_layout", "id");
 
-            traverseTabs(mNowTabs, idStreamTab, 0);
+            traverseTabs(nowTabs, idStreamTab, 0);
             if (mFeed == null || mUpcoming == null) {
-                Logger.e("Can't get mFeed or mUpcoming.");
-                return;
+                Logger.w("Can't get mFeed or mUpcoming.");
+                return false;
             }
 
             mDrawerMenu = (ViewGroup) mActivity.findViewById(idDrawerMenu);
             if (mDrawerMenu == null) {
-                Logger.e("Can't get mDrawerMenu.");
-                return;
+                Logger.w("Can't get mDrawerMenu.");
+                return false;
             }
+            Logger.i("Got mDrawerMenu " + mDrawerMenu);
 
             String feedText = mActivity.getString(idFeedText);
             String upcomingText = mActivity.getString(idUpcomingText);
             createDrawerItem(idDrawerEntry, idDrawerImage, idFeedIcon, idDrawerText, feedText, mFeed, 0);
             createDrawerItem(idDrawerEntry, idDrawerImage, idUpcomingIcon, idDrawerText, upcomingText, mUpcoming, 1);
-            mNowTabs.setVisibility(View.GONE);
-
-            mDrawerLayout = mActivity.findViewById(idDrawerLayout);
-            if (mDrawerLayout == null) {
-                Logger.e("Can't get mDrawerLayout.");
-                return;
-            }
-
-            Class clsDrawerLayout = XposedHelpers.findClass("android.support.v4.widget.DrawerLayout", lpparam.classLoader);
-            mMethodCloseDrawers = clsDrawerLayout.getDeclaredMethod("closeDrawers");
+            nowTabs.setVisibility(View.GONE);
+            return true;
         }
 
-        private void traverseTabs(View view, int id, int depth) {
-            if (!(view instanceof ViewGroup)) {
-                return;
+        private void traverseTabs(ViewGroup nowTabs, int id, int depth) {
+            View feed = nowTabs.getChildAt(0);
+            View upcoming = nowTabs.getChildAt(1);
+            if (mFeed == null) {
+                mFeed = new FinalWrapper<>(feed);
+            } else {
+                mFeed.set(feed);
             }
-
-            ViewGroup viewGroup = (ViewGroup) view;
-            for (int i = 0; i < viewGroup.getChildCount(); ++i) {
-                view = viewGroup.getChildAt(i);
-                if (view.getId() == id) {
-                    if (mFeed == null) {
-                        mFeed = view;
-                        Logger.i("Got mFeed " + mFeed);
-                        continue;
-                    } else {
-                        mUpcoming = view;
-                        Logger.i("Got mUpcoming " + mUpcoming);
-                    }
-                }
-
-                if (mFeed != null && mUpcoming != null) {
-                    return;
-                } else {
-                    traverseTabs(view, id, depth + 1);
-                }
+            if (mUpcoming == null) {
+                mUpcoming = new FinalWrapper<>(upcoming);
+            } else {
+                mUpcoming.set(upcoming);
             }
+        }
+
+        private void traverseTabsAgain() {
+            final int idStreamTab = getResId("now_stream_tab", "id");
+            mFeed = null;
+            mUpcoming = null;
+            traverseTabs(mNowTabs, idStreamTab, 0);
         }
 
         private void createDrawerItem(int idDrawerEntry, int idDrawerImage, int idIcon, int idDrawerText,
-                                      final String menuText, final View clickTab, int pos) {
+                                      final String menuText, final FinalWrapper<View> clickTab, final int pos) {
             FrameLayout layout = new FrameLayout(mActivity);
             View drawerEntry = LayoutInflater.from(mActivity).inflate(idDrawerEntry, layout, true);
             ImageView drawerImage = (ImageView) drawerEntry.findViewById(idDrawerImage);
@@ -200,13 +281,8 @@ public class XposedGoogle extends XposedBase {
                 @Override
                 public void onClick(View v) {
                     Logger.i(menuText + " is clicked.");
-                    clickTab.performClick();
-                    try {
-                        mMethodCloseDrawers.invoke(mDrawerLayout);
-                    } catch (Exception e) {
-                        Logger.e("Can't invoke mMethodCloseDrawers.");
-                        Logger.stackTrace(e);
-                    }
+                    clickTab.get().performClick();
+                    XposedHelpers.callMethod(mDrawerLayout, "closeDrawers");
                 }
             });
             Logger.i(menuText + " item in drawer is created.");

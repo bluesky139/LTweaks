@@ -17,6 +17,7 @@ public class ClassNames {
     public static final String TAB_LAYOUT_TAB_VIEW = "android.support.design.widget.TabLayout$TabView";
     public static final String CONSTRAINT_LAYOUT = "android.support.constraint.ConstraintLayout";
     public static final String BOTTOM_NAV_VIEW = "android.support.design.widget.BottomNavigationView";
+    public static final String DRAWER_LAYOUT = "android.support.v4.widget.DrawerLayout";
 
     public static final String ACTIVITY_MANAGER_SERVICE = "com.android.server.am.ActivityManagerService";
     public static final String ALARM_MANAGER_SERVICE = "com.android.server.AlarmManagerService";
