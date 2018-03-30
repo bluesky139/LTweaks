@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -292,10 +293,20 @@ public class ViewUtils {
                 .show();
     }
 
-    public static void showDialog(Context context, @StringRes int messageId, DialogInterface.OnClickListener positiveListener) {
+    public static void showDialog(Context context, @StringRes int messageId, final DialogInterface.OnClickListener positiveListener) {
         new AlertDialog.Builder(context)
                 .setMessage(messageId)
                 .setPositiveButton(ContextUtils.getLString(R.string.app_ok), positiveListener)
+                .setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_BACK && positiveListener != null) {
+                            positiveListener.onClick(dialog, AlertDialog.BUTTON_POSITIVE);
+                            return true;
+                        }
+                        return false;
+                    }
+                })
                 .show();
     }
 
