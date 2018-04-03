@@ -1,5 +1,7 @@
 package li.lingfeng.ltweaks.xposed.system;
 
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
@@ -33,6 +36,8 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedTextActions extends XposedBase {
 
     private static final String FLOATING_TOOLBAR = "com.android.internal.widget.FloatingToolbar";
+    private static final String EDITOR = "android.widget.Editor";
+    private static final String EDITOR_TEXT_ACTION_HANDLER = "android.widget.Editor$ProcessTextIntentActionsHandler";
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -98,5 +103,28 @@ public class XposedTextActions extends XposedBase {
                 }
             }
         });
+
+        // https://github.com/aosp-mirror/platform_frameworks_base/blob/oreo-release/core/java/android/widget/Editor.java#L6354
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            findAndHookMethod(EDITOR_TEXT_ACTION_HANDLER, "onInitializeMenu", Menu.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    Menu menu = (Menu) param.args[0];
+                    XposedHelpers.callMethod(param.thisObject, "loadSupportedActivities");
+                    List<ResolveInfo> supportedActivities = (List<ResolveInfo>) XposedHelpers.getObjectField(param.thisObject, "mSupportedActivities");
+                    int start = XposedHelpers.getStaticIntField(findClass(EDITOR), "MENU_ITEM_ORDER_PROCESS_TEXT_INTENT_ACTIONS_START");
+                    for (int i = 0; i < supportedActivities.size(); ++i) {
+                        final ResolveInfo resolveInfo = supportedActivities.get(i);
+                        Logger.d("Text action supported activity " + resolveInfo.activityInfo.name);
+                        menu.add(Menu.NONE, Menu.NONE,
+                                start + i,
+                                (CharSequence) XposedHelpers.callMethod(param.thisObject, "getLabel", resolveInfo))
+                                .setIntent((Intent) XposedHelpers.callMethod(param.thisObject, "createProcessTextIntentForResolveInfo", resolveInfo))
+                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    }
+                    param.setResult(null);
+                }
+            });
+        }
     }
 }
