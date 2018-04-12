@@ -104,6 +104,11 @@
         <ListPreference
             android:key="@string/key_quick_settings_tile_3g"
             android:title="@string/pref_quick_settings_tile_3g" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_quick_settings_brightness_by_volume_buttons"
+            android:title="@string/pref_quick_settings_brightness_by_volume_buttons"
+            android:summary="@string/pref_quick_settings_brightness_by_volume_buttons_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

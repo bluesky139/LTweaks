@@ -99,6 +99,7 @@
     <string name="key_quick_settings_tile_4g3g">key_quick_settings_tile_4g3g</string>
     <string name="key_quick_settings_tile_4g">key_quick_settings_tile_4g</string>
     <string name="key_quick_settings_tile_3g">key_quick_settings_tile_3g</string>
+    <string name="key_quick_settings_brightness_by_volume_buttons">key_quick_settings_brightness_by_volume_buttons</string>
     <string name="key_nav_bar_input_cursor_control">key_nav_bar_input_cursor_control</string>
     <string name="key_native_clipboard_fix_chrome">key_native_clipboard_fix_chrome</string>
     <string name="key_trust_agent_wifi_aps">key_google_smart_lock_with_wifi_aps</string>
