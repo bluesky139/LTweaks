@@ -208,7 +208,6 @@ Open source on github: \n
     <string name="pref_bilibili_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_bilibili_get_cover">获取封面</string>
     <string name="pref_bilibili_get_cover_summary">添加一个菜单项来获取封面</string>
-    <string name="pref_bilibili_light_desc_in_night">调亮夜间模式下的视频简介文本</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">分享链接</string>
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>
