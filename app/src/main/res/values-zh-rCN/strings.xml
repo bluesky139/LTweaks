@@ -336,13 +336,14 @@ Open source on github: \n
     <string name="text_actions_menu_add_custom">添加</string>
     <string name="text_actions_custom_title">菜单名</string>
     <string name="text_actions_menu_usage">使用说明</string>
-    <string name="text_actions_usage">
+    <string name="text_actions_usage">使用说明:\n
         ⋅ 勾选表示屏蔽.\n
-        ⋅ 长按并上下拖动进行排序.\n
+        ⋅ 长按并上下拖动进行排序，左右滑动进行删除.\n
         ⋅ 应用可额外添加一些菜单项, 这些菜单项不会默认列在此列表内, 你可以手动添加.\n
         ⋅ 此功能直接通过菜单文本进行比较, 如果你改了系统语言，你需要重新配置.
     </string>
     <string name="text_actions_rename">重命名</string>
+    <string name="text_actions_remove_custom_only">仅可删除自定义项.</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">识别图中二维码</string>

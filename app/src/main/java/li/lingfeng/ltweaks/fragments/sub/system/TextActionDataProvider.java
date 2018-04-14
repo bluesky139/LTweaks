@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -270,6 +271,23 @@ public class TextActionDataProvider extends ListCheckActivity.DataProvider {
     protected void onMove(int fromPosition, int toPosition) {
         Collections.swap(mActions, fromPosition, toPosition);
         save();
+    }
+
+    @Override
+    protected boolean allowSwipe() {
+        return true;
+    }
+
+    @Override
+    protected void onSwiped(int position) {
+        Action action = mActions.get(position);
+        if (action.type == Action.TYPE_CUSTOM) {
+            mActions.remove(position);
+            save();
+        } else {
+            Toast.makeText(mActivity, R.string.text_actions_remove_custom_only, Toast.LENGTH_SHORT).show();
+            notifyDataSetChanged();
+        }
     }
 
     @Override

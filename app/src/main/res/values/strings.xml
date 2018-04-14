@@ -349,13 +349,14 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="text_actions_menu_add_custom">Add Custom</string>
     <string name="text_actions_custom_title">Menu item name</string>
     <string name="text_actions_menu_usage">Usage</string>
-    <string name="text_actions_usage">
+    <string name="text_actions_usage">Usage:\n
         ⋅ Toggle on to block.\n
-        ⋅ Long click and drag to sort.\n
+        ⋅ Long click and drag to sort, swipe left or right to remove.\n
         ⋅ App can add additional menu items by itself, those are not listed here, you can add it manually.\n
-        ⋅ Comparison is based on name, you need reconfigure this list if system language changed.
+        ⋅ Comparison is based on name, you need reconfigure this list if system language changed.\n
     </string>
     <string name="text_actions_rename">Rename</string>
+    <string name="text_actions_remove_custom_only">Only custom items can be removed.</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">Scan QR Code in image</string>
