@@ -42,6 +42,10 @@
             android:key="@string/key_bilibili_get_cover"
             android:title="@string/pref_bilibili_get_cover"
             android:summary="@string/pref_bilibili_get_cover_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_bilibili_expand_desc"
+            android:title="@string/pref_bilibili_expand_desc" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_steam">

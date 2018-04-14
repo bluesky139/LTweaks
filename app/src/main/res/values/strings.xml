@@ -221,6 +221,7 @@ Open source on github: \n
     <string name="pref_bilibili_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_bilibili_get_cover">Get cover</string>
     <string name="pref_bilibili_get_cover_summary">Add a menu item to get cover</string>
+    <string name="pref_bilibili_expand_desc">Expand description by default</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">Share url</string>
     <string name="pref_steam_share_url_summary">Add a top right menu to use system share</string>
