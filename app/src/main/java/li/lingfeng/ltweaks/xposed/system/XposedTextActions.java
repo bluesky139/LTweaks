@@ -67,7 +67,9 @@ public class XposedTextActions extends XposedBase {
                 List<MenuItem> items = (List<MenuItem>) param.getResult();
                 for (int i = items.size() - 1; i >= 0; --i) {
                     MenuItem item = items.get(i);
-                    Triple<Integer, Boolean, String> triple = savedItemMap.get(item.getTitle().toString().toUpperCase());
+                    String title = item.getTitle().toString().toUpperCase();
+                    title = StringUtils.strip(title, "\u200F\u200E ");
+                    Triple<Integer, Boolean, String> triple = savedItemMap.get(title);
                     if (triple != null && triple.second) {
                         Logger.d("Remove floating menu " + item.getTitle());
                         items.remove(i);
@@ -78,10 +80,16 @@ public class XposedTextActions extends XposedBase {
                 Collections.sort(items, new Comparator<MenuItem>() {
                     @Override
                     public int compare(MenuItem i1, MenuItem i2) {
-                        Triple<Integer, Boolean, String> triple = savedItemMap.get(i1.getTitle().toString().toUpperCase());
+                        String title1 = i1.getTitle().toString().toUpperCase();
+                        title1 = StringUtils.strip(title1, "\u200F\u200E ");
+                        Triple<Integer, Boolean, String> triple = savedItemMap.get(title1);
                         Integer order1 = triple == null ? null : triple.first;
-                        triple = savedItemMap.get(i2.getTitle().toString().toUpperCase());
+
+                        String title2 = i2.getTitle().toString().toUpperCase();
+                        title2 = StringUtils.strip(title2, "\u200F\u200E ");
+                        triple = savedItemMap.get(title2);
                         Integer order2 = triple == null ? null : triple.first;
+
                         if (order1 == null && order2 == null) {
                             return 0;
                         }
@@ -96,7 +104,9 @@ public class XposedTextActions extends XposedBase {
                 });
 
                 for (MenuItem item : items) {
-                    Triple<Integer, Boolean, String> triple = savedItemMap.get(item.getTitle().toString().toUpperCase());
+                    String title = item.getTitle().toString().toUpperCase();
+                    title = StringUtils.strip(title, "\u200F\u200E ");
+                    Triple<Integer, Boolean, String> triple = savedItemMap.get(title);
                     if (triple != null && !StringUtils.isBlank(triple.third)) {
                         item.setTitle(triple.third);
                     }
