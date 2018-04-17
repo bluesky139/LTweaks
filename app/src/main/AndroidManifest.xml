@@ -70,6 +70,20 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.BilibiliCoverActivity" android:excludeFromRecents="true"
+            android:label="@string/bilibili_cover"
+            android:icon="@mipmap/ic_bilibili"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogActivityTheme"
+            android:taskAffinity="li.lingfeng.ltweaks.activities.BilibiliCoverActivity"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.DoubanMovieActivity"
             android:excludeFromRecents="true"
