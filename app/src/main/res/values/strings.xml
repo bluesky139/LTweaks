@@ -336,6 +336,8 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_category_display">Display</string>
     <string name="pref_display_light_amber_in_daylight">Light amber in daylight</string>
     <string name="pref_display_light_amber_in_daylight_summary">Color temperature is about 5500K\nFor Android 7.1+</string>
+    <string name="pref_display_min_brightness">Set minimum brightness</string>
+    <string name="pref_display_min_brightness_dialog_title">Default is %d, valid range 1-254</string>
 
     <!-- Text -->
     <string name="text_selectable">Selectable Text</string>

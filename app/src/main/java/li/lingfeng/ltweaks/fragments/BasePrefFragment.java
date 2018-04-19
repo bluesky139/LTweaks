@@ -168,10 +168,15 @@ public class BasePrefFragment extends PreferenceFragment
             for (Method method : changeMethods) {
                 try {
                     method.setAccessible(true);
-                    InvokeMethod(method, this, null, preference, newValue);
+                    Object ret = InvokeMethod(method, this, null, preference, newValue);
+                    if (Boolean.FALSE.equals(ret)) {
+                        Logger.e("onPreferenceChange invoke " + method.getName() + " return false.");
+                        return false;
+                    }
                 } catch (Exception e) {
                     Logger.e("Can't invoke preference change method " + method + ", " + e.getMessage());
                     Logger.stackTrace(e);
+                    return false;
                 }
             }
         }
@@ -213,14 +218,14 @@ public class BasePrefFragment extends PreferenceFragment
         return true;
     }
 
-    private void InvokeMethod(Method method, Object receiver, Extra extra, Object... args) throws InvocationTargetException, IllegalAccessException {
+    private Object InvokeMethod(Method method, Object receiver, Extra extra, Object... args) throws InvocationTargetException, IllegalAccessException {
         if (method.getParameterTypes().length == args.length) {
-            method.invoke(receiver, args);
+            return method.invoke(receiver, args);
         } else {
             Object[] params = new Object[args.length + 1];
             System.arraycopy(args, 0, params, 0, args.length);
             params[args.length] = extra != null ? extra : new Extra();
-            method.invoke(receiver, params);
+            return method.invoke(receiver, params);
         }
     }
 

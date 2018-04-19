@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
@@ -210,5 +212,29 @@ public class SystemPrefFragment extends BasePrefFragment {
     private void customizeLineageOSLiveDisplayTime(SwitchPreference preference, boolean enabled) {
         enablePreference(R.string.key_lineage_os_live_display_time_sunrise, enabled);
         enablePreference(R.string.key_lineage_os_live_display_time_sunset, enabled);
+    }
+
+    @PreferenceChange(prefs = R.string.key_display_min_brightness, refreshAtStart = true)
+    private boolean setMinBrightness(EditTextPreference preference, String intValue, Extra extra) {
+        if (extra.refreshAtStart) {
+            PowerManager powerManager = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+            try {
+                int defaultMinBrightness = (int) PowerManager.class.getDeclaredMethod("getMinimumScreenBrightnessSetting").invoke(powerManager);
+                preference.setDialogTitle(getString(R.string.pref_display_min_brightness_dialog_title, defaultMinBrightness));
+            } catch (Throwable e) {
+                Logger.e("Can't get default min brightness, " + e);
+            }
+        }
+        if (intValue.isEmpty()) {
+            preference.setSummary("");
+            return true;
+        }
+        int value = Integer.parseInt(intValue);
+        if (value > 0 && value < 255) {
+            preference.setSummary(intValue);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
