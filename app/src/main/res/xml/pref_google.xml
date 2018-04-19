@@ -28,6 +28,11 @@
             android:defaultValue="false"
             android:key="@string/key_google_keyboard_suggestion"
             android:title="@string/pref_google_keyboard_suggestion" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_google_overlay_search_to_browser"
+            android:title="@string/pref_google_overlay_search_to_browser"
+            android:summary="@string/pref_google_overlay_search_to_browser_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
