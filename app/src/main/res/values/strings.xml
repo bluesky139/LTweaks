@@ -358,6 +358,7 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
         ⋅ Long click and drag to sort, swipe left or right to remove.\n
         ⋅ App can add additional menu items by itself, those are not listed here, you can add it manually.\n
         ⋅ Comparison is based on name, you need reconfigure this list if system language changed.\n
+        ⋅ Name duplicated menu items will be removed after sorting and renaming.\n
     </string>
     <string name="text_actions_rename">Rename</string>
     <string name="text_actions_remove_custom_only">Only custom items can be removed.</string>

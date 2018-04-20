@@ -115,6 +115,21 @@ public class XposedTextActions extends XposedBase {
                     }
                 }
 
+                // Remove title duplicated menu items after sorting and renaming.
+                for (int i = items.size() - 1; i > 0; --i) {
+                    String title = items.get(i).getTitle().toString().toUpperCase();
+                    title = StringUtils.strip(title, "\u200F\u200E ");
+                    for (int j = i - 1; j >= 0; --j) {
+                        String title2 = items.get(j).getTitle().toString().toUpperCase();
+                        title2 = StringUtils.strip(title2, "\u200F\u200E ");
+                        if (title.equals(title2)) {
+                            Logger.d("Remove duplicated " + title);
+                            items.remove(i);
+                            break;
+                        }
+                    }
+                }
+
                 XposedHelpers.setAdditionalInstanceField(items, "mIsSorted", true);
             }
         });

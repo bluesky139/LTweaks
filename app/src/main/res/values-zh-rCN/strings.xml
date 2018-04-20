@@ -344,7 +344,8 @@ Open source on github: \n
         ⋅ 勾选表示屏蔽.\n
         ⋅ 长按并上下拖动进行排序，左右滑动进行删除.\n
         ⋅ 应用可额外添加一些菜单项, 这些菜单项不会默认列在此列表内, 你可以手动添加.\n
-        ⋅ 此功能直接通过菜单文本进行比较, 如果你改了系统语言，你需要重新配置.
+        ⋅ 此功能直接通过菜单文本进行比较, 如果你改了系统语言，你需要重新配置.\n
+        ⋅ 在排序和重命名之后相同菜单名的菜单项会被去掉.\n
     </string>
     <string name="text_actions_rename">重命名</string>
     <string name="text_actions_remove_custom_only">仅可删除自定义项.</string>
