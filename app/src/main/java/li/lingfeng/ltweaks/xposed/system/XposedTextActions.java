@@ -53,6 +53,9 @@ public class XposedTextActions extends XposedBase {
                 if (savedItems == null || savedItems.size() == 0) {
                     return;
                 }
+                if (XposedHelpers.getAdditionalInstanceField(param.getResult(), "mIsSorted") != null) {
+                    return;
+                }
 
                 final Map<String, Triple<Integer, Boolean, String>> savedItemMap = new HashMap<>(savedItems.size());
                 for (String savedItem : savedItems) {
@@ -111,6 +114,8 @@ public class XposedTextActions extends XposedBase {
                         item.setTitle(triple.third);
                     }
                 }
+
+                XposedHelpers.setAdditionalInstanceField(items, "mIsSorted", true);
             }
         });
 
