@@ -33,20 +33,29 @@ public class XposedCopyToShare extends XposedBase {
         findAndHookMethod(ClipboardManager.class, "setPrimaryClip", ClipData.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-                new Handler().postDelayed(new Runnable() {
+                if (mActivityRef == null) {
+                    return;
+                }
+                Activity activity = mActivityRef.get();
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (mActivityRef == null) {
-                            return;
-                        }
-                        Activity activity = mActivityRef.get();
-                        if (activity != null) {
-                            Logger.i("ClipboardManager setPrimaryClip " + param.args[0]);
-                            ClipData clipData = (ClipData) param.args[0];
-                            ShareUtils.shareClipWithSnackbar(activity, clipData);
-                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mActivityRef == null) {
+                                    return;
+                                }
+                                Activity activity = mActivityRef.get();
+                                if (activity != null) {
+                                    Logger.i("ClipboardManager setPrimaryClip " + param.args[0]);
+                                    ClipData clipData = (ClipData) param.args[0];
+                                    ShareUtils.shareClipWithSnackbar(activity, clipData);
+                                }
+                            }
+                        }, 500);
                     }
-                }, 500);
+                });
             }
         });
 
