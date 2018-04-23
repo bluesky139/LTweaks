@@ -1,17 +1,21 @@
 package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
-import android.content.ComponentCallbacks;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
-import org.apache.commons.lang3.ArrayUtils;
-
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -20,9 +24,9 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
-import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.Utils;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.utils.XposedUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -36,7 +40,12 @@ public class XposedYoutubeSetQuality extends XposedBase {
     private Set<XC_MethodHook.Unhook> mActivityAttachHook;
     private ClassTester mClassTester;
     private boolean mSetQualityHooked = false;
-    private boolean mNewVideo = false;
+    private int[] mCurrentQualities;
+    private WeakReference<Object> mItemClickRef; // gnb
+
+    private static final String WATCH_WHILE_ACTIVITY = "com.google.android.apps.youtube.app.WatchWhileActivity";
+    private WeakReference<TextView> mTitleViewRef;
+    private String mLastTitle;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -62,26 +71,16 @@ public class XposedYoutubeSetQuality extends XposedBase {
             mClassTester = new ClassTester();
             mClassTester.createEmptyResult();
             Utils.loadObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER, lpparam.classLoader);
-            Utils.loadObfuscatedClasses(mClassTester.mResultFragment, activity, "ltweaks_result_fragment", ClassTester._VER, lpparam.classLoader);
-            Logger.d("time cost aaa " + (System.currentTimeMillis() - startTime));
+            Logger.d("Time cost on obfuscated classes " + (System.currentTimeMillis() - startTime));
         } catch (Throwable e) {
             Logger.w("Can't load obfuscated classes, " + e);
             mClassTester = new ClassTester();
             mClassTester.startTest();
-            if (mClassTester.mResultItemClick == null || mClassTester.mResultFragment == null) {
+            if (mClassTester.mResultItemClick == null) {
                 return;
             }
             Utils.saveObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER);
-            Utils.saveObfuscatedClasses(mClassTester.mResultFragment, activity, "ltweaks_result_fragment", ClassTester._VER);
         }
-
-        XposedBridge.hookMethod(mClassTester.mResultFragment.mMethodNewVideo, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.i("New video.");
-                mNewVideo = true;
-            }
-        });
 
         XposedBridge.hookMethod(mClassTester.mResultItemClick.mMethodUpdateList, new XC_MethodHook() {
             @Override
@@ -93,21 +92,55 @@ public class XposedYoutubeSetQuality extends XposedBase {
 
                 Object[] qjqArray = (Object[]) param.args[0];
                 int index = (int) param.args[1];
-                Logger.d("Qualities are total " + qjqArray.length + ", set by index " + index);
-                if (mNewVideo) {
-                    mNewVideo = false;
-                    int quality = Prefs.instance().getIntFromString(R.string.key_youtube_set_quality, 0);
-                    if (quality > 0) {
-                        int[] qualities = ContextUtils.getIntArrayFromStringArray("youtube_quality_int", ContextUtils.createLTweaksContext());
-                        index = Math.min(qjqArray.length - 1, ArrayUtils.indexOf(qualities, quality));
-                        quality = qualities[index];
-                        Logger.i("Change quality at start, " + quality);
-                        mClassTester.mResultItemClick.mMethodSetQuality.invoke(
-                                mClassTester.mResultItemClick.mFieldToSetquality.get(param.thisObject),
-                                quality
-                        );
+                mCurrentQualities = new int[qjqArray.length];
+                Pattern pattern = Pattern.compile("\\d{3,}");
+                for (int i = 0; i < qjqArray.length; ++i) {
+                    Matcher matcher = pattern.matcher(qjqArray[i].toString());
+                    if (matcher.find()) {
+                        mCurrentQualities[i] = Integer.valueOf(matcher.group(0));
+                    } else {
+                        mCurrentQualities[i] = 0;
                     }
                 }
+                mItemClickRef = new WeakReference<>(param.thisObject);
+                Logger.d("Qualities are total " + mCurrentQualities.length + ", set by index " + index);
+
+            }
+        });
+
+        findAndHookActivity(WATCH_WHILE_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Activity activity = (Activity) param.thisObject;
+                final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
+                rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (mTitleViewRef != null) {
+                            TextView titleView = mTitleViewRef.get();
+                            if (titleView != null) {
+                                if (!titleView.getText().toString().equals(mLastTitle)) {
+                                    mLastTitle = titleView.getText().toString();
+                                    Logger.d("New video");
+                                    setQuality();
+                                }
+                                return;
+                            }
+                        }
+
+                        ViewGroup videoLayout = (ViewGroup) ViewUtils.findViewByName(rootView, "video_info_loading_layout");
+                        if (videoLayout != null) {
+                            View expandView = ViewUtils.findViewByName(videoLayout, "expand_click_target");
+                            if (expandView != null) {
+                                TextView titleView = (TextView) ViewUtils.findViewByName((ViewGroup) expandView.getParent(), "title");
+                                mTitleViewRef = new WeakReference<>(titleView);
+                                mLastTitle = titleView.getText().toString();
+                                Logger.d("New video.");
+                                setQuality();
+                            }
+                        }
+                    }
+                });
             }
         });
     }
@@ -127,6 +160,33 @@ public class XposedYoutubeSetQuality extends XposedBase {
         findAndHookMethod(x.getClass(), mClassTester.mResultItemClick.mMethodSetQuality.getName(), parameterTypesAndCallback);
     }
 
+    private void setQuality() {
+        try {
+            int maxQuality = Prefs.instance().getIntFromString(R.string.key_youtube_set_quality, 0);
+            if (maxQuality > 0) {
+                int quality = 0;
+                for (int i = mCurrentQualities.length - 1; i > 0; --i) {
+                    int _quality = mCurrentQualities[i];
+                    if (maxQuality >= _quality) {
+                        quality = _quality;
+                        break;
+                    }
+                }
+                if (quality > 0) {
+                    Logger.i("Change quality at start, " + quality);
+                    mClassTester.mResultItemClick.mMethodSetQuality.invoke(
+                            mClassTester.mResultItemClick.mFieldToSetquality.get(mItemClickRef.get()),
+                            quality
+                    );
+                } else {
+                    Logger.e("No quality match in current qualities?");
+                }
+            }
+        } catch (Throwable e) {
+            Logger.e("Can't set quality, " + e);
+        }
+    }
+
     // Obfuscated classes below are v12.23.60
     class ClassTester {
         int mErrorCount = 0;
@@ -134,7 +194,6 @@ public class XposedYoutubeSetQuality extends XposedBase {
         static final int CHECKED_ITEM_CLICK_FIELD_INT = 0x1; // int W
         static final int _VER = 1;
         ResultItemClick mResultItemClick;
-        ResultFragment mResultFragment;
 
         class Result {
             void makeSureAllChecked() throws Throwable {
@@ -186,14 +245,8 @@ public class XposedYoutubeSetQuality extends XposedBase {
             }
         }
 
-        class ResultFragment extends Result {
-            Class mClsFragment; // eho
-            Method mMethodNewVideo; // eho.V()
-        }
-
         void createEmptyResult() {
             mResultItemClick = new ResultItemClick();
-            mResultFragment = new ResultFragment();
         }
 
         void startTest() {
@@ -205,10 +258,7 @@ public class XposedYoutubeSetQuality extends XposedBase {
                     if (mResultItemClick == null) {
                         mResultItemClick = testClassImplementedItemClick(clsName);
                     }
-                    if (mResultFragment == null) {
-                        mResultFragment = testClassFragment(clsName);
-                    }
-                    if (mResultItemClick != null && mResultFragment != null) {
+                    if (mResultItemClick != null) {
                         break;
                     }
                 } catch (XposedHelpers.ClassNotFoundError e) {
@@ -223,7 +273,6 @@ public class XposedYoutubeSetQuality extends XposedBase {
                 }
             }
             Logger.i("Test class mResultItemClick " + mResultItemClick);
-            Logger.i("Test class mResultFragment " + mResultFragment);
             Logger.i("Test class cost time " + (System.currentTimeMillis() - startTime));
         }
 
@@ -272,29 +321,6 @@ public class XposedYoutubeSetQuality extends XposedBase {
             result.mMethodUpdateList = XposedHelpers.findMethodsByExactParameters(cls,
                     void.class, clsQualityArray, int.class)[0];
             result.mMethodUpdateList.setAccessible(true);
-
-            result.makeSureAllChecked();
-            return result;
-        }
-
-        ResultFragment testClassFragment(String name) throws Throwable {
-            Class cls = findClass(name);
-            if (!ComponentCallbacks.class.isAssignableFrom(cls)
-                    || !View.OnCreateContextMenuListener.class.isAssignableFrom(cls)) {
-                return null;
-            }
-            Logger.v("Test cls " + cls + " implemented ComponentCallbacks.");
-            ResultFragment result = new ResultFragment();
-            result.mClsFragment = cls;
-
-            Method[] methods = XposedHelpers.findMethodsByExactParameters(cls, boolean.class);
-            for (Method method : methods) {
-                if (Modifier.isPrivate(method.getModifiers()) && Modifier.isStatic(method.getModifiers())) {
-                    result.mMethodNewVideo = method;
-                    result.mMethodNewVideo.setAccessible(true);
-                    break;
-                }
-            }
 
             result.makeSureAllChecked();
             return result;
