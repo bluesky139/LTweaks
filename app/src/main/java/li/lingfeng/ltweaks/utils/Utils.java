@@ -162,33 +162,38 @@ public class Utils {
         SharedPreferences.Editor editor = prefs.edit().clear()
                 .putInt("versionCode", versionCode)
                 .putInt("_ver", _ver);
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            if (field.getType() == Class.class) {
-                Class c = (Class) field.get(object);
-                editor.putString(field.getName(), c.getName());
-            } else if (field.getType() == Field.class) {
-                Field f = (Field) field.get(object);
-                editor.putString(field.getName(), f.getDeclaringClass().getName() + " " + f.getName());
-            } else if (field.getType() == Method.class) {
-                Method m = (Method) field.get(object);
-                StringBuilder methodStrings = new StringBuilder();
-                Class[] paramTypes = m.getParameterTypes();
-                for (int i = 0; i < paramTypes.length; ++i) {
-                    if (i > 0) {
-                        methodStrings.append(' ');
+
+        if (object != null) {
+            Field[] fields = object.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.getType() == Class.class) {
+                    Class c = (Class) field.get(object);
+                    editor.putString(field.getName(), c.getName());
+                } else if (field.getType() == Field.class) {
+                    Field f = (Field) field.get(object);
+                    editor.putString(field.getName(), f.getDeclaringClass().getName() + " " + f.getName());
+                } else if (field.getType() == Method.class) {
+                    Method m = (Method) field.get(object);
+                    StringBuilder methodStrings = new StringBuilder();
+                    Class[] paramTypes = m.getParameterTypes();
+                    for (int i = 0; i < paramTypes.length; ++i) {
+                        if (i > 0) {
+                            methodStrings.append(' ');
+                        }
+                        methodStrings.append(paramTypes[i].getName());
                     }
-                    methodStrings.append(paramTypes[i].getName());
+                    editor.putString(field.getName(), m.getDeclaringClass().getName() + " " + m.getName()
+                            + (methodStrings.length() > 0 ? " " + methodStrings : ""));
                 }
-                editor.putString(field.getName(), m.getDeclaringClass().getName() + " " + m.getName()
-                        + (methodStrings.length() > 0 ? " " + methodStrings : ""));
             }
+        } else {
+            editor.putBoolean("_no_match", true);
         }
         editor.apply();
     }
 
-    public static void loadObfuscatedClasses(Object object, Context context, String prefName, int _ver, ClassLoader classLoader) throws Throwable {
+    public static boolean loadObfuscatedClasses(Object object, Context context, String prefName, int _ver, ClassLoader classLoader) throws Throwable {
         Logger.v("loadObfuscatedClasses " + prefName);
         SharedPreferences prefs = context.getSharedPreferences(prefName, 0);
         if (prefs.getInt("_ver", 0) != _ver) {
@@ -199,6 +204,10 @@ public class Utils {
         int existVersionCode = prefs.getInt("versionCode", 0);
         if (versionCode != existVersionCode) {
             throw new Exception("Version code not match.");
+        }
+
+        if (prefs.getBoolean("_no_match", false)) {
+            return false;
         }
 
         Field[] fields = object.getClass().getDeclaredFields();
@@ -240,5 +249,6 @@ public class Utils {
                 field.set(object, m);
             }
         }
+        return true;
     }
 }

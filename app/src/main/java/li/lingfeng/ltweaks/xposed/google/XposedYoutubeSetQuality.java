@@ -67,19 +67,24 @@ public class XposedYoutubeSetQuality extends XposedBase {
 
     private void startHook(Activity activity) throws Throwable {
         try {
-            long startTime = System.currentTimeMillis();
             mClassTester = new ClassTester();
             mClassTester.createEmptyResult();
-            Utils.loadObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER, lpparam.classLoader);
-            Logger.d("Time cost on obfuscated classes " + (System.currentTimeMillis() - startTime));
+            boolean match = Utils.loadObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER, lpparam.classLoader);
+            if (!match) {
+                Logger.e("No match obfuscated classes.");
+                return;
+            }
         } catch (Throwable e) {
             Logger.w("Can't load obfuscated classes, " + e);
+            long startTime = System.currentTimeMillis();
             mClassTester = new ClassTester();
             mClassTester.startTest();
+            Logger.d("Time cost on test obfuscated classes " + (System.currentTimeMillis() - startTime));
+
+            Utils.saveObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER);
             if (mClassTester.mResultItemClick == null) {
                 return;
             }
-            Utils.saveObfuscatedClasses(mClassTester.mResultItemClick, activity, "ltweaks_result_item_click", ClassTester._VER);
         }
 
         XposedBridge.hookMethod(mClassTester.mResultItemClick.mMethodUpdateList, new XC_MethodHook() {
