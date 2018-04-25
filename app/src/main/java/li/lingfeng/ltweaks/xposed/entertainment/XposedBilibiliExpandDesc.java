@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed.entertainment;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -46,7 +47,7 @@ public class XposedBilibiliExpandDesc extends XposedBase {
                                     @Override
                                     public void run() {
                                         try {
-                                            handleDesc(desc);
+                                            handleDesc(rootView, desc);
                                         } catch (Throwable e) {
                                             Logger.e("handleDesc error, " + e);
                                         }
@@ -68,7 +69,7 @@ public class XposedBilibiliExpandDesc extends XposedBase {
         });
     }
 
-    private void handleDesc(final View desc) {
+    private void handleDesc(ViewGroup rootView, final TextView desc) {
         Logger.i("Expand desc.");
         desc.performClick();
         Object listenerInfo = XposedHelpers.callMethod(desc, "getListenerInfo");
@@ -94,5 +95,8 @@ public class XposedBilibiliExpandDesc extends XposedBase {
                 desc.setOnClickListener(null);
             }
         });
+
+        // Set desc color to light a bit.
+        desc.setTextColor(Color.parseColor("#A3A3A3"));
     }
 }
