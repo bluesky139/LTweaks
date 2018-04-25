@@ -19,16 +19,20 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
 import li.lingfeng.ltweaks.utils.ViewUtils;
+import li.lingfeng.ltweaks.utils.XposedUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
@@ -47,6 +51,9 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
     private ListView mListView;
     private CheckedTextView mHomeTextView;
 
+    private TextView mNickView;
+    private boolean mHookedDynamicPageTab = false;
+
     @Override
     protected void handleLoadPackage() throws Throwable {
         findAndHookActivity(MAIN_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
@@ -59,8 +66,9 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
                     public void onGlobalLayout() {
                         try {
                             hookBottomBar(activity);
+                            tabClickToTopInDynamicPage(rootView);
                         } catch (Throwable e) {
-                            Logger.e("Can't hook bottom bar, " + e);
+                            Logger.e("Can't hook bottom bar or dynamic page, " + e);
                             Logger.stackTrace(e);
                         }
                     }
@@ -74,6 +82,8 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
                 mNavItems = null;
                 mListView = null;
                 mHomeTextView = null;
+                mNickView = null;
+                mHookedDynamicPageTab = false;
             }
         });
 
@@ -269,6 +279,37 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
                 bottomNav.setVisibility(View.GONE);
             }
             mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+    }
+
+    private void tabClickToTopInDynamicPage(ViewGroup rootView) {
+        if (mHookedDynamicPageTab) {
+            return;
+        }
+        if (mNickView == null) {
+            mNickView = (TextView) ViewUtils.findViewByName(rootView, "nick_name");
+        }
+        if (mNickView != null && "动态".equals(mNickView.getText().toString())) {
+            ViewGroup tabs = (ViewGroup) ViewUtils.findViewByName(rootView, "tabs");
+            List<View> tabRoots = ViewUtils.findAllViewByName(tabs, "tab_root");
+            View.OnClickListener listener = ViewUtils.getViewClickListener(tabRoots.get(1));
+            findAndHookMethod(listener.getClass(), "onClick", View.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    View view = (View) param.args[0];
+                    int intValue = ((Integer) view.getTag()).intValue();
+                    Object pagerSlidingTabStrip = XposedUtils.getSurroundingThis(param.thisObject);
+                    Field field = XposedHelpers.findFirstFieldByExactType(pagerSlidingTabStrip.getClass(), findClass(ClassNames.VIEW_PAGER));
+                    Object viewPager = field.get(pagerSlidingTabStrip);
+                    int current = (int) XposedHelpers.callMethod(viewPager, "getCurrentItem");
+                    if (current == intValue) {
+                        Logger.i("Click on same dynamic tab, go to top.");
+                        ((View) mNavItems[2].mClickObj).performClick();
+                    }
+                }
+            });
+            mHookedDynamicPageTab = true;
+            Logger.i("Hooked dynamic page tab.");
         }
     }
 }

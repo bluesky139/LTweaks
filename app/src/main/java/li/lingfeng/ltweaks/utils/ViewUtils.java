@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.R;
 
 /**
@@ -356,5 +357,10 @@ public class ViewUtils {
             Logger.e("Can't getWindowHeightWithNavigator, " + e);
             return getWindowHeight(activity);
         }
+    }
+
+    public static View.OnClickListener getViewClickListener(View view) {
+        Object listenerInfo = XposedHelpers.callMethod(view, "getListenerInfo");
+        return (View.OnClickListener) XposedHelpers.getObjectField(listenerInfo, "mOnClickListener");
     }
 }
