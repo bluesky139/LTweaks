@@ -2,6 +2,7 @@ package li.lingfeng.ltweaks.xposed.system;
 
 import android.os.Build;
 import android.os.Process;
+import android.telephony.SubscriptionInfo;
 import android.telephony.TelephonyManager;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -35,6 +36,15 @@ public class XposedDenyAccessPhoneNumber extends XposedBase {
                     param.setResult(null);
                 }
             });
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                findAndHookMethod(SubscriptionInfo.class, "getNumber", new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        param.setResult(null);
+                    }
+                });
+            }
         }
     }
 }
