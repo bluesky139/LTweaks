@@ -121,6 +121,7 @@
     <string name="key_phone_deny_access_phone_number">key_phone_deny_access_phone_number</string>
     <string name="key_display_light_amber_in_daylight">key_display_light_amber_in_daylight</string>
     <string name="key_display_min_brightness">key_display_min_brightness</string>
+    <string name="key_web_search_to_browser">key_web_search_to_browser</string>
 
     <!--Donate-->
     <string name="key_donate_alipay">key_donate_alipay</string>

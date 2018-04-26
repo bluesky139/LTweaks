@@ -230,4 +230,13 @@
             android:key="@string/key_display_min_brightness"
             android:title="@string/pref_display_min_brightness" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_web">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_web_search_to_browser"
+            android:title="@string/pref_web_search_to_browser"
+            android:summary="@string/pref_web_search_to_browser_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>
