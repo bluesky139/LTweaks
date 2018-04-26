@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "li.lingfeng.ltweaks"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 25
         versionName '1.18.1'

@@ -211,6 +211,8 @@ Open source on github: \n
     <string name="pref_bilibili_get_cover">获取封面</string>
     <string name="pref_bilibili_get_cover_summary">通过分享链接来调用此功能</string>
     <string name="pref_bilibili_expand_desc">默认展开视频描述</string>
+    <string name="pref_bilibili_darken_reading_page_loading">修复夜间模式下进入文章页时的闪屏问题</string>
+    <string name="pref_bilibili_darken_reading_page_loading_summary">夜间模式下进入文章页面时，会先调为白天模式，然后瞬间再返回夜间模式. 尝试修复此问题</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">分享链接</string>
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>

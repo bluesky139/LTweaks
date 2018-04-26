@@ -67,6 +67,7 @@
     <string name="key_bilibili_get_cover">key_bilibili_get_cover</string>
     <!-- key_bilibili_light_desc_in_night -->
     <string name="key_bilibili_expand_desc">key_bilibili_expand_desc</string>
+    <string name="key_bilibili_darken_reading_page_loading">key_bilibili_darken_reading_page_loading</string>
     <string name="key_steam_share_url">key_steam_share_url</string>
     <string name="key_steam_database">key_steam_database</string>
     <string name="key_steam_go_top">key_steam_go_top</string>
