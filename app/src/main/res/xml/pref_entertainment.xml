@@ -48,9 +48,9 @@
             android:title="@string/pref_bilibili_expand_desc" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_bilibili_darken_reading_page_loading"
-            android:title="@string/pref_bilibili_darken_reading_page_loading"
-            android:summary="@string/pref_bilibili_darken_reading_page_loading_summary" />
+            android:key="@string/key_bilibili_darken"
+            android:title="@string/pref_bilibili_darken"
+            android:summary="@string/pref_bilibili_darken_summary" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_steam">

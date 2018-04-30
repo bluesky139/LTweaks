@@ -25,7 +25,7 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = {
         PackageNames.BILIBILI,
         PackageNames.BILIBILI_IN
-}, prefs = R.string.key_bilibili_darken_reading_page_loading)
+}, prefs = R.string.key_bilibili_darken)
 public class XposedBilibiliDarkenReadingPageLoading extends XposedBase {
 
     private boolean mHookedJsInjectionClass = false;
