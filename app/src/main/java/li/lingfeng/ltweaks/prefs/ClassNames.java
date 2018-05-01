@@ -1,5 +1,7 @@
 package li.lingfeng.ltweaks.prefs;
 
+import android.os.Build;
+
 /**
  * Created by smallville on 2017/2/11.
  */
@@ -27,7 +29,8 @@ public class ClassNames {
     public static final String ACTIVITY_INTENT_RESOLVER = "com.android.server.pm.PackageManagerService$ActivityIntentResolver";
     public static final String PHONE_WINDOW = "com.android.internal.policy.PhoneWindow";
 
-    public static final String QS_TILE_HOST = "com.android.systemui.statusbar.phone.QSTileHost";
+    public static final String QS_TILE_HOST = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
+            "com.android.systemui.statusbar.phone.QSTileHost" : "com.android.systemui.qs.QSTileHost";
     public static final String INTENT_TILE = "com.android.systemui.qs.tiles.IntentTile";
     public static final String RADIO_INFO = "com.android.settings.RadioInfo";
     public static final String DEVELOPMENT_SETTINGS = "com.android.settings.DevelopmentSettings";
