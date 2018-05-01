@@ -101,7 +101,11 @@ public class SharedPreferences implements android.content.SharedPreferences {
 
     public int getIntFromString(String key, int defValue) {
         String s = getString(key, String.valueOf(defValue));
-        return Integer.parseInt(s);
+        try {
+            return Integer.parseInt(s);
+        } catch (Throwable e) {
+            return defValue;
+        }
     }
 
     public int getIntFromString(@StringRes int key, int defValue) {

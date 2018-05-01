@@ -17,6 +17,7 @@ import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import li.lingfeng.ltweaks.lib.XposedLoad;
+import li.lingfeng.ltweaks.lib.ZygoteLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -27,6 +28,7 @@ import li.lingfeng.ltweaks.utils.Logger;
 
 public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPackage {
 
+    private Set<Class<? extends IXposedHookZygoteInit>> mZygoteModules = new HashSet<>();
     private Set<Class<? extends XposedBase>> mModulesForAll = new HashSet<>(); // These modules are loaded for all packages.
     private Map<String, Set<Class<? extends XposedBase>>> mModules = new HashMap<>();     // package name -> set of Xposed class implemented IXposedHookLoadPackage.
     private Map<Class<?>, Set<String>> mModulePrefs = new HashMap<>(); // Xposed class -> set of enalbed pref.
@@ -34,6 +36,10 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
 
     private boolean isEmptyModules() {
         return  mModules.size() == 0;
+    }
+
+    protected void addZygoteModule(Class<? extends IXposedHookZygoteInit> cls) {
+        mZygoteModules.add(cls);
     }
 
     protected void addModuleForAll(Class<? extends XposedBase> cls) {
@@ -66,6 +72,7 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         return mModulePrefs.get(cls);
     }
 
+    protected abstract void addZygoteModules();
     protected abstract void addModulesForAll();
     protected abstract void addModules();
     protected abstract void addModulePrefs();
@@ -80,10 +87,32 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         Prefs.zygotePrefs.makeWorldReadable();
 
         if (isEmptyModules()) {
+            addZygoteModules();
             addModulesForAll();
             addModules();
             addModulePrefs();
         }
+
+        Prefs.useZygotePreferences();
+        for (Class<?> cls : mZygoteModules) {
+            try {
+                ZygoteLoad zygoteLoad = cls.getAnnotation(ZygoteLoad.class);
+                List<Integer> enabledPrefs = new ArrayList<>();
+                for (int pref : zygoteLoad.prefs()) {
+                    if (Prefs.instance().getBoolean(pref, false)) {
+                        enabledPrefs.add(pref);
+                    }
+                }
+                if (enabledPrefs.size() > 0 || zygoteLoad.prefs().length == 0) {
+                    IXposedHookZygoteInit module = (IXposedHookZygoteInit) cls.newInstance();
+                    module.initZygote(startupParam);
+                }
+            } catch (Throwable e) {
+                Logger.e("Can't load zygote module, " + e);
+                Logger.stackTrace(e);
+            }
+        }
+        Prefs.clearZygotePreferences();
     }
 
     @Override

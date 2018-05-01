@@ -47,11 +47,19 @@ public class Prefs {
         return new SharedPreferences(MyApplication.instance(), pref);
     }
 
+    public static SharedPreferences createZygotePreferences() {
+        return new SharedPreferences(MyApplication.instance(), zygotePrefs);
+    }
+
     public static void useZygotePreferences() {
         if (instance_ != null) {
             Logger.w("useZygotePreferences, but instance exists.");
         }
-        instance_ = new SharedPreferences(MyApplication.instance(), zygotePrefs);
+        instance_ = createZygotePreferences();
+    }
+
+    public static void clearZygotePreferences() {
+        instance_ = null;
     }
 
     private static SharedPreferences createSharedPreferences() {

@@ -1,32 +1,26 @@
 package li.lingfeng.ltweaks.xposed.system;
 
-import android.os.PowerManager;
+import android.content.res.XResources;
 
-import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.IXposedHookZygoteInit;
 import li.lingfeng.ltweaks.R;
-import li.lingfeng.ltweaks.lib.XposedLoad;
-import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.lib.ZygoteLoad;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.Logger;
-import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
  * Created by smallville on 2018/4/19.
  */
-@XposedLoad(packages = PackageNames.ANDROID_SYSTEM_UI, prefs = {})
-public class XposedMinBrightness extends XposedBase {
+@ZygoteLoad(prefs = {})
+public class XposedMinBrightness implements IXposedHookZygoteInit {
+
     @Override
-    protected void handleLoadPackage() throws Throwable {
-        final int minBrightness = Prefs.instance().getIntFromString(R.string.key_display_min_brightness, 0);
+    public void initZygote(StartupParam startupParam) throws Throwable {
+        int minBrightness = Prefs.instance().getIntFromString(R.string.key_display_min_brightness, 0);
         if (minBrightness <= 0) {
             return;
         }
-        findAndHookMethod(PowerManager.class, "getMinimumScreenBrightnessSetting", new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                param.setResult(minBrightness);
-                Logger.v("getMinimumScreenBrightnessSetting return " + minBrightness);
-            }
-        });
+        Logger.i("Set min brightness " + minBrightness);
+        XResources.setSystemWideReplacement("android", "integer", "config_screenBrightnessSettingMinimum", minBrightness);
     }
 }
