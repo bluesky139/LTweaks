@@ -74,4 +74,11 @@
             android:title="@string/pref_push_bullet_share_to_all"
             android:summary="@string/pref_push_bullet_share_to_all_summary" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_ttrss">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_ttrss_disable_article_pager"
+            android:title="@string/pref_ttrss_disable_article_pager" />
+    </PreferenceCategory>
 </PreferenceScreen>

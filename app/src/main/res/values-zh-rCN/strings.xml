@@ -191,6 +191,8 @@ Open source on github: \n
     <string name="pref_category_push_bullet">Pushbullet</string>
     <string name="pref_push_bullet_share_to_all">默认推送内容到所有设备</string>
     <string name="pref_push_bullet_share_to_all_summary">如果你只想每次一键推送内容到所有设备.\n同时也可以关掉 direct share</string>
+    <string name="pref_category_ttrss">Tiny Tiny RSS</string>
+    <string name="pref_ttrss_disable_article_pager">禁止文章页面左右滑动切换</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>

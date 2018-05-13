@@ -19,6 +19,15 @@ android {
         }
     }
     productFlavors {
+        main {
+        }
+        selfUse {
+        }
+    }
+    sourceSets {
+        selfUse {
+            java.srcDirs = ['src/main/java', 'src/main/javaSelfUse']
+        }
     }
 }
 
