@@ -80,5 +80,9 @@
             android:defaultValue="false"
             android:key="@string/key_ttrss_disable_article_pager"
             android:title="@string/pref_ttrss_disable_article_pager" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_ttrss_open_link_in_browser_menu"
+            android:title="@string/pref_ttrss_open_link_in_browser_menu" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -206,6 +206,10 @@ Open source on github: \n
     <string name="pref_push_bullet_share_to_all_summary">Then you can disable direct share in Pushbullet settings if you only want to push everything to all devices with one tap</string>
     <string name="pref_category_ttrss">Tiny Tiny RSS</string>
     <string name="pref_ttrss_disable_article_pager">Disable article pager</string>
+    <string name="pref_ttrss_open_link_in_browser_menu">Add menu \"Open link in browser\"</string>
+
+    <!-- TTRss -->
+    <string name="ttrss_open_in_browser">Open In Browser</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>

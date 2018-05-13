@@ -53,6 +53,7 @@
     <string name="key_qq_prevent_audio_panel">key_qq_prevent_audio_panel</string>
     <string name="key_push_bullet_share_to_all">key_push_bullet_share_to_all</string>
     <string name="key_ttrss_disable_article_pager">key_ttrss_disable_article_pager</string>
+    <string name="key_ttrss_open_link_in_browser_menu">key_ttrss_open_link_in_browser_menu</string>
 
     <!--Entertainment-->
     <string name="key_douban_movie_url">key_douban_movie_url</string>
