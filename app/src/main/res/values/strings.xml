@@ -207,9 +207,11 @@ Open source on github: \n
     <string name="pref_category_ttrss">Tiny Tiny RSS</string>
     <string name="pref_ttrss_disable_article_pager">Disable article pager</string>
     <string name="pref_ttrss_open_link_in_browser_menu">Add menu \"Open link in browser\"</string>
+    <string name="pref_ttrss_refresh_menu">Put refresh button to top right menu</string>
 
     <!-- TTRss -->
     <string name="ttrss_open_in_browser">Open In Browser</string>
+    <string name="ttrss_refresh">Refresh</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">Entertainment</string>

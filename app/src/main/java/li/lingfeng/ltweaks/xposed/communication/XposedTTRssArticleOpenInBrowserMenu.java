@@ -29,10 +29,14 @@ public class XposedTTRssArticleOpenInBrowserMenu extends XposedBase {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 Menu menu = (Menu) XposedHelpers.getObjectField(param.thisObject, "m_menu");
-                if (menu.findItem(ITEM_ID) == null) {
+                if (menu != null && menu.findItem(ITEM_ID) == null) {
                     Logger.i("Create open in browser menu.");
                     int idMenuGroup = ContextUtils.getIdId("menu_group_article");
-                    menu.add(idMenuGroup, ITEM_ID, Menu.NONE, ContextUtils.getLString(R.string.ttrss_open_in_browser));
+                    MenuItem menuItem = menu.add(idMenuGroup, ITEM_ID, Menu.NONE, ContextUtils.getLString(R.string.ttrss_open_in_browser));
+                    menuItem.setIcon(ContextUtils.getDrawable("ic_action_web_site"));
+                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+                    menu.findItem(ContextUtils.getIdId("toggle_published")).setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
                 }
             }
         });

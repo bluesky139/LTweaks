@@ -194,9 +194,11 @@ Open source on github: \n
     <string name="pref_category_ttrss">Tiny Tiny RSS</string>
     <string name="pref_ttrss_disable_article_pager">禁止文章页面左右滑动切换</string>
     <string name="pref_ttrss_open_link_in_browser_menu">添加菜单 \"使用浏览器打开\"</string>
+    <string name="pref_ttrss_refresh_menu">把刷新按钮放到右上角菜单</string>
 
     <!-- TTRss -->
     <string name="ttrss_open_in_browser">使用浏览器打开</string>
+    <string name="ttrss_refresh">刷新</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>
