@@ -14,6 +14,7 @@ public class ClassNames {
     public static final String APP_COMPAT_ACTIVITY = "android.support.v7.app.AppCompatActivity";
     public static final String FRAGMENT_ACTIVITY = "android.support.v4.app.FragmentActivity";
     public static final String TOOLBAR = "android.support.v7.widget.Toolbar";
+    public static final String TOOLBAR_ACTIONBAR = "android.support.v7.app.ToolbarActionBar";
     public static final String VIEW_PAGER = "android.support.v4.view.ViewPager";
     public static final String REBIND_REPORTING_HOLDER = "android.support.v7.widget.RebindReportingHolder";
     public static final String TAB_LAYOUT_TAB_VIEW = "android.support.design.widget.TabLayout$TabView";
