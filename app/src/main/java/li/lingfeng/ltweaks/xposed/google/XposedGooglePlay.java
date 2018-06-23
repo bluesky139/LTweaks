@@ -1,8 +1,6 @@
 package li.lingfeng.ltweaks.xposed.google;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -39,7 +37,7 @@ public class XposedGooglePlay extends XposedBase {
     private static String MENU_APP_INFO;
     private HashMap<String, String> markets;
 
-    private Field fNavigationMgr;
+    private Method mGetNavigationMgr;
     private Method mGetCurrentDoc;
     private Field fDocv2;
 
@@ -94,7 +92,7 @@ public class XposedGooglePlay extends XposedBase {
                         ContextUtils.searchInMobilism(activity, title);
                     } else {
                         Logger.i("Menu is clicked .");
-                        Object navigationMgr = fNavigationMgr.get(param.thisObject);
+                        Object navigationMgr = mGetNavigationMgr.invoke(param.thisObject);
                         Object doc = mGetCurrentDoc.invoke(navigationMgr);
 
                         Object docv2 = fDocv2.get(doc);
@@ -154,17 +152,18 @@ public class XposedGooglePlay extends XposedBase {
         });
 
         Class clsMainActivity = lpparam.classLoader.loadClass("com.google.android.finsky.activities.MainActivity");
-        Field[] fields = clsMainActivity.getDeclaredFields();
-        for (Field f : fields) {
-            if (f.getType().getName().startsWith("com.google.android.finsky.navigationmanager.")) {
-                fNavigationMgr = f;
-                fNavigationMgr.setAccessible(true);
-                Logger.i("Got fNavigationMgr " + f.getType().getName());
+        Method[] methods = clsMainActivity.getDeclaredMethods();
+        for (Method m : methods) {
+            if (Modifier.isPublic(m.getModifiers())
+                    && m.getReturnType().getName().startsWith("com.google.android.finsky.navigationmanager.")
+                    && m.getParameterTypes().length == 0) {
+                mGetNavigationMgr = m;
+                Logger.i("Got mGetNavigationMgr " + m);
                 break;
             }
         }
 
-        Method[] methods = fNavigationMgr.getType().getDeclaredMethods();
+        methods = mGetNavigationMgr.getReturnType().getDeclaredMethods();
         Class clsDocument = lpparam.classLoader.loadClass("com.google.android.finsky.dfemodel.Document");
         if (clsDocument == null) {
             clsDocument = lpparam.classLoader.loadClass("com.google.android.finsky.api.model.Document");
@@ -178,7 +177,7 @@ public class XposedGooglePlay extends XposedBase {
             }
         }
 
-        fields = clsDocument.getDeclaredFields();
+        Field[] fields = clsDocument.getDeclaredFields();
         List<Field> docv2List = new ArrayList<>();
         for (Field f : fields) {
             if (!Modifier.isStatic(f.getModifiers()) && f.getType() != clsDocument && f.getType().getName().startsWith("com.google.android.finsky.") ) {
