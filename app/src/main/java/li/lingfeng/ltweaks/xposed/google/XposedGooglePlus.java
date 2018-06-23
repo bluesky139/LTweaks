@@ -16,11 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -32,7 +30,10 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
+
+import static li.lingfeng.ltweaks.utils.ContextUtils.dp2px;
 
 /**
  * Created by smallville on 2017/1/4.
@@ -51,8 +52,6 @@ public class XposedGooglePlus extends XposedBase {
     private View tabBarCounter;
 
     private View accountView;
-    private ListView barList;
-    private BarListAdapter barListAdapter;
     private ImageView counter;
 
     private boolean done = false;
@@ -112,7 +111,7 @@ public class XposedGooglePlus extends XposedBase {
                 Logger.i("Add menu \"Refresh\"");
                 Menu menu = (Menu) param.args[0];
                 refreshMenu = menu.add(Menu.NONE, Menu.NONE, 1000, "Refresh");
-                refreshMenu.setIcon(ContextUtils.getResId("quantum_ic_refresh_white_24", "drawable"));
+                refreshMenu.setIcon(ContextUtils.getResId("quantum_ic_refresh_grey600_24", "drawable"));
                 refreshMenu.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
         });
@@ -144,8 +143,6 @@ public class XposedGooglePlus extends XposedBase {
                 newPostsButton = null;
                 refreshMenu = null;
                 accountView = null;
-                barList = null;
-                barListAdapter = null;
                 counter = null;
                 done = false;
             }
@@ -237,143 +234,104 @@ public class XposedGooglePlus extends XposedBase {
     }
 
     private void createBarList() {
-        barListAdapter = new BarListAdapter();
-        View one = barListAdapter.getView(0, null, barList);
-        one.measure(0, 0);
-        int height = one.getMeasuredHeight();
-
-        barList = new ListView(XposedGooglePlus.this.activity);
-        barList.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * barListAdapter.getCount()));
-        barList.setHeaderDividersEnabled(false);
-        barList.setFooterDividersEnabled(false);
-        barList.setDividerHeight(0);
-        barList.setAdapter(barListAdapter);
-        //barList.setOnItemClickListener(barListAdapter);
-        final ViewGroup drawerListContainer = (ViewGroup) accountView.getParent();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                drawerListContainer.addView(barList, drawerListContainer.indexOfChild(accountView) + 1);
+                final ViewGroup drawerListContainer = (ViewGroup) accountView.getParent();
+                View view = ViewUtils.findViewByName(drawerListContainer, "nav_menu_item_text");
+                ViewGroup viewGroup = (ViewGroup) view.getParent();
+                int height = viewGroup.getHeight();
+                Logger.d("One height " + height);
+
+                LinearLayout listLayout = new LinearLayout(activity);
+                listLayout.setOrientation(LinearLayout.VERTICAL);
+                for (int i = 0; i < tabButtons.length; ++i) {
+                    View itemView = createListItem(i);
+                    listLayout.addView(itemView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+                }
+                drawerListContainer.addView(listLayout, drawerListContainer.indexOfChild(accountView) + 1);
             }
         }, 1000);
-
         done = true;
     }
 
-    private class BarListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    public View createListItem(final int position) {
+        int layoutId = activity.getResources().getIdentifier("nav_item", "layout", "com.google.android.apps.plus");
+        View view = LayoutInflater.from(activity).inflate(layoutId, null);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                activity.getResources().getDimensionPixelSize(ContextUtils.getDimenId("nav_item_height"))));
+        int titleId = activity.getResources().getIdentifier("nav_menu_item_text", "id", "com.google.android.apps.plus");
+        TextView title = (TextView) view.findViewById(titleId);
+        title.setText(tabButtons[position].getText());
 
-        View[] views = new View[tabButtons.length];
-
-        @Override
-        public int getCount() {
-            return tabButtons.length;
+        String strDrwable = null;
+        switch (position)
+        {
+            case 0:
+                strDrwable = "quantum_ic_home_grey600_24";
+                break;
+            case 1:
+                strDrwable = "quantum_ic_google_collections_grey600_24";
+                break;
+            case 2:
+                strDrwable = "quantum_ic_communities_grey600_24";
+                break;
+            case 3:
+                strDrwable = "quantum_ic_notifications_grey600_24";
+                break;
+        }
+        if (strDrwable != null) {
+            int iconDrawableId = activity.getResources().getIdentifier(strDrwable, "drawable", "com.google.android.apps.plus");
+            Drawable icon = activity.getResources().getDrawable(iconDrawableId);
+            icon.setBounds(0, 0, icon.getMinimumWidth(), icon.getMinimumHeight());
+            title.setCompoundDrawables(icon, null, null, null);
         }
 
-        @Override
-        public Object getItem(int position) {
-            return tabButtons[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (views[position] != null)
-                return views[position];
-
-            int layoutId = activity.getResources().getIdentifier("navigation_item", "layout", "com.google.android.apps.plus");
-            View view = LayoutInflater.from(activity).inflate(layoutId, barList, false);
-            int titleId = activity.getResources().getIdentifier("navigation_item_name", "id", "com.google.android.apps.plus");
-            TextView title = (TextView) view.findViewById(titleId);
-            title.setText(tabButtons[position].getText());
-
-            String strDrwable = null;
-            switch (position)
-            {
-                case 0:
-                    strDrwable = "quantum_ic_home_grey600_24";
-                    break;
-                case 1:
-                    strDrwable = "quantum_ic_google_collections_grey600_24";
-                    break;
-                case 2:
-                    strDrwable = "quantum_ic_communities_grey600_24";
-                    break;
-                case 3:
-                    strDrwable = "quantum_ic_notifications_grey600_24";
-                    break;
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onBackPressed();
+                if (position != 3)
+                    tabButtons[position].performClick();
+                else
+                    ((View) tabButtons[position].getParent()).performClick();
             }
-            if (strDrwable != null) {
-                int iconDrawableId = activity.getResources().getIdentifier(strDrwable, "drawable", "com.google.android.apps.plus");
-                Drawable icon = activity.getResources().getDrawable(iconDrawableId);
-                icon.setBounds(0, 0, icon.getMinimumWidth(), icon.getMinimumHeight());
-                title.setCompoundDrawables(icon, null, null, null);
-            }
+        });
 
-            if (position == 3) {
-                FrameLayout layout = new FrameLayout(activity);
-                layout.addView(view);
+        if (position == 3) {
+            FrameLayout layout = new FrameLayout(activity);
+            layout.addView(view);
 
-                FrameLayout counterLayout = new FrameLayout(activity);
-                counterLayout.setLayoutParams(new FrameLayout.LayoutParams(dip2px(64), FrameLayout.LayoutParams.MATCH_PARENT));
+            FrameLayout counterLayout = new FrameLayout(activity);
+            counterLayout.setLayoutParams(new FrameLayout.LayoutParams(dp2px(64), FrameLayout.LayoutParams.MATCH_PARENT));
 
-                counter = new ImageView(activity);
-                FrameLayout.LayoutParams counterParams = new FrameLayout.LayoutParams(dip2px(8), dip2px(8));
-                counterParams.setMargins(0, dip2px(16), dip2px(27), 0);
-                counterParams.gravity = Gravity.END | Gravity.CENTER | Gravity.TOP;
-                counter.setLayoutParams(counterParams);
+            counter = new ImageView(activity);
+            FrameLayout.LayoutParams counterParams = new FrameLayout.LayoutParams(dp2px(8), dp2px(8));
+            counterParams.setMargins(0, dp2px(16), dp2px(27), 0);
+            counterParams.gravity = Gravity.END | Gravity.CENTER | Gravity.TOP;
+            counter.setLayoutParams(counterParams);
 
-                ShapeDrawable shapeDrawable = new ShapeDrawable(new Shape() {
-                    @Override
-                    public void draw(Canvas canvas, Paint paint) {
-                        paint.setColor(0xffdb4437);
-                        paint.setStyle(Paint.Style.FILL);
-                        canvas.drawCircle(dip2px(4), dip2px(4), dip2px(4), paint);
-                        paint.setStrokeWidth(dip2px(1) / 3 * 2);
-                        paint.setColor(Color.WHITE);
-                        paint.setStyle(Paint.Style.STROKE);
-                        canvas.drawCircle(dip2px(4), dip2px(4), dip2px(4), paint);
-                    }
-                });
-                shapeDrawable.setIntrinsicWidth(dip2px(8));
-                shapeDrawable.setIntrinsicHeight(dip2px(8));
-                counter.setImageDrawable(shapeDrawable);
-                counter.setVisibility(tabBarCounter.getVisibility());
-                counterLayout.addView(counter);
-
-                layout.addView(counterLayout);
-                view = layout;
-            }
-
-            view.setOnClickListener(new View.OnClickListener() {
+            ShapeDrawable shapeDrawable = new ShapeDrawable(new Shape() {
                 @Override
-                public void onClick(View v) {
-                    activity.onBackPressed();
-                    if (position != 3)
-                        tabButtons[position].performClick();
-                    else
-                        ((View) tabButtons[position].getParent()).performClick();
+                public void draw(Canvas canvas, Paint paint) {
+                    paint.setColor(0xffdb4437);
+                    paint.setStyle(Paint.Style.FILL);
+                    canvas.drawCircle(dp2px(4), dp2px(4), dp2px(4), paint);
+                    paint.setStrokeWidth(dp2px(1) / 3 * 2);
+                    paint.setColor(Color.WHITE);
+                    paint.setStyle(Paint.Style.STROKE);
+                    canvas.drawCircle(dp2px(4), dp2px(4), dp2px(4), paint);
                 }
             });
-            views[position] = view;
-            return view;
-        }
+            shapeDrawable.setIntrinsicWidth(dp2px(8));
+            shapeDrawable.setIntrinsicHeight(dp2px(8));
+            counter.setImageDrawable(shapeDrawable);
+            counter.setVisibility(tabBarCounter.getVisibility());
+            counterLayout.addView(counter);
 
-        public int dip2px(float dipValue){
-            final float scale = activity.getResources().getDisplayMetrics().density;
-            return (int)(dipValue * scale + 0.5f);
+            layout.addView(counterLayout);
+            view = layout;
         }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            /*activity.onBackPressed();
-            if (position != 3)
-                tabButtons[position].performClick();
-            else
-                ((View) tabButtons[position].getParent()).performClick();*/
-        }
+        return view;
     }
 }
