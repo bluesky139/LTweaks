@@ -34,6 +34,7 @@ import li.lingfeng.ltweaks.R;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.prefs.Prefs;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.utils.SimpleDrawer;
@@ -52,29 +53,34 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
     private SimpleDrawer mDrawerLayout;
     private WeakReference mUserInfoDbRef;
     private Method mMethodAvatar;
+    private boolean mNoDrawer;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
+        mNoDrawer = Prefs.instance().getBoolean(R.string.key_wechat_no_drawer, false);
+
         findAndHookActivity(ClassNames.WE_CHAT_LAUNCHER_UI, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(final MethodHookParam param) throws Throwable {
-                List<Method> methods = getPossibleMethodsOfAvatar();
-                if (methods == null) {
-                    throw new Exception("Can't get methods of avatar.");
-                }
-                Logger.d("Possible " + methods.size() + " methods of avatar.");
+                if (!mNoDrawer) {
+                    List<Method> methods = getPossibleMethodsOfAvatar();
+                    if (methods == null) {
+                        throw new Exception("Can't get methods of avatar.");
+                    }
+                    Logger.d("Possible " + methods.size() + " methods of avatar.");
 
-                final List<Unhook> unhooks = new ArrayList<>(methods.size());
-                for (final Method method : methods) {
-                    Unhook unhook = XposedBridge.hookMethod(method, new XC_MethodHook() {
-                        @Override
-                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            Logger.i("Got avatar method, " + method);
-                            mMethodAvatar = method;
-                            XposedUtils.unhookAll(unhooks);
-                        }
-                    });
-                    unhooks.add(unhook);
+                    final List<Unhook> unhooks = new ArrayList<>(methods.size());
+                    for (final Method method : methods) {
+                        Unhook unhook = XposedBridge.hookMethod(method, new XC_MethodHook() {
+                            @Override
+                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                Logger.i("Got avatar method, " + method);
+                                mMethodAvatar = method;
+                                XposedUtils.unhookAll(unhooks);
+                            }
+                        });
+                        unhooks.add(unhook);
+                    }
                 }
 
                 new Handler().post(new Runnable() {
@@ -111,23 +117,25 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
             }
         });
 
-        // com.tencent.mm.storage.t in v6.5.4
-        Class clsUserInfoDb = getUserInfoDbCls("com.tencent.mm.storage.");
-        if (clsUserInfoDb == null) {
-            clsUserInfoDb = getUserInfoDbCls("com.tencent.mm.storage.a");
-        }
-        if (clsUserInfoDb == null) {
-            throw new Exception("Can't get clsUserInfoDb.");
-        }
-        Logger.i("Got clsUserInfoDb " + clsUserInfoDb);
-
-        hookAllConstructors(clsUserInfoDb, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.i("Got userInfoDb " + param.thisObject);
-                mUserInfoDbRef = new WeakReference(param.thisObject);
+        if (!mNoDrawer) {
+            // com.tencent.mm.storage.t in v6.5.4
+            Class clsUserInfoDb = getUserInfoDbCls("com.tencent.mm.storage.");
+            if (clsUserInfoDb == null) {
+                clsUserInfoDb = getUserInfoDbCls("com.tencent.mm.storage.a");
             }
-        });
+            if (clsUserInfoDb == null) {
+                throw new Exception("Can't get clsUserInfoDb.");
+            }
+            Logger.i("Got clsUserInfoDb " + clsUserInfoDb);
+
+            hookAllConstructors(clsUserInfoDb, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    Logger.i("Got userInfoDb " + param.thisObject);
+                    mUserInfoDbRef = new WeakReference(param.thisObject);
+                }
+            });
+        }
     }
 
     private void listenOnLayoutChange(final Activity activity, final View view) {
@@ -167,52 +175,57 @@ public class XposedWeChatRemoveBottomBar extends XposedBase {
             throw new Exception("No tabs.");
         }
 
-        String nickName = (String) XposedHelpers.callMethod(mUserInfoDbRef.get(), "get", 4, null);
-        String userName = (String) XposedHelpers.callMethod(mUserInfoDbRef.get(), "get", 42, null);
-        String originalUserName = (String) XposedHelpers.callMethod(mUserInfoDbRef.get(), "get", 2, null);
-        Logger.d("nickName " + nickName + ", userName " + userName + ", originalUserName " + originalUserName);
+        if (!mNoDrawer) {
+            String nickName = (String) XposedHelpers.callMethod(mUserInfoDbRef.get(), "get", 4, null);
+            String userName = (String) XposedHelpers.callMethod(mUserInfoDbRef.get(), "get", 42, null);
+            String originalUserName = (String) XposedHelpers.callMethod(mUserInfoDbRef.get(), "get", 2, null);
+            Logger.d("nickName " + nickName + ", userName " + userName + ", originalUserName " + originalUserName);
 
-        String name = !StringUtils.isEmpty(nickName) ? nickName : userName;
-        name = !StringUtils.isEmpty(name) ? name : originalUserName;
-        mDrawerLayout.getHeaderText().setText(name);
-        mMethodAvatar.invoke(null, mDrawerLayout.getHeaderImage(), originalUserName);
+            String name = !StringUtils.isEmpty(nickName) ? nickName : userName;
+            name = !StringUtils.isEmpty(name) ? name : originalUserName;
+            mDrawerLayout.getHeaderText().setText(name);
+            mMethodAvatar.invoke(null, mDrawerLayout.getHeaderImage(), originalUserName);
+        }
         return true;
     }
 
     private boolean handleWithTabs(final Activity activity, ViewGroup rootView, List<RelativeLayout> tabs) throws Throwable {
-        SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[tabs.size()];
-        for (int i = 0; i < tabs.size(); ++i) {
-            RelativeLayout tab = tabs.get(i);
-            ImageView imageView = ViewUtils.findViewByType(tab, ImageView.class);
-            if (imageView.getWidth() == 0) {
-                return false;
+        if (!mNoDrawer) {
+            SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[tabs.size()];
+            for (int i = 0; i < tabs.size(); ++i) {
+                RelativeLayout tab = tabs.get(i);
+                ImageView imageView = ViewUtils.findViewByType(tab, ImageView.class);
+                if (imageView.getWidth() == 0) {
+                    return false;
+                }
+                Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                imageView.draw(canvas);
+                BitmapDrawable drawable = new BitmapDrawable(activity.getResources(), bitmap);
+                TextView textView = ViewUtils.findViewByType(tab, TextView.class);
+                SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(drawable, textView.getText(), tab);
+                navItems[i] = navItem;
             }
-            Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            imageView.draw(canvas);
-            BitmapDrawable drawable = new BitmapDrawable(activity.getResources(), bitmap);
-            TextView textView = ViewUtils.findViewByType(tab, TextView.class);
-            SimpleDrawer.NavItem navItem = new SimpleDrawer.NavItem(drawable, textView.getText(), tab);
-            navItems[i] = navItem;
-        }
-        SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(ContextUtils.getAppIcon(),
-                ContextUtils.getAppName(), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClassName(PackageNames.WE_CHAT, PERSIONAL_INFO);
-                activity.startActivity(intent);
-                mDrawerLayout.closeDrawers();
-            }
-        });
+            SimpleDrawer.NavItem headerItem = new SimpleDrawer.NavItem(ContextUtils.getAppIcon(),
+                    ContextUtils.getAppName(), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClassName(PackageNames.WE_CHAT, PERSIONAL_INFO);
+                    activity.startActivity(intent);
+                    mDrawerLayout.closeDrawers();
+                }
+            });
 
-        FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
-        mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
-        mDrawerLayout.updateHeaderBackground(Color.parseColor("#393A3F"));
-        rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        Logger.i("Drawer is created.");
+            FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
+            mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
+            mDrawerLayout.updateHeaderBackground(Color.parseColor("#393A3F"));
+            rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            Logger.i("Drawer is created.");
+        }
         ((ViewGroup) tabs.get(0).getParent()).setVisibility(View.GONE);
+        Logger.i("Bottom bar is removed.");
         return true;
     }
 

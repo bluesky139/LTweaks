@@ -170,6 +170,8 @@ Open source on github: \n
     <string name="pref_wechat_set_incoming_ringtone">设置铃声</string>
     <string name="pref_wechat_remove_bottom_bar">去底栏</string>
     <string name="pref_wechat_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单\n注意: 如果微信无法启动, 尝试删掉 /data/data/com.tencent.mm/tinker 文件夹, 再手动创建这个文件夹并赋于 000 权限.</string>
+    <string name="pref_wechat_no_drawer">去掉底栏后不添加抽屉菜单</string>
+    <string name="pref_wechat_no_drawer_summary">你仍然可以左右滑动来切换页面</string>
     <string name="pref_category_qq">QQ (仅在轻聊版上测试过)</string>
     <string name="pref_qq_dismiss_contacts_enabler">不再弹出\"启用通信录\"</string>
     <string name="pref_qq_dismiss_contacts_enabler_summary">如果你要使用通信录请不要勾这个</string>
