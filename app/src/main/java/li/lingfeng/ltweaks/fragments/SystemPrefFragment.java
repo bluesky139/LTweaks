@@ -14,6 +14,8 @@ import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -135,6 +137,18 @@ public class SystemPrefFragment extends BasePrefFragment {
     @PreferenceClick(prefs = R.string.key_prevent_running_set_list)
     private void setPreventList(Preference preference) {
         ListCheckActivity.create(getActivity(), PreventListDataProvider.class);
+    }
+
+    @PreferenceChange(prefs = R.string.key_shadowsocks_primary_dns, refreshAtStart = true)
+    private void setShadowsocksPrimaryDns(EditTextPreference preference, String value, Extra extra) {
+        String[] dnsArray = StringUtils.split(value, ',');
+        StringBuilder summary = new StringBuilder(getString(R.string.pref_shadowsocks_primary_dns_summary));
+        for (String dns : dnsArray) {
+            dns = StringUtils.strip(dns, " ");
+            summary.append("\n");
+            summary.append(dns);
+        }
+        preference.setSummary(summary);
     }
 
     @PreferenceChange(prefs = R.string.key_quick_settings_tile_4g3g, refreshAtStart = true)

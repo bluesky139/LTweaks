@@ -84,6 +84,10 @@
             android:key="@string/key_shadowsocks_precise_route"
             android:title="@string/pref_shadowsocks_precise_route"
             android:summary="@string/pref_shadowsocks_precise_route_summary" />
+        <EditTextPreference
+            android:key="@string/key_shadowsocks_primary_dns"
+            android:title="@string/pref_shadowsocks_primary_dns"
+            android:summary="@string/pref_shadowsocks_primary_dns_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
