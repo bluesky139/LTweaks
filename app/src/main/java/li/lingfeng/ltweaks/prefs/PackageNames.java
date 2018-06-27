@@ -22,6 +22,7 @@ public class PackageNames {
     public static final String CHROME_CANARY = "com.chrome.canary";
     public static final String CHROME_DEV = "com.chrome.dev";
     public static final String YOUTUBE = "com.google.android.youtube";
+    public static final String GOOGLE_DIALER = "com.google.android.dialer";
 
     // Shopping
     public static final String SMZDM = "com.smzdm.client.android";

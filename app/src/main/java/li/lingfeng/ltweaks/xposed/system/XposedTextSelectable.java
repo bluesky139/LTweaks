@@ -25,7 +25,8 @@ public class XposedTextSelectable extends XposedBase {
     protected void handleLoadPackage() throws Throwable {
         if (lpparam.packageName.equals(PackageNames.ANDROID)
                 || lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)
-                || lpparam.packageName.equals(PackageNames.DIALER)) {
+                || lpparam.packageName.equals(PackageNames.DIALER)
+                || lpparam.packageName.equals(PackageNames.GOOGLE_DIALER)) {
             return;
         }
 
