@@ -21,6 +21,9 @@ public class ClassNames {
     public static final String CONSTRAINT_LAYOUT = "android.support.constraint.ConstraintLayout";
     public static final String BOTTOM_NAV_VIEW = "android.support.design.widget.BottomNavigationView";
     public static final String DRAWER_LAYOUT = "android.support.v4.widget.DrawerLayout";
+    public static final String RECYCLER_VIEW_HOLDER = "android.support.v7.widget.RecyclerView$ViewHolder";
+    public static final String ITEM_TOUCH_HELPER = "android.support.v7.widget.helper.ItemTouchHelper";
+    public static final String ITEM_TOUCH_HELPER_CALLBACK = "android.support.v7.widget.helper.ItemTouchHelper$Callback";
 
     public static final String ACTIVITY_MANAGER_SERVICE = "com.android.server.am.ActivityManagerService";
     public static final String ALARM_MANAGER_SERVICE = "com.android.server.AlarmManagerService";

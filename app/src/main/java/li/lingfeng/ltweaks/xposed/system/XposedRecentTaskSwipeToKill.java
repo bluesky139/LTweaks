@@ -1,5 +1,6 @@
 package li.lingfeng.ltweaks.xposed.system;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -24,6 +25,8 @@ public class XposedRecentTaskSwipeToKill extends XposedBase {
     private static final String SWIPE_HELPER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
             "com.android.systemui.SwipeHelper" : "com.android.systemui.recents.views.SwipeHelper";
     private static final String TASK_VIEW = "com.android.systemui.recents.views.TaskView";
+    private static final String SLIM_RECENT_PANEL_VIEW = "com.android.systemui.slimrecent.RecentPanelView";
+    private XC_MethodHook.Unhook mSlimItemTouchHelperHook;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -44,6 +47,11 @@ public class XposedRecentTaskSwipeToKill extends XposedBase {
             return;
         }
 
+        handleAOSP();
+        handleSlim();
+    }
+
+    private void handleAOSP() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             findAndHookMethod(SWIPE_HELPER, "dismissChild", View.class, float.class, boolean.class, new XC_MethodHook() {
                 @Override
@@ -78,5 +86,48 @@ public class XposedRecentTaskSwipeToKill extends XposedBase {
         Intent intent = (Intent) XposedHelpers.getObjectField(taskKey, "baseIntent");
         String packageName = intent.getComponent().getPackageName();
         PackageUtils.killPackage(taskView.getContext(), packageName);
+    }
+
+    private void handleSlim() {
+        try {
+            findClass(SLIM_RECENT_PANEL_VIEW);
+        } catch (Throwable e) {
+            return;
+        }
+
+        mSlimItemTouchHelperHook = findAndHookConstructor(ClassNames.ITEM_TOUCH_HELPER, ClassNames.ITEM_TOUCH_HELPER_CALLBACK, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (mSlimItemTouchHelperHook == null) {
+                    return;
+                }
+                Class cls = param.args[0].getClass();
+                if (cls.getName().startsWith(SLIM_RECENT_PANEL_VIEW)) {
+                    mSlimItemTouchHelperHook = null;
+                    hookSlimTouchHelper(cls);
+                }
+            }
+        });
+    }
+
+    private void hookSlimTouchHelper(Class cls) {
+        Logger.d("hookSlimTouchHelper " + cls);
+        findAndHookMethod(cls, "onSwiped", findClass(ClassNames.RECYCLER_VIEW_HOLDER), int.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                int direction = (int) param.args[1];
+                if (direction == 32) {
+                    Logger.i("Slim recent swipe right to kill.");
+                    int pos = (int) XposedHelpers.callMethod(param.args[0], "getAdapterPosition");
+                    Object panelView = XposedHelpers.getSurroundingThis(param.thisObject);
+                    Object cardAdapter = XposedHelpers.getObjectField(panelView, "mCardAdapter");
+                    Object card = XposedHelpers.callMethod(cardAdapter, "getCard", pos);
+                    Object task = XposedHelpers.getObjectField(card, "task");
+                    String packageName = (String) XposedHelpers.getObjectField(task, "packageName");
+                    Context context = (Context) XposedHelpers.getObjectField(panelView, "mContext");
+                    PackageUtils.killPackage(context, packageName);
+                }
+            }
+        });
     }
 }
