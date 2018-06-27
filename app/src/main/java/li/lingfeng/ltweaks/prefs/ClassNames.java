@@ -29,6 +29,7 @@ public class ClassNames {
     public static final String PACKAGE_MANAGER_SERVICE = "com.android.server.pm.PackageManagerService";
     public static final String ACTIVITY_INTENT_RESOLVER = "com.android.server.pm.PackageManagerService$ActivityIntentResolver";
     public static final String PHONE_WINDOW = "com.android.internal.policy.PhoneWindow";
+    public static final String MENU_BUILDER = "com.android.internal.view.menu.MenuBuilder";
 
     public static final String QS_TILE_HOST = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
             "com.android.systemui.statusbar.phone.QSTileHost" : "com.android.systemui.qs.QSTileHost";

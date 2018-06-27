@@ -220,6 +220,14 @@ public class ContextUtils {
         return getResId(name, "layout", context);
     }
 
+    public static int getMenuId(String name) {
+        return getMenuId(name, MyApplication.instance());
+    }
+
+    public static int getMenuId(String name, Context context) {
+        return getResId(name, "menu", context);
+    }
+
     public static int getAttrId(String name) {
         return getAttrId(name, MyApplication.instance());
     }

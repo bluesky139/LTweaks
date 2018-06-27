@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -108,6 +109,61 @@ public class Utils {
 
     private interface FindMenuItemCallback {
         boolean onMenuItem(MenuItem item);
+    }
+
+    public static Method findMethodFromList(Method[] methods, FindMethodCallback callback) {
+        for (Method method : methods) {
+            if (callback.onMethodCheck(method)) {
+                method.setAccessible(true);
+                return method;
+            }
+        }
+        return null;
+    }
+
+    public interface FindMethodCallback {
+        boolean onMethodCheck(Method m);
+    }
+
+    public static Constructor findConstructorFromList(Constructor[] constructors, FindConstructorCallback callback) {
+        for (Constructor constructor : constructors) {
+            if (callback.onConstructorCheck(constructor)) {
+                return constructor;
+            }
+        }
+        return null;
+    }
+
+    public interface FindConstructorCallback {
+        boolean onConstructorCheck(Constructor c);
+    }
+
+    public static Constructor findConstructorHasParameterType(Constructor[] constructors, final Class type) {
+        return findConstructorFromList(constructors, new FindConstructorCallback() {
+            @Override
+            public boolean onConstructorCheck(Constructor c) {
+                Class[] types = c.getParameterTypes();
+                for (Class t : types) {
+                    if (t == type) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    public static Class findClassFromList(Class[] classes, FindClassCallback callback) {
+        for (Class cls : classes) {
+            if (callback.onClassCheck(cls)) {
+                return cls;
+            }
+        }
+        return null;
+    }
+
+    public interface FindClassCallback {
+        boolean onClassCheck(Class cls);
     }
 
     public static class ObfuscatedClassGenerator implements Iterator<String> {
