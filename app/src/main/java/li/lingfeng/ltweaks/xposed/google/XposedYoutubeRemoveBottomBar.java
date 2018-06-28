@@ -85,13 +85,10 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
     }
 
     private void hookBottomBar(final Activity activity) throws Throwable {
-        int idPivotBar = ContextUtils.getIdId("pivot_bar_container");
+        int idPivotBar = ContextUtils.getIdId("bottom_bar_container");
         final ViewGroup pivotBar = (ViewGroup) activity.findViewById(idPivotBar);
         final Class clsConstraintLayout = findClass(ClassNames.CONSTRAINT_LAYOUT);
         List buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, clsConstraintLayout, 4);
-        if (buttons.size() == 0) {
-            buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, LinearLayout.class, 4);
-        }
         Logger.d("pivotBar with " + buttons.size() + " buttons.");
 
         SimpleDrawer.NavItem[] navItems = new SimpleDrawer.NavItem[buttons.size()];
@@ -126,9 +123,6 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
                 Logger.i("pivotBar onLayoutChange.");
                 try {
                     List buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, clsConstraintLayout, 4);
-                    if (buttons.size() == 0) {
-                        buttons = ViewUtils.findAllViewByTypeInSameHierarchy(pivotBar, LinearLayout.class, 4);
-                    }
                     mDrawerLayout.updateClickObjs(buttons.toArray());
                     updatePaneContainerHeight(pivotBar, paneContainer);
                 } catch (Throwable e) {
