@@ -220,7 +220,7 @@ Open source on github: \n
     <string name="pref_bilibili_remove_bottom_bar">去底栏</string>
     <string name="pref_bilibili_remove_bottom_bar_summary">底栏按钮放到左侧滑出的抽屉菜单</string>
     <string name="pref_bilibili_get_cover">获取封面</string>
-    <string name="pref_bilibili_get_cover_summary">通过分享链接来调用此功能</string>
+    <string name="pref_bilibili_get_cover_summary">添加一个菜单项来获取封面</string>
     <string name="pref_bilibili_expand_desc">默认展开视频描述</string>
     <string name="pref_bilibili_darken">更完美的夜间模式</string>
     <string name="pref_bilibili_darken_summary">1.夜间模式下进入文章页面时，会先调为白天模式，然后瞬间再返回夜间模式. 尝试修复此问题\n2.启动此应用时，将应用尚未加载完成前的白屏调为黑屏</string>
@@ -235,7 +235,7 @@ Open source on github: \n
     <string name="pref_steam_go_reviews_summary">在右上角添加一个菜单</string>
 
     <!-- Bilibili -->
-    <string name="bilibili_cover">哔哩哔哩封面</string>
+    <string name="bilibili_get_cover">获取封面</string>
 
     <!-- Douban Movie -->
     <string name="douban_movie_app">豆瓣电影</string>

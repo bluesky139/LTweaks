@@ -233,7 +233,7 @@ Open source on github: \n
     <string name="pref_bilibili_remove_bottom_bar">Remove bottom bar</string>
     <string name="pref_bilibili_remove_bottom_bar_summary">Put them into drawer menu</string>
     <string name="pref_bilibili_get_cover">Get cover</string>
-    <string name="pref_bilibili_get_cover_summary">Call this method through link sharing</string>
+    <string name="pref_bilibili_get_cover_summary">Add a menu item to get cover</string>
     <string name="pref_bilibili_expand_desc">Expand description by default</string>
     <string name="pref_bilibili_darken">A more better night mode</string>
     <string name="pref_bilibili_darken_summary">1.When entering reading page in night mode, it will switch to daytime mode first, then suddenly back to night mode. Try fix this\n2.When entering this app, the whole screen will become white before app loading finish, change it to dark</string>
@@ -248,7 +248,7 @@ Open source on github: \n
     <string name="pref_steam_go_reviews_summary">Add a top right menu</string>
 
     <!-- Bilibili -->
-    <string name="bilibili_cover">Bilibili Cover</string>
+    <string name="bilibili_get_cover">Get Cover</string>
 
     <!-- Douban Movie -->
     <string name="douban_movie_app">Douban Movie</string>

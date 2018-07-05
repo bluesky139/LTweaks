@@ -2,7 +2,6 @@ package li.lingfeng.ltweaks.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -144,11 +143,6 @@ public class ViewUtils {
     public static View findViewByName(Activity activity, String name) {
         int id = ContextUtils.getIdId(name);
         return id > 0 ? activity.findViewById(id) : null;
-    }
-
-    public static View findViewByName(Dialog dialog, String name) {
-        int id = ContextUtils.getIdId(name);
-        return id > 0 ? dialog.findViewById(id) : null;
     }
 
     public static View findViewByName(ViewGroup rootView, String name) {
