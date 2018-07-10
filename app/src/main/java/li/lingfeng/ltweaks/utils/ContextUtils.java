@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -270,6 +271,13 @@ public class ContextUtils {
 
     public static int getColorId(String name, Context context) {
         return getResId(name, "color", context);
+    }
+
+    public static int getColorFromTheme(Resources.Theme theme, String name, Context context) {
+        int idColor = getAttrId(name, context);
+        if (idColor <= 0)
+            return Color.RED;
+        return getColorFromTheme(theme, idColor);
     }
 
     public static int getColorFromTheme(Resources.Theme theme, String name) {

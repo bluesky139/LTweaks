@@ -97,5 +97,10 @@
             android:defaultValue="false"
             android:key="@string/key_ttrss_disable_show_hide_on_scroll"
             android:title="@string/pref_ttrss_disable_show_hide_on_scroll" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_ttrss_darken"
+            android:title="@string/pref_ttrss_darken"
+            android:summary="@string/pref_ttrss_darken_summary" />
     </PreferenceCategory>
 </PreferenceScreen>

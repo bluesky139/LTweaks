@@ -57,6 +57,7 @@
     <string name="key_ttrss_open_link_in_browser_menu">key_ttrss_open_link_in_browser_menu</string>
     <string name="key_ttrss_refresh_menu">key_ttrss_refresh_menu</string>
     <string name="key_ttrss_disable_show_hide_on_scroll">key_ttrss_disable_show_hide_on_scroll</string>
+    <string name="key_ttrss_darken">key_ttrss_darken</string>
 
     <!--Entertainment-->
     <string name="key_douban_movie_url">key_douban_movie_url</string>

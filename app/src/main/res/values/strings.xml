@@ -211,6 +211,8 @@ Open source on github: \n
     <string name="pref_ttrss_open_link_in_browser_menu">Add menu \"Open link in browser\"</string>
     <string name="pref_ttrss_refresh_menu">Put refresh button to top right menu</string>
     <string name="pref_ttrss_disable_show_hide_on_scroll">Disable top app bar show hide on scroll</string>
+    <string name="pref_ttrss_darken">A more better night mode</string>
+    <string name="pref_ttrss_darken_summary">For switching back after low memory kill</string>
 
     <!-- TTRss -->
     <string name="ttrss_open_in_browser">Open In Browser</string>
