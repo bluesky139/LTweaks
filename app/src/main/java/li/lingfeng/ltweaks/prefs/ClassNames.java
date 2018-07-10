@@ -33,6 +33,14 @@ public class ClassNames {
     public static final String ACTIVITY_INTENT_RESOLVER = "com.android.server.pm.PackageManagerService$ActivityIntentResolver";
     public static final String PHONE_WINDOW = "com.android.internal.policy.PhoneWindow";
     public static final String MENU_BUILDER = "com.android.internal.view.menu.MenuBuilder";
+    public static final String APPLICATION_PACKAGE_MANAGER = "android.app.ApplicationPackageManager";
+
+    public static final String VM_CLASS_LOADER = "java.lang.VMClassLoader";
+    public static final String UNIX_FILE_SYSTEM = "java.io.UnixFileSystem";
+    public static final String IO_BRIDGE = "libcore.io.IoBridge";
+    public static final String LIBCORE_IO_POSIX = "libcore.io.Posix";
+    public static final String PROCESS_IMPL = "java.lang.ProcessImpl";
+    public static final String PROCESS_ENVIRONMENT = "java.lang.ProcessEnvironment";
 
     public static final String QS_TILE_HOST = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
             "com.android.systemui.statusbar.phone.QSTileHost" : "com.android.systemui.qs.QSTileHost";

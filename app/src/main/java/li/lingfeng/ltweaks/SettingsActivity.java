@@ -96,6 +96,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.pref_headers, target);
+        if (BuildConfig.FLAVOR.equals("selfUse")) {
+            loadHeadersFromResource(R.xml.pref_headers_self_use, target);
+        }
     }
 
     /**

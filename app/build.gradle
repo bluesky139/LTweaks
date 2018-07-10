@@ -27,6 +27,7 @@ android {
     sourceSets {
         selfUse {
             java.srcDirs = ['src/main/java', 'src/main/javaSelfUse']
+            res.srcDirs = ['src/main/res', 'src/main/resSelfUse']
         }
     }
 }

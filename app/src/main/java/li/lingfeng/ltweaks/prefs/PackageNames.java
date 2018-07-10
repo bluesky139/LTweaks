@@ -61,6 +61,8 @@ public class PackageNames {
     public static final String SHADOWSOCKS = "com.github.shadowsocks";
     public static final String SOLID_EXPLORER = "pl.solidexplorer2";
     public static final String GALLERY = "com.android.gallery3d";
+    public static final String XPOSED_INSTALLER = "de.robv.android.xposed.installer";
+    public static final String SUPER_SU = "eu.chainfire.supersu";
 
     public static final String[] _SYSTEM_BOOT_PACKAGES = new String[] {
             ANDROID,
