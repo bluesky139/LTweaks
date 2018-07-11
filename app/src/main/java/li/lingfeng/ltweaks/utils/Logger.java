@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import li.lingfeng.ltweaks.BuildConfig;
 
@@ -69,6 +70,13 @@ public class Logger {
     public static void paramArgs(Object[] args) {
         for (Object arg : args) {
             Logger.d(" param arg: " + arg);
+        }
+    }
+
+    public static void map(Map map) {
+        for (Object _kv : map.entrySet()) {
+            Map.Entry kv = (Map.Entry) _kv;
+            Logger.d(" map "  + kv.getKey() + ": " + kv.getValue());
         }
     }
 }

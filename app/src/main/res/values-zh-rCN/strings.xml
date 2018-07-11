@@ -200,6 +200,8 @@ Open source on github: \n
     <string name="pref_ttrss_disable_show_hide_on_scroll">禁止顶部应用栏在滚动时显示和隐藏</string>
     <string name="pref_ttrss_darken">更完美的夜间模式</string>
     <string name="pref_ttrss_darken_summary">主要用于在后台被系统杀掉再切回来的时候</string>
+    <string name="pref_ttrss_open_all_articles_at_startup">启动时打开所有文章</string>
+    <string name="pref_ttrss_open_all_articles_at_startup_summary">需要在 TT RSS 里勾选\"启动时打开新文章\"</string>
 
     <!-- TTRss -->
     <string name="ttrss_open_in_browser">使用浏览器打开</string>
