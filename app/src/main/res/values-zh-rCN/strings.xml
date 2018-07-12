@@ -195,7 +195,8 @@ Open source on github: \n
     <string name="pref_push_bullet_share_to_all_summary">如果你只想每次一键推送内容到所有设备.\n同时也可以关掉 direct share</string>
     <string name="pref_category_ttrss">Tiny Tiny RSS</string>
     <string name="pref_ttrss_disable_article_pager">禁止文章页面左右滑动切换</string>
-    <string name="pref_ttrss_open_link_in_browser_menu">添加菜单 \"使用浏览器打开\"</string>
+    <string name="pref_ttrss_open_link_in_browser_menu">向文章页添加更多菜单</string>
+    <string name="pref_ttrss_open_link_in_browser_menu_summary">用浏览器打开，分享，跳转顶部，跳转底部</string>
     <string name="pref_ttrss_refresh_menu">把刷新按钮放到右上角菜单</string>
     <string name="pref_ttrss_disable_show_hide_on_scroll">禁止顶部应用栏在滚动时显示和隐藏</string>
     <string name="pref_ttrss_darken">更完美的夜间模式</string>
@@ -206,6 +207,8 @@ Open source on github: \n
     <!-- TTRss -->
     <string name="ttrss_open_in_browser">使用浏览器打开</string>
     <string name="ttrss_refresh">刷新</string>
+    <string name="ttrss_go_top">跳转顶部</string>
+    <string name="ttrss_go_bottom">跳转底部</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娱乐</string>

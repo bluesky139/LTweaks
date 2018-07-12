@@ -334,6 +334,14 @@ public class ViewUtils {
         }
     }
 
+    public static void webviewGoTop(WebView webView) {
+        executeJs(webView, "window.scrollTo(0, 0);");
+    }
+
+    public static void webviewGoBottom(WebView webView) {
+        executeJs(webView, "window.scrollTo(0, document.body.scrollHeight);");
+    }
+
     public static int getWindowHeight(Activity activity) {
         return activity.getWindowManager().getDefaultDisplay().getHeight();
     }
