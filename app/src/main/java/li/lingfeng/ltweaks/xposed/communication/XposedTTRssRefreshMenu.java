@@ -23,13 +23,13 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 @XposedLoad(packages = PackageNames.TT_RSS, prefs = R.string.key_ttrss_refresh_menu)
 public class XposedTTRssRefreshMenu extends XposedBase {
 
-    private static final String ONLINE_ACTIVITY = "org.fox.ttrss.OnlineActivity";
+    private static final String MASTER_ACTIVITY = "org.fox.ttrss.MasterActivity";
     private static final String HEADLINES_FRAGMENT = "org.fox.ttrss.HeadlinesFragment";
     private static final int ITEM_ID = 10001;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookMethod(ONLINE_ACTIVITY, "initMenu", new XC_MethodHook() {
+        findAndHookMethod(MASTER_ACTIVITY, "initMenu", new XC_MethodHook() {
 
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -47,7 +47,7 @@ public class XposedTTRssRefreshMenu extends XposedBase {
             }
         });
 
-        findAndHookMethod(ONLINE_ACTIVITY, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
+        findAndHookMethod(MASTER_ACTIVITY, "onOptionsItemSelected", MenuItem.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 MenuItem menuItem = (MenuItem) param.args[0];
