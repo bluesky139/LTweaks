@@ -33,7 +33,8 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 public class XposedOriginalSelectionActionMode extends XposedBase {
     @Override
     protected void handleLoadPackage() throws Throwable {
-        if (lpparam.packageName.equals(PackageNames.ANDROID)) {
+        if (lpparam.packageName.equals(PackageNames.ANDROID)
+                || lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)) {
             return;
         }
 
