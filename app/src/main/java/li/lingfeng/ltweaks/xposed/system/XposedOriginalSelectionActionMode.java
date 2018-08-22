@@ -52,8 +52,12 @@ public class XposedOriginalSelectionActionMode extends XposedBase {
         findAndHookMethod(TextView.class, "canProcessText", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Logger.i("canProcessText return true");
-                param.setResult(true);
+                if (XposedHelpers.getObjectField(param.thisObject, "mEditor") != null) {
+                    Logger.i("canProcessText return true");
+                    param.setResult(true);
+                } else {
+                    Logger.d("No mEditor for canProcessText.");
+                }
             }
         });
     }
