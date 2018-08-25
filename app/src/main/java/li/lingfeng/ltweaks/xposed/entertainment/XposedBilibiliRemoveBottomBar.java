@@ -125,6 +125,7 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
         int idBottomNav = ContextUtils.getIdId("bottom_navigation");
         final ViewGroup bottomNav = (ViewGroup) activity.findViewById(idBottomNav);
         if (bottomNav == null) {
+            hideDefaultHomeFromDrawer();
             return;
         }
         List<FrameLayout> layouts = ViewUtils.findAllViewByTypeInSameHierarchy(bottomNav, FrameLayout.class, 4);
@@ -175,13 +176,7 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
             }
         }
 
-        if (mHomeTextView.getVisibility() != View.GONE) {
-            Logger.d("Set home gone.");
-            mHomeTextView.setVisibility(View.GONE);
-            ViewGroup parent = ((ViewGroup) mHomeTextView.getParent());
-            parent.setMinimumHeight(0);
-            parent.getLayoutParams().height = 0;
-            parent.setBackgroundColor(Color.TRANSPARENT);
+        if (hideDefaultHomeFromDrawer()) {
             bottomNav.setVisibility(View.GONE);
         }
 
@@ -193,6 +188,19 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
                 contentView.getLayoutParams().height = height;
             }
         }
+    }
+
+    private boolean hideDefaultHomeFromDrawer() {
+        if (mHomeTextView.getVisibility() != View.GONE) {
+            Logger.d("Hide default home from drawer.");
+            mHomeTextView.setVisibility(View.GONE);
+            ViewGroup parent = ((ViewGroup) mHomeTextView.getParent());
+            parent.setMinimumHeight(0);
+            parent.getLayoutParams().height = 0;
+            parent.setBackgroundColor(Color.TRANSPARENT);
+            return true;
+        }
+        return false;
     }
 
     class ButtonListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, ViewTreeObserver.OnGlobalLayoutListener {
