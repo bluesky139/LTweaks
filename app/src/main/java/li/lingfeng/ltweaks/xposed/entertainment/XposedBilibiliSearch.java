@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.xposed.entertainment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -42,6 +43,7 @@ public class XposedBilibiliSearch extends XposedCommon {
                         Logger.i("Search " + text);
                         EditText editText = (EditText) ViewUtils.findViewByName(activity, "search_src_text");
                         editText.setText(text);
+                        editText.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     }
                 }
             }
