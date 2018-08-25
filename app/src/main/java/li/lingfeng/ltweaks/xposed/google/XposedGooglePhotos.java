@@ -57,11 +57,10 @@ public class XposedGooglePhotos extends XposedBase {
     LinearLayout scrollLayout;
 
     boolean done = false;
-    boolean doneWithPageTransformer = false;
 
     @Override
     public void handleLoadPackage() throws Throwable {
-        findAndHookMethod("com.google.android.apps.photos.app.PhotosApplication", "onCreate", new XC_MethodHook() {
+        findAndHookApplication("com.google.android.apps.photos.PhotosApplication", "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
@@ -139,87 +138,17 @@ public class XposedGooglePhotos extends XposedBase {
                         tabSharing = null;
                         Arrays.fill(tabButtons, null);
                         drawerFragment = null;
+                        navList = null;
                         barList = null;
                         barListAdapter = null;
+                        navLayout = null;
+                        scrollView = null;
+                        scrollLayout = null;
                         done = false;
                     }
                 });
             }
         });
-
-        /*findAndHookConstructor("com.google.android.apps.photos.home.LockableViewPager", lpparam.classLoader, Context.class, AttributeSet.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
-                if (doneWithPageTransformer)
-                    return;
-
-                Class pageTransformer = null;
-                Class viewPager = activity.getClassLoader().loadClass("android.support.v4.view.ViewPager");
-                Field[] fields = viewPager.getDeclaredFields();
-                for (Field field : fields) {
-                    int flag = field.getModifiers();
-                    if (!Modifier.isPrivate(flag) || Modifier.isFinal(flag) || Modifier.isStatic(flag))
-                        continue;
-                    flag = field.getType().getModifiers();
-                    if (!Modifier.isInterface(flag) || !Modifier.isAbstract(flag) || field.getType().getDeclaredMethods().length != 1)
-                        continue;
-                    Class[] params = field.getType().getDeclaredMethods()[0].getParameterTypes();
-                    if (params.length != 2 || params[0] != View.class || params[1] != float.class)
-                        continue;
-                    pageTransformer = field.getType();
-                    Logger.i("Got PageTransformer " + field.getName() + " " + field.getType().getName());
-                    break;
-                }
-                if (pageTransformer == null)
-                    return;
-
-                Method setPageTransformer = null;
-                Method[] methods = viewPager.getDeclaredMethods();
-                for (Method method : methods) {
-                    int flag = method.getModifiers();
-                    if (!Modifier.isPublic(flag) || !Modifier.isFinal(flag) || method.getParameterTypes().length != 2)
-                        continue;
-                    Class[] params = method.getParameterTypes();
-                    if (params[0] != boolean.class || params[1] != pageTransformer)
-                        continue;
-                    setPageTransformer = method;
-                    Logger.i("Got setPageTransformer");
-                    break;
-                }
-                if (setPageTransformer == null)
-                    return;
-
-                findAndHookMethod("android.support.v4.view.ViewPager", lpparam.classLoader, setPageTransformer.getName(), boolean.class, pageTransformer, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                        if (param.thisObject.getClass().getName().equals("com.google.android.apps.photos.home.LockableViewPager")) {
-                            param.args[0] = false;
-                            param.args[1] = null;
-                            Logger.i("Set to default page transformer.");
-                        }
-                    }
-                });
-                doneWithPageTransformer = true;
-            }
-        });
-
-        findAndHookMethod("com.google.android.apps.photos.home.LockableViewPager", lpparam.classLoader, "onInterceptTouchEvent", MotionEvent.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
-                Field[] fields = param.thisObject.getClass().getDeclaredFields();
-                for (Field field : fields) {
-                    if (field.getGenericType() == Boolean.TYPE && field.getBoolean(param.thisObject)) {
-                        field.setAccessible(true);
-                        field.setBoolean(param.thisObject, false);
-                        Logger.i("Modified boolean to false in LockableViewPager.");
-                        break;
-                    }
-                }
-            }
-        });*/
     }
 
     boolean isReady() {

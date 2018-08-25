@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Service;
 import android.text.TextUtils;
 
@@ -177,6 +178,10 @@ public abstract class XposedBase implements IXposedHookLoadPackage {
 
     protected Set<XC_MethodHook.Unhook> hookAllConstructors(String className, XC_MethodHook callback) {
         return XposedBridge.hookAllConstructors(findClass(className), callback);
+    }
+
+    protected XC_MethodHook.Unhook findAndHookApplication(final String className, String methodName, Object... parameterTypesAndCallback) {
+        return findAndHookWithParent(className, Application.class, methodName, parameterTypesAndCallback);
     }
 
     protected XC_MethodHook.Unhook findAndHookActivity(final String className, String methodName, Object... parameterTypesAndCallback) {
