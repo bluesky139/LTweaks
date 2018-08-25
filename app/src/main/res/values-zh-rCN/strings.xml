@@ -240,6 +240,8 @@ Open source on github: \n
     <string name="pref_steam_go_top_summary">在右上角添加一个菜单</string>
     <string name="pref_steam_go_reviews">在商品页跳到评测栏</string>
     <string name="pref_steam_go_reviews_summary">在右上角添加一个菜单</string>
+    <string name="pref_steam_chinese">中文商店页面</string>
+    <string name="pref_steam_chinese_summary">如果你的系统语言是英文但又想要中文商店界面的话就勾这个</string>
 
     <!-- Bilibili -->
     <string name="bilibili_get_cover">获取封面</string>
