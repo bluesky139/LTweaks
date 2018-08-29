@@ -70,6 +70,10 @@
             android:defaultValue="false"
             android:key="@string/key_qq_prevent_audio_panel"
             android:title="@string/pref_qq_prevent_audio_panel" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_qq_hide_weak_net_toast"
+            android:title="@string/pref_qq_hide_weak_net_toast" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_push_bullet">

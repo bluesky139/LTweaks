@@ -52,6 +52,7 @@
     <string name="key_qq_fix_image_sharing">key_qq_fix_image_sharing</string>
     <string name="key_qq_disable_discussion_notification">key_qq_disable_discussion_notification</string>
     <string name="key_qq_prevent_audio_panel">key_qq_prevent_audio_panel</string>
+    <string name="key_qq_hide_weak_net_toast">key_qq_hide_weak_net_toast</string>
     <string name="key_push_bullet_share_to_all">key_push_bullet_share_to_all</string>
     <string name="key_ttrss_disable_article_pager">key_ttrss_disable_article_pager</string>
     <string name="key_ttrss_open_link_in_browser_menu">key_ttrss_open_link_in_browser_menu</string>
