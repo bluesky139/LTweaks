@@ -221,6 +221,14 @@ public class ContextUtils {
         return getResId(name, "layout", context);
     }
 
+    public static int getXmlId(String name) {
+        return getXmlId(name, MyApplication.instance());
+    }
+
+    public static int getXmlId(String name, Context context) {
+        return getResId(name, "xml", context);
+    }
+
     public static int getMenuId(String name) {
         return getMenuId(name, MyApplication.instance());
     }

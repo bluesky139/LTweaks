@@ -101,7 +101,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.pref_headers, target);
         if (BuildConfig.FLAVOR.equals("selfUse")) {
-            loadHeadersFromResource(R.xml.pref_headers_self_use, target);
+            loadHeadersFromResource(ContextUtils.getXmlId("pref_headers_self_use"), target);
         }
     }
 
