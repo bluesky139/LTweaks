@@ -60,6 +60,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
+        if (BuildConfig.FLAVOR.equals("selfUse")) {
+            setTitle(getTitle() + " - Self Use");
+        }
+
         if (errStringId > 0) {
             ViewUtils.showDialog(this, errStringId, new DialogInterface.OnClickListener() {
                 @Override
