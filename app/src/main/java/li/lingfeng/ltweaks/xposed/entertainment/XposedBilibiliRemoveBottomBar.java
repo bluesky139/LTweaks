@@ -191,7 +191,8 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
     }
 
     private boolean hideDefaultHomeFromDrawer() {
-        if (mHomeTextView.getVisibility() != View.GONE) {
+        return true;
+        /*if (mHomeTextView.getVisibility() != View.GONE) {
             Logger.d("Hide default home from drawer.");
             mHomeTextView.setVisibility(View.GONE);
             ViewGroup parent = ((ViewGroup) mHomeTextView.getParent());
@@ -200,7 +201,7 @@ public class XposedBilibiliRemoveBottomBar extends XposedBase {
             parent.setBackgroundColor(Color.TRANSPARENT);
             return true;
         }
-        return false;
+        return false;*/
     }
 
     class ButtonListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, ViewTreeObserver.OnGlobalLayoutListener {
