@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Build;
 import android.view.animation.AnimationUtils;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -34,28 +35,33 @@ public class XposedLightAmberInDaylight extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookMethod(NIGHT_DISPLAY_SERVICE, "onActivated", boolean.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                boolean activated = (boolean) param.args[0];
-                if (activated) {
-                    return;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            findAndHookMethod(NIGHT_DISPLAY_SERVICE, "onActivated", boolean.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    boolean activated = (boolean) param.args[0];
+                    if (activated) {
+                        return;
+                    }
+                    Boolean mIsActivated = (Boolean) XposedHelpers.getObjectField(param.thisObject, "mIsActivated");
+                    if (mIsActivated == null || mIsActivated != activated) {
+                        mNeedSet = true;
+                    }
                 }
-                Boolean mIsActivated = (Boolean) XposedHelpers.getObjectField(param.thisObject, "mIsActivated");
-                if (mIsActivated == null || mIsActivated != activated) {
-                    mNeedSet = true;
-                }
-            }
 
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (mNeedSet) {
-                    mNeedSet = false;
-                    Logger.i("Set light amber in daylight.");
-                    setLightAmberInDaylight(param.thisObject);
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    if (mNeedSet) {
+                        mNeedSet = false;
+                        Logger.i("Set light amber in daylight.");
+                        setLightAmberInDaylight(param.thisObject);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Logger.i("Replace light amber in daylight.");
+            XposedHelpers.setStaticObjectField(findClass(NIGHT_DISPLAY_SERVICE), "MATRIX_IDENTITY", MATRIX_LIGHT_AMBER);
+        }
     }
 
     private void setLightAmberInDaylight(final Object thisObject) throws Throwable {
