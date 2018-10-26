@@ -1,6 +1,7 @@
 package li.lingfeng.ltweaks.xposed.system;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.NotificationCompat;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -169,7 +171,7 @@ public abstract class XposedTile extends XposedBase {
                 NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                 int id = getNotificationId();
                 if (!isOn) {
-                    Notification.Builder builder = new Notification.Builder(mContext)
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
                             .setSmallIcon(getNotificationIcon())
                             .setWhen(0)
                             .setOngoing(true)
@@ -178,9 +180,14 @@ public abstract class XposedTile extends XposedBase {
                             .setPriority(Notification.PRIORITY_LOW)
                             .setContentTitle(getNotificationTitle())
                             .setContentText(getNotificationText())
-                            .setContentIntent(pendingIntent);
+                            .setContentIntent(pendingIntent)
+                            .setChannelId(getNotificationTitle());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        notificationManager.createNotificationChannel(
+                                new NotificationChannel(getNotificationTitle(), getNotificationTitle(), NotificationManager.IMPORTANCE_LOW));
                     }
                     Notification notification = builder.build();
                     notificationManager.notify(id, notification);
