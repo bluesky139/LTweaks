@@ -38,7 +38,8 @@ public class ClassNames {
     public static final String VM_CLASS_LOADER = "java.lang.VMClassLoader";
     public static final String UNIX_FILE_SYSTEM = "java.io.UnixFileSystem";
     public static final String IO_BRIDGE = "libcore.io.IoBridge";
-    public static final String LIBCORE_IO_POSIX = "libcore.io.Posix";
+    public static final String LIBCORE_IO_POSIX = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
+            "libcore.io.Posix" : "libcore.io.Linux";
     public static final String PROCESS_IMPL = "java.lang.ProcessImpl";
     public static final String PROCESS_ENVIRONMENT = "java.lang.ProcessEnvironment";
 
