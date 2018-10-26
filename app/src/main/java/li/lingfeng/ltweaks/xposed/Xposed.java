@@ -122,6 +122,13 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
             return;
         }
 
+        if (lpparam.packageName.equals(PackageNames.ANDROID)
+                || lpparam.packageName.equals(PackageNames.ANDROID_SETTINGS)
+                || lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM)
+                || lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)) {
+            Prefs.useZygotePreferences();
+        }
+
         for (Class<?> cls : modules) {
             try {
                 XposedLoad xposedLoad = cls.getAnnotation(XposedLoad.class);
