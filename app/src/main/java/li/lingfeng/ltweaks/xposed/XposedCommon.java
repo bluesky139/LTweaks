@@ -4,11 +4,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageParser;
 
-import java.lang.reflect.Field;
-
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.prefs.ClassNames;
-import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.Logger;
 
 /**
@@ -18,26 +15,22 @@ import li.lingfeng.ltweaks.utils.Logger;
 public abstract class XposedCommon extends XposedBase {
 
     protected void hookAndSetComponentExported(final String packageName, final String componentName) {
-        hookAllMethods(ClassNames.PACKAGE_PARSER, "parseActivity", new XC_MethodHook() {
+        hookAllMethods(ClassNames.PACKAGE_PARSER, "parsePackage", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                PackageParser.Package owner = (PackageParser.Package) param.args[0];
-                if (!owner.packageName.equals(packageName)) {
+                PackageParser.Package pkg = (PackageParser.Package) param.getResult();
+                if (pkg == null || pkg.packageName != packageName) {
                     return;
                 }
 
-                PackageParser.Activity activity = (PackageParser.Activity) param.getResult();
-                Field fieldInfo = PackageParser.Activity.class.getDeclaredField("info");
-                fieldInfo.setAccessible(true);
-                ActivityInfo info = (ActivityInfo) fieldInfo.get(activity);
-
-                if (!info.name.equals(componentName)) {
-                    return;
+                for (PackageParser.Activity activity : pkg.activities) {
+                    if (activity.info.name.equals(componentName)) {
+                        Logger.i("Set " + componentName + " exported to true.");
+                        activity.info.exported = true;
+                        activity.info.launchMode = ActivityInfo.LAUNCH_MULTIPLE;
+                        break;
+                    }
                 }
-
-                Logger.i("Set " + componentName + " exported to true.");
-                info.exported = true;
-                info.launchMode = ActivityInfo.LAUNCH_MULTIPLE;
             }
         });
     }

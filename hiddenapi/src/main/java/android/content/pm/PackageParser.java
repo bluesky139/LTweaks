@@ -12,10 +12,11 @@ public class PackageParser {
     public final static class Package {
         public String packageName;
         public ApplicationInfo applicationInfo;
+        public final ArrayList<Activity> activities = new ArrayList<Activity>(0);
     }
 
     public final static class Activity extends Component<ActivityIntentInfo> {
-
+        public final ActivityInfo info = null;
     }
 
     public final static class ActivityIntentInfo extends IntentInfo {
