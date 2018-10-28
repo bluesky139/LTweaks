@@ -48,7 +48,7 @@ public class XposedGooglePlus extends XposedBase {
 
     private View tabBar;
     private int tabBarSpacerId = 0;
-    private TextView[] tabButtons = new TextView[4];
+    private TextView[] tabButtons = new TextView[5];
     private View tabBarCounter;
 
     private View accountView;
@@ -183,8 +183,8 @@ public class XposedGooglePlus extends XposedBase {
                     }
                 }
                 if (tabButtons[1] == null && view.getId() > 0) {
-                    if (getResNameById(view.getId()).equals("navigation_collections")) {
-                        Logger.i("got navigation_collections.");
+                    if (getResNameById(view.getId()).equals("navigation_discover")) {
+                        Logger.i("got navigation_discover.");
                         tabButtons[1] = (TextView) view;
                     }
                 }
@@ -195,9 +195,15 @@ public class XposedGooglePlus extends XposedBase {
                     }
                 }
                 if (tabButtons[3] == null && view.getId() > 0) {
+                    if (getResNameById(view.getId()).equals("navigation_profile")) {
+                        Logger.i("got navigation_profile.");
+                        tabButtons[3] = (TextView) view;
+                    }
+                }
+                if (tabButtons[4] == null && view.getId() > 0) {
                     if (getResNameById(view.getId()).equals("navigation_notifications_text")) {
                         Logger.i("got navigation_notifications_text.");
-                        tabButtons[3] = (TextView) view;
+                        tabButtons[4] = (TextView) view;
                     }
                 }
                 if (tabBarCounter == null && view.getId() > 0) {
@@ -271,12 +277,15 @@ public class XposedGooglePlus extends XposedBase {
                 strDrwable = "quantum_ic_home_grey600_24";
                 break;
             case 1:
-                strDrwable = "quantum_ic_google_collections_grey600_24";
+                strDrwable = "quantum_ic_explore_grey600_24";
                 break;
             case 2:
                 strDrwable = "quantum_ic_communities_grey600_24";
                 break;
             case 3:
+                strDrwable = "quantum_ic_account_circle_grey600_24";
+                break;
+            case 4:
                 strDrwable = "quantum_ic_notifications_grey600_24";
                 break;
         }
@@ -291,14 +300,14 @@ public class XposedGooglePlus extends XposedBase {
             @Override
             public void onClick(View v) {
                 activity.onBackPressed();
-                if (position != 3)
+                if (position != 4)
                     tabButtons[position].performClick();
                 else
                     ((View) tabButtons[position].getParent()).performClick();
             }
         });
 
-        if (position == 3) {
+        if (position == 4) {
             FrameLayout layout = new FrameLayout(activity);
             layout.addView(view);
 
