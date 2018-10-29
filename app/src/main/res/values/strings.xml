@@ -328,7 +328,7 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_native_clipboard_fix_chrome_summary">Try this if \"Native Clipboard\" doesn\'t work in Chrome</string>
     <string name="pref_category_trust_agent">Trust Agents</string>
     <string name="pref_trust_agent_wifi">Smart Lock with WiFi</string>
-    <string name="pref_trust_agent_wifi_summary">Unlock device by certain Wifi connected, just like Smart Lock which provided by Google.\nUse both SSID and BSSID to match.\nYou need go \"Settings -> Security -> Trust agents\" to enable this agent.\nClick to set WiFi list, only connected WiFi can be added.\nFor Android 5.0+</string>
+    <string name="pref_trust_agent_wifi_summary">Unlock device by certain Wifi connected, just like Smart Lock which provided by Google.\nUse both SSID and BSSID to match.\nYou need go \"Settings -> Security -> Trust agents\" to enable this agent.\nClick to set WiFi list, only connected WiFi can be added.\nFor Android 5.0+\nPlease manually give location permission on Android 8.1+, or SSID and BSSID can\'t be got.</string>
     <string name="pref_category_solid_explorer">Solid Explorer (Not Classic)</string>
     <string name="pref_solid_explorer_replace_url">Replace Streaming Url</string>
     <string name="pref_solid_explorer_replace_url_summary">When playing video from network, Solid Explorer will streaming video to local url (eg: \"http://127.0.0.1:12345/public/a.mp4\"), it has performance loss.\nReplace \"127.0.0.1:12345\" to server url for accessing video directly (If server supports it).\nSupport smb, dav, ftp, sftp.</string>
