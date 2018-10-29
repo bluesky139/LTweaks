@@ -216,10 +216,10 @@ public class XposedGoogle extends XposedBase {
             final int idDrawerEntry  = getResId("drawer_entry", "layout");
             final int idDrawerImage  = getResId("drawer_image_view", "id");
             final int idDrawerText   = getResId("drawer_text_view", "id");
-            final int idFeedIcon     = getResId("lobby_feed_icon", "drawable");
-            final int idUpcomingIcon = getResId("lobby_tray_icon", "drawable");
-            final int idFeedText     = getResId("now_interests_tab", "string");
-            final int idUpcomingText = getResId("now_update_tab", "string");
+            final int idFeedIcon     = getResId("ic_spark_gray_24dp", "drawable");
+            final int idUpcomingIcon = getResId("ic_canary_upcoming_inset", "drawable");
+            final int idFeedText     = getResId("navigation_spark_label", "string");
+            final int idUpcomingText = getResId("navigation_updates_label", "string");
 
             traverseTabs(nowTabs, idStreamTab, 0);
             if (mFeed == null || mUpcoming == null) {
