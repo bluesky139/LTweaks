@@ -108,6 +108,7 @@
     <string name="key_prevent_list_prevent_receiver">key_prevent_list_prevent_receiver</string>
     <!-- Removed "key_shadowsocks_precise_route" -->
     <string name="key_shadowsocks_primary_dns">key_shadowsocks_primary_dns</string>
+    <string name="key_shadowsocks_transproxy">key_shadowsocks_transproxy</string>
     <string name="key_quick_settings_tile_adb_wireless">key_quick_settings_tile_adb_wireless</string>
     <string name="key_quick_settings_tile_4g3g">key_quick_settings_tile_4g3g</string>
     <string name="key_quick_settings_tile_4g">key_quick_settings_tile_4g</string>

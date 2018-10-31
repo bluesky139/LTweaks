@@ -99,4 +99,13 @@ public class PackageUtils {
             return false;
         }
     }
+
+    public static int getUid() {
+        try {
+            return MyApplication.instance().getPackageManager().getApplicationInfo(
+                    MyApplication.instance().getPackageName(), 0).uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            return -1;
+        }
+    }
 }
