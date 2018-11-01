@@ -76,7 +76,7 @@ public class Shell extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    private void forceClean() {
+    public void forceClean() {
         synchronized (this) {
             if (mProcess != null) {
                 Logger.d("Force clean cmd.");
