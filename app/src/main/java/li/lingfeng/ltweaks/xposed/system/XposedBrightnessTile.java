@@ -46,6 +46,8 @@ public class XposedBrightnessTile extends XposedTile {
         int value = Prefs.instance().getIntFromString(R.string.key_quick_settings_tile_preconfigured_brightness, 0);
         if (value > 0) {
             Logger.i("Set brightness " + value);
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE,
+                    Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
             Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, value);
         }
     }
