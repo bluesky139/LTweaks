@@ -190,6 +190,26 @@ public class SystemPrefFragment extends BasePrefFragment {
         listPreference.setSummary("%s");
     }
 
+    @PreferenceChange(prefs = R.string.key_quick_settings_tile_set_preconfigured_brightness, refreshAtStart = true)
+    private void tileSetPreconfiguredBrightness(SwitchPreference preference, boolean enabled, Extra extra) {
+        findPreference(R.string.key_quick_settings_tile_preconfigured_brightness).setEnabled(enabled);
+    }
+
+    @PreferenceChange(prefs = R.string.key_quick_settings_tile_preconfigured_brightness, refreshAtStart = true)
+    private boolean tilePrecongiruedBrightness(EditTextPreference preference, String intValue, Extra extra) {
+        if (intValue.isEmpty()) {
+            preference.setSummary("");
+            return true;
+        }
+        int value = Integer.parseInt(intValue);
+        if (value > 0 && value < 255) {
+            preference.setSummary(intValue);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)
     private void setSmartLockWifiList(Preference preference) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

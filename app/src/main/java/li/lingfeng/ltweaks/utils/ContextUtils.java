@@ -177,6 +177,14 @@ public class ContextUtils {
         return context.getResources().getDrawable(getDrawableId(name, context));
     }
 
+    public static Drawable getDrawable(int id, String packageName) {
+        return createPackageContext(packageName).getResources().getDrawable(id);
+    }
+
+    public static Drawable getDrawable(String name, String packageName) {
+        return getDrawable(name, createPackageContext(packageName));
+    }
+
     public static Drawable getColorDrawable(String name) {
         return getColorDrawable(name, MyApplication.instance());
     }

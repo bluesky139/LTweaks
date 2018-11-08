@@ -318,6 +318,10 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_quick_settings_tile_4g3g_summary">This is equivalent to set preferred network type from *#*#4636#*#*\nSet 4G/3G network types below</string>
     <string name="pref_quick_settings_tile_4g">4G</string>
     <string name="pref_quick_settings_tile_3g">3G</string>
+    <string name="pref_quick_settings_tile_set_preconfigured_brightness">Add tile \"Set xxx brightness\"</string>
+    <string name="pref_quick_settings_tile_set_preconfigured_brightness_summary">Tap to set preconfigured brightness, long press to set auto brightness.\nConfigure brightness below</string>
+    <string name="pref_quick_settings_tile_preconfigured_brightness">Configure brightness</string>
+    <string name="pref_quick_settings_tile_preconfigured_brightness_dialog_title">Valid range 1-254</string>
     <string name="pref_quick_settings_brightness_by_volume_buttons">Adjust brightness by volume buttons</string>
     <string name="pref_quick_settings_brightness_by_volume_buttons_summary">At quick settings is fully expanded.\nThis is useful for precise adjustment</string>
     <string name="pref_category_nav_bar">Navigation Bar</string>

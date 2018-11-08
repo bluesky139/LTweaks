@@ -120,7 +120,8 @@ public abstract class XposedTile extends XposedBase {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     XposedHelpers.callMethod(param.thisObject, "addTile", XposedTile.this.getClass().getSimpleName(),
-                            ContextUtils.getLDrawable(getTileIcon(true)), getTileName(true), getTileName(true),
+                            ContextUtils.getDrawable(getTileIcon(true), getTileIconPackage()),
+                            getTileName(true), getTileName(true),
                             XposedHelpers.getObjectField(param.thisObject, "mContext"));
                 }
             });
@@ -161,6 +162,9 @@ public abstract class XposedTile extends XposedBase {
     protected abstract String getTileName(boolean isOn);
     protected abstract String getTileDesc();
     protected abstract @DrawableRes int getTileIcon(boolean isOn);
+    protected String getTileIconPackage() {
+        return PackageNames.L_TWEAKS;
+    }
     protected abstract void onSwitch(Context context, boolean isOn) throws Throwable;
     protected abstract void onLongClick(Context context) throws Throwable;
 
@@ -171,7 +175,7 @@ public abstract class XposedTile extends XposedBase {
         intent.putExtra("visible", true);
         intent.putExtra("contentDescription", getTileDesc());
         intent.putExtra("label", getTileName(isOn));
-        intent.putExtra("iconPackage", PackageNames.L_TWEAKS);
+        intent.putExtra("iconPackage", getTileIconPackage());
         intent.putExtra("iconId", getTileIcon(isOn));
 
         Intent clickIntent = new Intent(ACTION_SWITCH);
