@@ -43,9 +43,6 @@ public class ClassNames {
     public static final String PROCESS_IMPL = "java.lang.ProcessImpl";
     public static final String PROCESS_ENVIRONMENT = "java.lang.ProcessEnvironment";
 
-    public static final String QS_TILE_HOST = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
-            "com.android.systemui.statusbar.phone.QSTileHost" : "com.android.systemui.qs.QSTileHost";
-    public static final String INTENT_TILE = "com.android.systemui.qs.tiles.IntentTile";
     public static final String RADIO_INFO = "com.android.settings.RadioInfo";
     public static final String DEVELOPMENT_SETTINGS = "com.android.settings.DevelopmentSettings";
 

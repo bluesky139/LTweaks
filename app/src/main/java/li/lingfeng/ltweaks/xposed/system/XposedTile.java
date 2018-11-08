@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.NotificationCompat;
 
@@ -19,8 +20,8 @@ import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
-import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.prefs.PackageNames;
+import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
@@ -29,6 +30,11 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
  */
 
 public abstract class XposedTile extends XposedBase {
+
+    private static final String QS_TILE_HOST = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 ?
+            "com.android.systemui.statusbar.phone.QSTileHost" : "com.android.systemui.qs.QSTileHost";
+    private static final String INTENT_TILE = "com.android.systemui.qs.tiles.IntentTile";
+    private static final String TILE_QUERY_HELPER = "com.android.systemui.qs.customize.TileQueryHelper";
 
     private final String ACTION_UPDATE_STATE = getClass().getName() + ".ACTION_UPDATE_STATE";
     protected final String ACTION_SWITCH = getClass().getName() + ".ACTION_SWITCH";
@@ -46,8 +52,8 @@ public abstract class XposedTile extends XposedBase {
         if (!lpparam.packageName.equals(PackageNames.ANDROID_SYSTEM_UI)) {
             return;
         }
-        final Class clsQsTileHost = findClass(ClassNames.QS_TILE_HOST);
-        final Class clsIntentTile = findClass(ClassNames.INTENT_TILE);
+        final Class clsQsTileHost = findClass(QS_TILE_HOST);
+        final Class clsIntentTile = findClass(INTENT_TILE);
 
         String methodOnTuningChanged = "onTuningChanged";
         try {
@@ -108,6 +114,17 @@ public abstract class XposedTile extends XposedBase {
                 }
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            findAndHookMethod(TILE_QUERY_HELPER, "addPackageTiles", Handler.class, Handler.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    XposedHelpers.callMethod(param.thisObject, "addTile", XposedTile.this.getClass().getSimpleName(),
+                            ContextUtils.getLDrawable(getTileIcon(true)), getTileName(true), getTileName(true),
+                            XposedHelpers.getObjectField(param.thisObject, "mContext"));
+                }
+            });
+        }
     }
 
     private class SwitchReceiver extends BroadcastReceiver {
