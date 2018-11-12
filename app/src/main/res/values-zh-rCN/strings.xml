@@ -243,6 +243,9 @@ Open source on github: \n
     <string name="pref_steam_go_reviews_summary">在右上角添加一个菜单</string>
     <string name="pref_steam_chinese">中文商店页面</string>
     <string name="pref_steam_chinese_summary">如果你的系统语言是英文但又想要中文商店界面的话就勾这个</string>
+    <string name="pref_category_comic_screen">Comic Screen</string>
+    <string name="pref_comic_screen_better_sort">更好的文件夹排序</string>
+    <string name="pref_comic_screen_better_sort_summary">如果你有文件夹命名为 \"01.5\" 这种, 可以试试这个方法来获得正确的排序.\n比如 \"01 -> 01.5 -> 02 -> 03\"</string>
 
     <!-- Bilibili -->
     <string name="bilibili_get_cover">获取封面</string>

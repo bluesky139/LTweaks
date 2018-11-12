@@ -80,4 +80,12 @@
             android:title="@string/pref_steam_chinese"
             android:summary="@string/pref_steam_chinese_summary" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_category_comic_screen">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_comic_screen_better_sort"
+            android:title="@string/pref_comic_screen_better_sort"
+            android:summary="@string/pref_comic_screen_better_sort_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

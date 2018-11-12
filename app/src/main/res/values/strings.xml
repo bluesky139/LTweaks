@@ -256,6 +256,9 @@ Open source on github: \n
     <string name="pref_steam_go_reviews_summary">Add a top right menu</string>
     <string name="pref_steam_chinese">Chinese store page</string>
     <string name="pref_steam_chinese_summary">Check this if your system language is English but you want Chinese store page</string>
+    <string name="pref_category_comic_screen">Comic Screen</string>
+    <string name="pref_comic_screen_better_sort">Better sort</string>
+    <string name="pref_comic_screen_better_sort_summary">If you have folder name like \"01.5\", try this method to get right sort.\neg. \"01 -> 01.5 -> 02 -> 03\"</string>
 
     <!-- Bilibili -->
     <string name="bilibili_get_cover">Get Cover</string>

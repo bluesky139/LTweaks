@@ -81,6 +81,7 @@
     <string name="key_steam_go_top">key_steam_go_top</string>
     <string name="key_steam_go_reviews">key_steam_go_reviews</string>
     <string name="key_steam_chinese">key_steam_chinese</string>
+    <string name="key_comic_screen_better_sort">key_comic_screen_better_sort</string>
 
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>
