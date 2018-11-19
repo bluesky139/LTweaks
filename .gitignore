@@ -40,3 +40,5 @@ captures/
 *.jks
 app/src/main/javaSelfUse/
 app/src/main/resSelfUse/
+app/main0/
+app/selfUse/release/

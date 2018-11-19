@@ -20,10 +20,6 @@ public class XposedTrustAgentWifi extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return;
-        }
-
         hookAllMethods(ClassNames.PACKAGE_MANAGER_SERVICE, "checkPermission", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

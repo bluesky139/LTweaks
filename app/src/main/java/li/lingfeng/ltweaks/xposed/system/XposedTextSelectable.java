@@ -30,21 +30,12 @@ public class XposedTextSelectable extends XposedBase {
             return;
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            findAndHookConstructor(TextView.class, Context.class, AttributeSet.class, int.class, new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    hookTextView(param);
-                }
-            });
-        } else {
-            findAndHookConstructor(TextView.class, Context.class, AttributeSet.class, int.class, int.class, new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    hookTextView(param);
-                }
-            });
-        }
+        findAndHookConstructor(TextView.class, Context.class, AttributeSet.class, int.class, int.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                hookTextView(param);
+            }
+        });
     }
 
     private void hookTextView(XC_MethodHook.MethodHookParam param) {

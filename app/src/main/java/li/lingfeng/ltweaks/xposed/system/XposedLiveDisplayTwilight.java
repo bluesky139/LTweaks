@@ -98,7 +98,6 @@ public class XposedLiveDisplayTwilight extends XposedBase {
         }
     };
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void updateTwilightState() throws Throwable {
         String sunrise = Prefs.instance().getString(R.string.key_lineage_os_live_display_time_sunrise, "08:00");
         String sunset = Prefs.instance().getString(R.string.key_lineage_os_live_display_time_sunset, "19:00");

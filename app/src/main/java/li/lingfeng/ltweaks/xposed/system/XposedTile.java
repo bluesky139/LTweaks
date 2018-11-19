@@ -202,10 +202,8 @@ public abstract class XposedTile extends XposedBase {
                             .setContentTitle(getNotificationTitle())
                             .setContentText(getNotificationText())
                             .setContentIntent(pendingIntent)
-                            .setChannelId(getNotificationTitle());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-                    }
+                            .setChannelId(getNotificationTitle())
+                            .setVisibility(Notification.VISIBILITY_PUBLIC);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         notificationManager.createNotificationChannel(
                                 new NotificationChannel(getNotificationTitle(), getNotificationTitle(), NotificationManager.IMPORTANCE_LOW));

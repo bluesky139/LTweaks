@@ -212,16 +212,12 @@ public class SystemPrefFragment extends BasePrefFragment {
 
     @PreferenceClick(prefs = R.string.key_trust_agent_wifi_aps)
     private void setSmartLockWifiList(Preference preference) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
-            if (keyguardManager.isKeyguardSecure()) {
-                Intent keyguardIntent = keyguardManager.createConfirmDeviceCredentialIntent(getString(R.string.pref_trust_agent_wifi), "");
-                startActivityForResult(keyguardIntent, ActivityRequestCode.KEYGUARD);
-            } else {
-                Toast.makeText(getActivity(), R.string.secure_lock_screen_not_setup, Toast.LENGTH_SHORT).show();
-            }
+        KeyguardManager keyguardManager = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
+        if (keyguardManager.isKeyguardSecure()) {
+            Intent keyguardIntent = keyguardManager.createConfirmDeviceCredentialIntent(getString(R.string.pref_trust_agent_wifi), "");
+            startActivityForResult(keyguardIntent, ActivityRequestCode.KEYGUARD);
         } else {
-            Toast.makeText(getActivity(), R.string.not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.secure_lock_screen_not_setup, Toast.LENGTH_SHORT).show();
         }
     }
 

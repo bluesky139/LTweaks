@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
+import li.lingfeng.ltweaks.MyApplication;
 import li.lingfeng.ltweaks.prefs.ClassNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.Logger;
@@ -27,6 +28,7 @@ public class XposedChromeBase extends XposedBase {
     protected static final String CUSTOM_ACTIVITY = "org.chromium.chrome.browser.customtabs.CustomTabActivity";
     protected static final String LOAD_URL_PARAMS = "org.chromium.content_public.browser.LoadUrlParams";
     protected static final String TAB = "org.chromium.chrome.browser.tab.Tab";
+    protected static final String TAB_WEB_CONTENTS_DELEGATE_ANDROID = "org.chromium.chrome.browser.tab.TabWebContentsDelegateAndroid";
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -121,21 +123,35 @@ public class XposedChromeBase extends XposedBase {
         Logger.i("loadUrl " + url);
         try {
             Object tab = getCurrentTab(activity);
-            final Class clsLoadUrlParams = findClass(LOAD_URL_PARAMS);
-            Method method = Utils.findMethodFromList(tab.getClass().getDeclaredMethods(), new Utils.FindMethodCallback() {
-                @Override
-                public boolean onMethodCheck(Method m) {
-                    return Modifier.isPublic(m.getModifiers()) && m.getParameterTypes().length == 1
-                            && m.getParameterTypes()[0] == clsLoadUrlParams && m.getReturnType() == int.class;
-                }
-            });
-            Object loadUrlParams = XposedHelpers.newInstance(clsLoadUrlParams, url);
-            int ret = (int) method.invoke(tab, loadUrlParams);
-            Logger.d("loadUrl return " + ret);
+            _loadUrl(tab, url);
         } catch (Throwable e) {
             Toast.makeText(activity, "Error.", Toast.LENGTH_SHORT).show();
             Logger.stackTrace(e);
         }
+    }
+
+    protected void loadUrl(Object tab, String url) {
+        Logger.i("loadUrl " + url + " on tab " + tab);
+        try {
+            _loadUrl(tab, url);
+        } catch (Throwable e) {
+            Toast.makeText(MyApplication.instance(), "Error.", Toast.LENGTH_SHORT).show();
+            Logger.stackTrace(e);
+        }
+    }
+
+    private void _loadUrl(Object tab, String url) throws Throwable {
+        final Class clsLoadUrlParams = findClass(LOAD_URL_PARAMS);
+        Method method = Utils.findMethodFromList(tab.getClass().getDeclaredMethods(), new Utils.FindMethodCallback() {
+            @Override
+            public boolean onMethodCheck(Method m) {
+                return Modifier.isPublic(m.getModifiers()) && m.getParameterTypes().length == 1
+                        && m.getParameterTypes()[0] == clsLoadUrlParams && m.getReturnType() == int.class;
+            }
+        });
+        Object loadUrlParams = XposedHelpers.newInstance(clsLoadUrlParams, url);
+        int ret = (int) method.invoke(tab, loadUrlParams);
+        Logger.d("loadUrl return " + ret);
     }
 
     private Object getCurrentTab(Activity activity) throws Throwable {

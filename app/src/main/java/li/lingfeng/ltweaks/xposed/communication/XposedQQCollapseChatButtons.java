@@ -98,7 +98,7 @@ public class XposedQQCollapseChatButtons extends XposedBase {
                         Logger.e("Error to handleLayoutChanged, " + e);
                         Logger.stackTrace(e);
                     }
-                    if (mHeight > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    if (mHeight > 0) {
                         rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 }

@@ -104,10 +104,7 @@ public class XposedYoutubeRemoveBottomBar extends XposedBase {
 
         FrameLayout allView = ViewUtils.rootChildsIntoOneLayout(activity);
         mDrawerLayout = new SimpleDrawer(activity, allView, navItems, headerItem);
-        int color = ContextUtils.getColorFromTheme(activity.getTheme(), android.R.attr.colorPrimary);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            color = activity.getWindow().getStatusBarColor();
-        }
+        int color = activity.getWindow().getStatusBarColor();
         mDrawerLayout.updateHeaderBackground(color);
         final ViewGroup rootView = (ViewGroup) activity.findViewById(android.R.id.content);
         rootView.addView(mDrawerLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

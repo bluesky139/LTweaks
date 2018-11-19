@@ -145,12 +145,10 @@ public class XposedShadowsocksTransproxy extends XposedBase {
                 .setPriority(Notification.PRIORITY_LOW)
                 .setContentTitle("Shadowsocks transproxy")
                 .setContentText(text)
-                .setChannelId("Shadowsocks transproxy iptables");
+                .setChannelId("Shadowsocks transproxy iptables")
+                .setVisibility(Notification.VISIBILITY_PUBLIC);
         if (isOngoing) {
             builder.setProgress(0, 0, true);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(
