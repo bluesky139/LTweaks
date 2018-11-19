@@ -127,21 +127,6 @@ public class XposedProcessor extends AbstractProcessor {
         }
         writer.write("    }\n");
 
-        // Generate by pref keys
-        Map<Integer, String> keys = getKeyMap();
-        writer.write("    @Override\n");
-        writer.write("    protected void addModulePrefs() {\n");
-        for (Element element_ : env.getElementsAnnotatedWith(xposedTypeElement)) {
-            TypeElement element = (TypeElement) element_;
-            XposedLoad load = element.getAnnotation(XposedLoad.class);
-            for (int prefId : load.prefs()) {
-                String key = keys.get(prefId);
-                mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + key + " -> " + element.getSimpleName());
-                writer.write("        addModulePref(" + element.getQualifiedName() + ".class, \"" + key + "\");\n");
-            }
-        }
-        writer.write("    }\n");
-
         // Generate for res modules
         mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor resTypeElement " + resTypeElement.toString());
         writer.write("    @Override\n");

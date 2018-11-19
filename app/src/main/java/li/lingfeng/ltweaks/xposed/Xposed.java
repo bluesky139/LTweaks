@@ -66,17 +66,6 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         return modules;
     }
 
-    protected void addModulePref(Class<?> cls, String pref) {
-        if (!mModulePrefs.containsKey(cls)) {
-            mModulePrefs.put(cls, new HashSet<String>());
-        }
-        mModulePrefs.get(cls).add(pref);
-    }
-
-    private Set<String> getModulePrefs(Class<?> cls) {
-        return mModulePrefs.get(cls);
-    }
-
     protected void addResModule(String packageName, Class<? extends IXposedHookInitPackageResources> cls) {
         if (!mResModules.containsKey(packageName)) {
             mResModules.put(packageName, new HashSet<Class<? extends IXposedHookInitPackageResources>>());
@@ -91,7 +80,6 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
     protected abstract void addZygoteModules();
     protected abstract void addModulesForAll();
     protected abstract void addModules();
-    protected abstract void addModulePrefs();
     protected abstract void addResModules();
 
     @Override
@@ -109,7 +97,6 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
             addZygoteModules();
             addModulesForAll();
             addModules();
-            addModulePrefs();
             addResModules();
         }
 
@@ -156,14 +143,11 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
                     Prefs.useZygotePreferences();
                 }
 
-                List<String> enabledPrefs = new ArrayList<>();
+                List<Integer> enabledPrefs = new ArrayList<>();
                 if (xposedLoad.loadAtActivityCreate().isEmpty()) {
-                    Set<String> prefs = getModulePrefs(cls);
-                    if (prefs != null) {
-                        for (String pref : prefs) {
-                            if (Prefs.instance().getBoolean(pref, false)) {
-                                enabledPrefs.add(pref);
-                            }
+                    for (int pref : xposedLoad.prefs()) {
+                        if (Prefs.instance().getBoolean(pref, false)) {
+                            enabledPrefs.add(pref);
                         }
                     }
                 }
