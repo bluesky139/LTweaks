@@ -48,5 +48,16 @@ public class XposedBilibiliSearch extends XposedCommon {
                 }
             }
         });
+
+        findAndHookActivity(ClassNames.BILIBILI_SEARCH_ACTIVITY, "onStop", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Activity activity = (Activity) param.thisObject;
+                if (!activity.isFinishing()) {
+                    Logger.d("Finish search activity.");
+                    activity.finish();
+                }
+            }
+        });
     }
 }
