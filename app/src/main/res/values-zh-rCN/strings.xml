@@ -300,7 +300,7 @@ Open source on github: \n
     <string name="pref_shadowsocks_primary_dns">主 DNS</string>
     <string name="pref_shadowsocks_primary_dns_summary">ip:port, 多个用逗号隔开</string>
     <string name="pref_shadowsocks_transproxy">透明代理</string>
-    <string name="pref_shadowsocks_transproxy_summary">配合 Shadowsocks 的透明代理模式使用</string>
+    <string name="pref_shadowsocks_transproxy_summary">配合 Shadowsocks 的透明代理模式使用, 需要设置路由为\"绕过局域网和中国大陆\".\nss-local acl 将被禁用, IP 列表将使用 iptables 来添加.\n每次启用 Shadowsocks 时需要几分钟的时间.\n需要 root</string>
     <string name="pref_category_quick_settings">通知栏快捷菜单</string>
     <string name="pref_quick_settings_tile_adb_wireless">添加菜单 \"Adb Wireless\"</string>
     <string name="pref_quick_settings_tile_adb_wireless_summary">使用 \"adb connect x:x:x:x:5555\" 来连接\n仅 Android 5.0+, 需要 root</string>
@@ -361,7 +361,7 @@ Open source on github: \n
     <string name="pref_display_dark_wallpaper_color_summary">欺骗系统认为我们正在使用一张黑色的壁纸, 因此可以使系统固定在深色主题.\n比如: 快速下拉设置会使用黑色背景.\n仅 Android 8.1+</string>
     <string name="pref_category_web">网络</string>
     <string name="pref_display_hspap_signal">H+ 网络</string>
-    <string name="pref_display_hspap_signal_summary">让 HSPA+ 网络显示 H+ 而不是 H</string>
+    <string name="pref_display_hspap_signal_summary">让 HSPA+ 网络显示 H+ 而不是 H\n仅 Android 6.0+</string>
     <string name="pref_web_search_to_browser">网页搜索跳转浏览器</string>
     <string name="pref_web_search_to_browser_summary">而不是\"Google 搜索\"应用</string>
 
