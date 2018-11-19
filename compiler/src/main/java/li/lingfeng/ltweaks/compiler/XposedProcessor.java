@@ -28,6 +28,7 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import li.lingfeng.ltweaks.lib.ResLoad;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.lib.ZygoteLoad;
 
@@ -37,7 +38,8 @@ import li.lingfeng.ltweaks.lib.ZygoteLoad;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
         "li.lingfeng.ltweaks.lib.ZygoteLoad",
-        "li.lingfeng.ltweaks.lib.XposedLoad"
+        "li.lingfeng.ltweaks.lib.XposedLoad",
+        "li.lingfeng.ltweaks.lib.ResLoad"
 })
 public class XposedProcessor extends AbstractProcessor {
 
@@ -57,15 +59,16 @@ public class XposedProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-        if (annotations.size() != 2) {
+        if (annotations.size() != 3) {
             return false;
         }
 
         try {
             Iterator<TypeElement> iterator = (Iterator<TypeElement>) annotations.iterator();
+            TypeElement resTypeElement = iterator.next();
             TypeElement xposedTypeElement = iterator.next();
             TypeElement zygoteTypeElement = iterator.next();
-            generateXposedLoader(xposedTypeElement, zygoteTypeElement, env);
+            generateXposedLoader(xposedTypeElement, zygoteTypeElement, resTypeElement, env);
             generatePrefKeys();
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +76,7 @@ public class XposedProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void generateXposedLoader(TypeElement xposedTypeElement, TypeElement zygoteElement, RoundEnvironment env) throws Exception {
+    private void generateXposedLoader(TypeElement xposedTypeElement, TypeElement zygoteTypeElement, TypeElement resTypeElement, RoundEnvironment env) throws Exception {
         JavaFileObject genFile = processingEnv.getFiler().createSourceFile("li.lingfeng.ltweaks.xposed.XposedLoader");
         String genFilePath = genFile.toUri().toString();
         mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor is generating " + genFilePath);
@@ -85,10 +88,10 @@ public class XposedProcessor extends AbstractProcessor {
         writer.write("public class XposedLoader extends Xposed {\n\n");
 
         // Generate for zygote modules
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor zygoteElement " + zygoteElement.toString());
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor zygoteElement " + zygoteTypeElement.toString());
         writer.write("    @Override\n");
         writer.write("    protected void addZygoteModules() {\n");
-        for (Element element_ : env.getElementsAnnotatedWith(zygoteElement)) {
+        for (Element element_ : env.getElementsAnnotatedWith(zygoteTypeElement)) {
             TypeElement element = (TypeElement) element_;
             ZygoteLoad load = element.getAnnotation(ZygoteLoad.class);
             mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + element.getSimpleName());
@@ -135,6 +138,20 @@ public class XposedProcessor extends AbstractProcessor {
                 String key = keys.get(prefId);
                 mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + key + " -> " + element.getSimpleName());
                 writer.write("        addModulePref(" + element.getQualifiedName() + ".class, \"" + key + "\");\n");
+            }
+        }
+        writer.write("    }\n");
+
+        // Generate for res modules
+        mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor resTypeElement " + resTypeElement.toString());
+        writer.write("    @Override\n");
+        writer.write("    protected void addResModules() {\n");
+        for (Element element_ : env.getElementsAnnotatedWith(resTypeElement)) {
+            TypeElement element = (TypeElement) element_;
+            ResLoad load = element.getAnnotation(ResLoad.class);
+            for (String packageName : load.packages()) {
+                mMessager.printMessage(Diagnostic.Kind.NOTE, "XposedProcessor " + packageName + " -> " + element.getSimpleName());
+                writer.write("        addResModule(\"" + packageName + "\", " + element.getQualifiedName() + ".class);\n");
             }
         }
         writer.write("    }\n");

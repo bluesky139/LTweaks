@@ -3,9 +3,14 @@ package li.lingfeng.ltweaks.utils;
 import android.content.Intent;
 import android.util.Log;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 
+import de.robv.android.xposed.XposedHelpers;
 import li.lingfeng.ltweaks.BuildConfig;
 
 /**
@@ -77,6 +82,15 @@ public class Logger {
         for (Object _kv : map.entrySet()) {
             Map.Entry kv = (Map.Entry) _kv;
             Logger.d(" map "  + kv.getKey() + ": " + kv.getValue());
+        }
+    }
+
+    public static void clsFieldValues(Object instance) throws Throwable {
+        Logger.d("clsFieldValues " + instance);
+        List<Field> fields = FieldUtils.getAllFieldsList(instance.getClass());
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Logger.d("  " + field.getName() + ": " + field.get(instance));
         }
     }
 }

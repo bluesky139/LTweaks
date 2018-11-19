@@ -247,6 +247,11 @@
             android:key="@string/key_display_dark_wallpaper_color"
             android:title="@string/pref_display_dark_wallpaper_color"
             android:summary="@string/pref_display_dark_wallpaper_color_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_display_hspap_signal"
+            android:title="@string/pref_display_hspap_signal"
+            android:summary="@string/pref_display_hspap_signal_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

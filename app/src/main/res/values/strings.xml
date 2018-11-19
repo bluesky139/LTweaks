@@ -372,6 +372,8 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_display_min_brightness_dialog_title">Default is %d, valid range 1-254</string>
     <string name="pref_display_dark_wallpaper_color">Dark wallpaper color</string>
     <string name="pref_display_dark_wallpaper_color_summary">Trick the system that we are using a dark wallpaper, then system theme color will change to dark.\neg. Quick Settings will use dark background.\nFor Android 8.1+</string>
+    <string name="pref_display_hspap_signal">H+ signal</string>
+    <string name="pref_display_hspap_signal_summary">Display H+ instead of H for HSPA+ signal</string>
     <string name="pref_category_web">Web</string>
     <string name="pref_web_search_to_browser">Go to browser on web search</string>
     <string name="pref_web_search_to_browser_summary">Instead of Google Search App</string>

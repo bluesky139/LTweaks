@@ -12,10 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import li.lingfeng.ltweaks.lib.ResLoad;
 import li.lingfeng.ltweaks.lib.XposedLoad;
 import li.lingfeng.ltweaks.lib.ZygoteLoad;
 import li.lingfeng.ltweaks.prefs.PackageNames;
@@ -26,13 +29,15 @@ import li.lingfeng.ltweaks.utils.Logger;
  * Created by smallville on 2016/12/22.
  */
 
-public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPackage {
+public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
+    public static String MODULE_PATH;
     private Set<Class<? extends IXposedHookZygoteInit>> mZygoteModules = new HashSet<>();
     private Set<Class<? extends XposedBase>> mModulesForAll = new HashSet<>(); // These modules are loaded for all packages.
     private Map<String, Set<Class<? extends XposedBase>>> mModules = new HashMap<>();     // package name -> set of Xposed class implemented IXposedHookLoadPackage.
     private Map<Class<?>, Set<String>> mModulePrefs = new HashMap<>(); // Xposed class -> set of enalbed pref.
-    private List<IXposedHookLoadPackage> mLoaded = new ArrayList<>();  // Loaded Xposed classes.
+    private Map<Class<?>, XposedBase> mLoadedModules = new HashMap<>();
+    private Map<String, Set<Class<? extends IXposedHookInitPackageResources>>> mResModules = new HashMap<>();
 
     private boolean isEmptyModules() {
         return  mModules.size() == 0;
@@ -72,13 +77,27 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
         return mModulePrefs.get(cls);
     }
 
+    protected void addResModule(String packageName, Class<? extends IXposedHookInitPackageResources> cls) {
+        if (!mResModules.containsKey(packageName)) {
+            mResModules.put(packageName, new HashSet<Class<? extends IXposedHookInitPackageResources>>());
+        }
+        mResModules.get(packageName).add(cls);
+    }
+
+    private Set<Class<? extends IXposedHookInitPackageResources>> getResModules(String packageName) {
+        return mResModules.get(packageName);
+    }
+
     protected abstract void addZygoteModules();
     protected abstract void addModulesForAll();
     protected abstract void addModules();
     protected abstract void addModulePrefs();
+    protected abstract void addResModules();
 
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
+        MODULE_PATH = startupParam.modulePath;
+
         File file = new File(Prefs.PATH);
         if (file.exists()) {
             file.setReadable(true, false);
@@ -91,6 +110,7 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
             addModulesForAll();
             addModules();
             addModulePrefs();
+            addResModules();
         }
 
         Prefs.useZygotePreferences();
@@ -166,12 +186,44 @@ public abstract class Xposed implements IXposedHookZygoteInit, IXposedHookLoadPa
                     if (ArrayUtils.contains(xposedLoad.excludedPackages(), lpparam.packageName)) {
                         continue;
                     }
-                    IXposedHookLoadPackage module = (IXposedHookLoadPackage) cls.newInstance();
+                    XposedBase module = (XposedBase) cls.newInstance();
                     module.handleLoadPackage(lpparam);
-                    mLoaded.add(module);
+                    mLoadedModules.put(cls, module);
                 }
             } catch (Throwable e) {
                 Logger.e("Can't handleLoadPackage, " + e.getMessage());
+                Logger.stackTrace(e);
+            }
+        }
+    }
+
+    @Override
+    public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
+        Set<Class<? extends IXposedHookInitPackageResources>> resModules = getResModules(resparam.packageName);
+        if (resModules == null) {
+            return;
+        }
+
+        for (Class<?> cls : resModules) {
+            try {
+                ResLoad resLoad = cls.getAnnotation(ResLoad.class);
+                List<Integer> enabledPrefs = new ArrayList<>();
+                for (int pref : resLoad.prefs()) {
+                    if (Prefs.instance().getBoolean(pref, false)) {
+                        enabledPrefs.add(pref);
+                    }
+                }
+                if (enabledPrefs.size() > 0 || resLoad.prefs().length == 0) {
+                    IXposedHookInitPackageResources resModule = (IXposedHookInitPackageResources) mLoadedModules.get(cls);
+                    if (resModule == null) {
+                        resModule = (IXposedHookInitPackageResources) cls.newInstance();
+                    }
+                    Logger.i("Load res " + cls.getName() + " for " + resparam.packageName
+                            + ", with prefs [" + TextUtils.join(", ", enabledPrefs) + "]");
+                    resModule.handleInitPackageResources(resparam);
+                }
+            } catch (Throwable e) {
+                Logger.e("Can't load res module, " + e);
                 Logger.stackTrace(e);
             }
         }
