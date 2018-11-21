@@ -233,6 +233,7 @@ Open source on github: \n
     <string name="pref_bilibili_darken">更完美的夜间模式</string>
     <string name="pref_bilibili_darken_summary">1.夜间模式下进入文章页面时，会先调为白天模式，然后瞬间再返回夜间模式. 尝试修复此问题\n2.启动此应用时，将应用尚未加载完成前的白屏调为黑屏</string>
     <string name="pref_bilibili_hide_follow_at_full_screen">隐藏全屏状态下的关注按钮</string>
+    <string name="pref_bilibili_dismiss_update">不检查更新</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">分享链接</string>
     <string name="pref_steam_share_url_summary">在右上角菜单添加一个系统分享项</string>

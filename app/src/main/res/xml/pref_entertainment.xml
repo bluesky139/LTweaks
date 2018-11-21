@@ -55,6 +55,10 @@
             android:defaultValue="false"
             android:key="@string/key_bilibili_hide_follow_at_full_screen"
             android:title="@string/pref_bilibili_hide_follow_at_full_screen" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_bilibili_dismiss_update"
+            android:title="@string/pref_bilibili_dismiss_update" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_category_steam">

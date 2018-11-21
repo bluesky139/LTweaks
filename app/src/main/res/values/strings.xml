@@ -246,6 +246,7 @@ Open source on github: \n
     <string name="pref_bilibili_darken">A more better night mode</string>
     <string name="pref_bilibili_darken_summary">1.When entering reading page in night mode, it will switch to daytime mode first, then suddenly back to night mode. Try fix this\n2.When entering this app, the whole screen will become white before app loading finish, change it to dark</string>
     <string name="pref_bilibili_hide_follow_at_full_screen">Hide follow button at full screen</string>
+    <string name="pref_bilibili_dismiss_update">Never check for new version</string>
     <string name="pref_category_steam">Steam</string>
     <string name="pref_steam_share_url">Share url</string>
     <string name="pref_steam_share_url_summary">Add a top right menu to use system share</string>
