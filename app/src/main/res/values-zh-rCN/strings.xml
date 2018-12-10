@@ -366,6 +366,9 @@ Open source on github: \n
     <string name="pref_display_hspap_signal_summary">让 HSPA+ 网络显示 H+ 而不是 H\n仅 Android 6.0+</string>
     <string name="pref_web_search_to_browser">网页搜索跳转浏览器</string>
     <string name="pref_web_search_to_browser_summary">而不是\"Google 搜索\"应用</string>
+    <string name="pref_category_debug">调试</string>
+    <string name="pref_debug_app_crash_info">在应用崩溃的时候显示调试信息</string>
+    <string name="pref_debug_app_crash_info_summary">作用在崩溃时系统弹出的对话框上.\n用户安装的应用内所有捕获异常的功能都将被禁掉.\n仅 Android 7.0+</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文本</string>

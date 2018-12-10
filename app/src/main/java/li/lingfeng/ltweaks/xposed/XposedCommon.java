@@ -3,6 +3,7 @@ package li.lingfeng.ltweaks.xposed;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageParser;
+import android.os.Process;
 
 import de.robv.android.xposed.XC_MethodHook;
 import li.lingfeng.ltweaks.prefs.ClassNames;
@@ -49,5 +50,9 @@ public abstract class XposedCommon extends XposedBase {
                 appInfo.flags |= ApplicationInfo.FLAG_DEBUGGABLE;
             }
         });
+    }
+
+    protected boolean isUserInstalledApp() {
+        return lpparam.appInfo.uid >= Process.FIRST_APPLICATION_UID && lpparam.appInfo.uid <= Process.LAST_APPLICATION_UID;
     }
 }

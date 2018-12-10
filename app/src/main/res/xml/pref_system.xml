@@ -262,4 +262,13 @@
             android:title="@string/pref_web_search_to_browser"
             android:summary="@string/pref_web_search_to_browser_summary" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_debug">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_debug_app_crash_info"
+            android:title="@string/pref_debug_app_crash_info"
+            android:summary="@string/pref_debug_app_crash_info_summary" />
+    </PreferenceCategory>
 </PreferenceScreen>

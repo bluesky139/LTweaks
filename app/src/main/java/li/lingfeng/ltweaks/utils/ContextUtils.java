@@ -84,6 +84,10 @@ public class ContextUtils {
         return context.getResources().getIdentifier(name, type, context.getPackageName());
     }
 
+    public static int getResId(String name, String type, String packageName) {
+        return MyApplication.instance().getResources().getIdentifier(name, type, packageName);
+    }
+
     public static int getIdId(String name) {
         return getIdId(name, MyApplication.instance());
     }
@@ -114,6 +118,10 @@ public class ContextUtils {
 
     public static int getDrawableId(String name, Context context) {
         return getResId(name, "drawable", context);
+    }
+
+    public static int getAndroidDrawableId(String name) {
+        return getResId(name, "drawable", "android");
     }
 
     public static int getMipmapId(String name) {
@@ -271,6 +279,10 @@ public class ContextUtils {
 
     public static int getThemeId(String name, Context context) {
         return getResId(name, "style", context);
+    }
+
+    public static int getAndroidThemeId(String name) {
+        return getResId(name, "style", "android");
     }
 
     public static int getColor(String name) {
