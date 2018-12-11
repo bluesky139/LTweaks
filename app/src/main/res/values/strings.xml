@@ -383,7 +383,7 @@ Note, you\'d better know what these methods for, in case of unexpected error</st
     <string name="pref_debug_app_crash_info">Show app crash info</string>
     <string name="pref_debug_app_crash_info_summary">Show crash info in app crash dialog.\nAll exception handlers from user installed apps will be disabled.\nFor Android 7.0+</string>
     <string name="pref_debug_mtp_always">MTP always</string>
-    <string name="pref_debug_mtp_always_summary">Always enable MTP when device is connected to PC.\nMTP will also be enabled if you choose charge only</string>
+    <string name="pref_debug_mtp_always_summary">Always enable MTP when device is connected to PC.\nMTP will also be enabled if you choose charge only.\nFor Android 8.0+</string>
 
     <!-- Text -->
     <string name="text_selectable">Selectable Text</string>

@@ -370,7 +370,7 @@ Open source on github: \n
     <string name="pref_debug_app_crash_info">在应用崩溃的时候显示调试信息</string>
     <string name="pref_debug_app_crash_info_summary">作用在崩溃时系统弹出的对话框上.\n用户安装的应用内所有捕获异常的功能都将被禁掉.\n仅 Android 7.0+</string>
     <string name="pref_debug_mtp_always">总是启用 MTP</string>
-    <string name="pref_debug_mtp_always_summary">当连接到电脑时总是启用 MTP.\n即使你选择仅充电, MTP 仍将被启用</string>
+    <string name="pref_debug_mtp_always_summary">当连接到电脑时总是启用 MTP.\n即使你选择仅充电, MTP 仍将被启用.\n仅 Android 8.0+</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文本</string>
