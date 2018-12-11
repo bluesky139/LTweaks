@@ -366,9 +366,11 @@ Open source on github: \n
     <string name="pref_display_hspap_signal_summary">讓 HSPA+ 網路顯示 H+ 而不是 H\n僅 Android 6.0+</string>
     <string name="pref_web_search_to_browser">網頁搜尋跳轉瀏覽器</string>
     <string name="pref_web_search_to_browser_summary">而不是\"Google 搜尋\"程式</string>
-    <string name="pref_category_debug">調試</string>
+    <string name="pref_category_debug">調試 / 其它</string>
     <string name="pref_debug_app_crash_info">在應用崩潰的時候顯示調試信息</string>
     <string name="pref_debug_app_crash_info_summary">作用在崩潰時系統彈出的對話框上.\n用戶安裝的應用內所有捕獲異常的功能都將被禁掉.\n僅 Android 7.0+</string>
+    <string name="pref_debug_mtp_always">總是啟用 MTP</string>
+    <string name="pref_debug_mtp_always_summary">當連接到電腦時總是啟用 MTP.\n即使你選擇僅充電, MTP 仍將被啟用</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文字</string>

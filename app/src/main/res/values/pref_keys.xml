@@ -141,6 +141,7 @@
     <string name="key_display_hspap_signal">key_display_hspap_signal</string>
     <string name="key_web_search_to_browser">key_web_search_to_browser</string>
     <string name="key_debug_app_crash_info">key_debug_app_crash_info</string>
+    <string name="key_debug_mtp_always">key_debug_mtp_always</string>
 
     <!--Donate-->
     <string name="key_donate_alipay">key_donate_alipay</string>

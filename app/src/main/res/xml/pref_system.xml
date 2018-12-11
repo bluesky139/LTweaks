@@ -270,5 +270,10 @@
             android:key="@string/key_debug_app_crash_info"
             android:title="@string/pref_debug_app_crash_info"
             android:summary="@string/pref_debug_app_crash_info_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_debug_mtp_always"
+            android:title="@string/pref_debug_mtp_always"
+            android:summary="@string/pref_debug_mtp_always_summary" />
     </PreferenceCategory>
 </PreferenceScreen>
