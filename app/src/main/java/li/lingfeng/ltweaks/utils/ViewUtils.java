@@ -114,12 +114,16 @@ public class ViewUtils {
     }
 
     public static <T extends View> T findViewByType(ViewGroup rootView, final Class<? extends View> type) {
+        return findViewByType(rootView, type, -1);
+    }
+
+    public static <T extends View> T findViewByType(ViewGroup rootView, final Class<? extends View> type, int maxDeep) {
         List<View> views = traverseViews(rootView, true, new ViewTraverseCallback() {
             @Override
             public boolean onAddResult(View view, int deep) {
                 return type.isAssignableFrom(view.getClass());
             }
-        });
+        }, maxDeep);
         if (views.size() > 0) {
             return (T) views.get(0);
         }
@@ -160,7 +164,13 @@ public class ViewUtils {
         });
     }
 
-    public static <T extends View> List<T> traverseViews(ViewGroup rootView, final boolean onlyOne, final ViewTraverseCallback callback) {
+    public static <T extends View> List<T> traverseViews(ViewGroup rootView, final boolean onlyOne,
+                                                         final ViewTraverseCallback callback) {
+        return traverseViews(rootView, onlyOne, callback, -1);
+    }
+
+    public static <T extends View> List<T> traverseViews(ViewGroup rootView, final boolean onlyOne,
+                                                         final ViewTraverseCallback callback, int maxDeep) {
         final List<T> results = new ArrayList<>();
         traverseViews(rootView, new ViewTraverseCallback2() {
             @Override
@@ -173,7 +183,7 @@ public class ViewUtils {
                 }
                 return false;
             }
-        });
+        }, maxDeep);
         return results;
     }
 

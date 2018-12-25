@@ -36,22 +36,6 @@ public abstract class XposedCommon extends XposedBase {
         });
     }
 
-    protected void hookAndSetAppDebuggable(final String packageName) {
-        hookAllMethods(ClassNames.PACKAGE_PARSER, "parseBaseApplication", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                PackageParser.Package owner = (PackageParser.Package) param.args[0];
-                if (!owner.packageName.equals(packageName)) {
-                    return;
-                }
-
-                Logger.i("Set " + packageName + " debuggable.");
-                ApplicationInfo appInfo = owner.applicationInfo;
-                appInfo.flags |= ApplicationInfo.FLAG_DEBUGGABLE;
-            }
-        });
-    }
-
     protected boolean isUserInstalledApp() {
         return lpparam.appInfo.uid >= Process.FIRST_APPLICATION_UID && lpparam.appInfo.uid <= Process.LAST_APPLICATION_UID;
     }

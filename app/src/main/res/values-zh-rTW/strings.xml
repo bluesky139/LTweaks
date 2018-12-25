@@ -371,6 +371,8 @@ Open source on github: \n
     <string name="pref_debug_app_crash_info_summary">作用在崩潰時系統彈出的對話框上.\n用戶安裝的應用內所有捕獲異常的功能都將被禁掉.\n僅 Android 7.0+</string>
     <string name="pref_debug_mtp_always">總是啟用 MTP</string>
     <string name="pref_debug_mtp_always_summary">當連接到電腦時總是啟用 MTP.\n即使你選擇僅充電, MTP 仍將被啟用.\n僅 Android 8.0+</string>
+    <string name="pref_debug_debuggable">設置所有應用為可調試</string>
+    <string name="pref_debug_debuggable_summary">相當於在 AndroidManifest.xml 中設置 debuggable</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文字</string>
