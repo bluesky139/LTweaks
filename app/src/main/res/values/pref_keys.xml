@@ -88,6 +88,7 @@
     <!--System-->
     <string name="key_text_aide_open_youdao">key_text_aide_open_youdao</string>
     <string name="key_text_double_click_for_selectable">key_text_double_click_for_selectable</string>
+    <string name="key_text_long_press_to_copy">key_text_long_press_to_copy</string>
     <string name="key_text_selectable_text">key_text_selectable_text</string>
     <string name="key_text_actions">key_text_actions</string>
     <string name="key_text_actions_set">key_text_actions_set</string>

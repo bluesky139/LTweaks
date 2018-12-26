@@ -276,6 +276,8 @@ Open source on github: \n
     <string name="pref_text_double_click_for_selectable">Double click for selectable</string>
     <string name="pref_text_double_click_for_selectable_summary">Double click to let text become selectable, then long press text to do something as usual.\n
 May not work on all places</string>
+    <string name="pref_text_long_press_to_copy">Long press to copy</string>
+    <string name="pref_text_long_press_to_copy_summary">Exclude selectable text</string>
     <string name="pref_text_selectable_text">Selectable Text</string>
     <string name="pref_text_selectable_text_summary">Add a item in share menu, to display or reprocess shared text</string>
     <string name="pref_text_actions">Manage floating menus</string>

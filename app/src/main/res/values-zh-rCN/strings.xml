@@ -263,6 +263,8 @@ Open source on github: \n
     <string name="pref_text_double_click_for_selectable">双击让文本变为可选状态</string>
     <string name="pref_text_double_click_for_selectable_summary">然后再像平常一样长按进行操作.\n
 也许在某些地方无法使用</string>
+    <string name="pref_text_long_press_to_copy">长按复制</string>
+    <string name="pref_text_long_press_to_copy_summary">忽略长按可进行选择的文本</string>
     <string name="pref_text_selectable_text">查看文本</string>
     <string name="pref_text_selectable_text_summary">在分享菜单中添加一个菜单, 用于查看当前分享的文本或对文本进行简单的二次处理</string>
     <string name="pref_text_actions">管理浮动菜单</string>

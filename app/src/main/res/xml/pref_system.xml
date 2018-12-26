@@ -16,6 +16,11 @@
             android:summary="@string/pref_text_double_click_for_selectable_summary" />
         <SwitchPreference
             android:defaultValue="false"
+            android:key="@string/key_text_long_press_to_copy"
+            android:title="@string/pref_text_long_press_to_copy"
+            android:summary="@string/pref_text_long_press_to_copy_summary" />
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="@string/key_text_selectable_text"
             android:title="@string/pref_text_selectable_text"
             android:summary="@string/pref_text_selectable_text_summary" />
