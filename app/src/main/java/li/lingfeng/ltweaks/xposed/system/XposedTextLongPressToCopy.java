@@ -21,7 +21,10 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 })
 public class XposedTextLongPressToCopy extends XposedBase {
 
+    private static final int MAX_DOWN_OFFSET = 15;
     private LongPressRunnable mLongPressRunnable;
+    private float mDownX;
+    private float mDownY;
 
     @Override
     protected void handleLoadPackage() throws Throwable {
@@ -35,11 +38,9 @@ public class XposedTextLongPressToCopy extends XposedBase {
                 MotionEvent event = (MotionEvent) param.args[0];
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        mDownX = event.getRawX();
+                        mDownY = event.getRawY();
                         pendingLongPress(textView);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        cancelLongPress();
                         break;
                 }
             }
@@ -53,6 +54,11 @@ public class XposedTextLongPressToCopy extends XposedBase {
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         cancelLongPress();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (Math.abs(mDownX - event.getRawX()) > MAX_DOWN_OFFSET || Math.abs(mDownY - event.getRawY()) > MAX_DOWN_OFFSET) {
+                            cancelLongPress();
+                        }
                         break;
                 }
             }
