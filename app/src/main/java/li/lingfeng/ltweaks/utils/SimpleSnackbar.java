@@ -36,7 +36,6 @@ public class SimpleSnackbar extends LinearLayout {
     protected Handler mHandler;
 
     protected TextView mTextView;
-    protected Button mButton;
     protected int mDuration;
 
     public static SimpleSnackbar make(Activity activity, String mainText, int duration) {
@@ -77,8 +76,8 @@ public class SimpleSnackbar extends LinearLayout {
     }
 
     protected void createButton(String buttonText, final OnClickListener clickListener) {
-        mButton = new Button(getContext());
-        mButton.setMinWidth(dp2px(48f));
+        Button button = new Button(getContext());
+        button.setMinWidth(dp2px(48f));
 
         StateListDrawable bgColor = new StateListDrawable();
         bgColor.setExitFadeDuration(250);
@@ -87,11 +86,11 @@ public class SimpleSnackbar extends LinearLayout {
         pressedDrawable.setStroke(dp2px(4f), Color.parseColor("#FF303030"));
         bgColor.addState(new int[] { android.R.attr.state_pressed }, pressedDrawable);
         bgColor.addState(new int[] {}, new ColorDrawable(Color.parseColor("#FF303030")));
-        mButton.setBackgroundDrawable(bgColor);
+        button.setBackgroundDrawable(bgColor);
 
-        mButton.setTextColor(Color.parseColor("#FFFF4081"));
-        mButton.setText(buttonText);
-        mButton.setOnClickListener(new OnClickListener() {
+        button.setTextColor(Color.parseColor("#FFFF4081"));
+        button.setText(buttonText);
+        button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Logger.i("SimpleSnackbar onClick.");
@@ -103,7 +102,7 @@ public class SimpleSnackbar extends LinearLayout {
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT | Gravity.END;
         params.rightMargin = dp2px(6f);
-        addView(mButton, params);
+        addView(button, params);
     }
 
     public void show() {
