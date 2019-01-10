@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.LruCache;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import li.lingfeng.ltweaks.prefs.PackageNames;
 import li.lingfeng.ltweaks.utils.ContextUtils;
 import li.lingfeng.ltweaks.utils.IOUtils;
 import li.lingfeng.ltweaks.utils.Logger;
+import li.lingfeng.ltweaks.utils.ViewUtils;
 import li.lingfeng.ltweaks.xposed.XposedBase;
 
 /**
@@ -35,6 +37,8 @@ import li.lingfeng.ltweaks.xposed.XposedBase;
 }, prefs = R.string.key_qq_clear_background)
 public class XposedQQChatBackground extends XposedBase {
 
+    private static final String SPLASH_ACTIVITY = "com.tencent.mobileqq.activity.SplashActivity";
+    private static final String CHAT_LISTVIEW = "com.tencent.mobileqq.bubble.ChatXListView";
     private BitmapDrawable mLargestDrawable;
     private LruCache<Integer, BitmapDrawable> mBackgroundDrawables; // height -> drawable, consider width is fixed.
     private long mLastModified = 0;
@@ -42,7 +46,8 @@ public class XposedQQChatBackground extends XposedBase {
 
     @Override
     protected void handleLoadPackage() throws Throwable {
-        findAndHookActivity(ClassNames.QQ_CHAT_ACTIVITY, "onCreate", Bundle.class, new XC_MethodHook() {
+        findAndHookActivity(lpparam.packageName.equals(PackageNames.TIM) ? SPLASH_ACTIVITY : ClassNames.QQ_CHAT_ACTIVITY,
+                "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 File file = new File(getImagePath());
@@ -87,12 +92,23 @@ public class XposedQQChatBackground extends XposedBase {
     }
 
     private void handleLayoutChanged(Activity activity) throws Throwable {
-        int idInputBar = ContextUtils.getIdId("inputBar");
-        LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
-        if (inputBar == null) {
-            return;
+        ViewGroup viewGroup;
+        if (lpparam.packageName.equals(PackageNames.TIM)) {
+            final ViewGroup rootView = activity.findViewById(android.R.id.content);
+            View chatListView = ViewUtils.findViewByType(rootView, (Class<? extends View>) findClass(CHAT_LISTVIEW));
+            if (chatListView == null) {
+                return;
+            }
+            viewGroup = (ViewGroup) chatListView;
+        } else {
+            int idInputBar = ContextUtils.getIdId("inputBar");
+            LinearLayout inputBar = (LinearLayout) activity.findViewById(idInputBar);
+            if (inputBar == null) {
+                return;
+            }
+            viewGroup = (ViewGroup) inputBar.getParent();
         }
-        ViewGroup viewGroup = (ViewGroup) inputBar.getParent();
+
         int width = viewGroup.getMeasuredWidth();
         int height = viewGroup.getMeasuredHeight();
         if (width <= 0 || height <= 0) {
