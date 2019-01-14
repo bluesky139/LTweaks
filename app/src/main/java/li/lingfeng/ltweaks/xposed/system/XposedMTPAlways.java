@@ -17,6 +17,7 @@ public class XposedMTPAlways extends XposedBase {
                 if (param.args[0] == null) {
                     Logger.d("setEnabledFunctions null -> mtp");
                     param.args[0] = "mtp";
+                    param.args[2] = true;
                 }
             }
         });
