@@ -3,61 +3,61 @@
     <string name="app_summary">一些個人使用的小東西合集，主要針對程式，如果你喜歡，那就用去吧</string>
     <string name="app_about">關於</string>
     <string name="app_about_summary">
-\"L 工具箱\" 是個人使用的一些小東西合集，主要對程式，大部分功能都需要 Xposed 的支援.\n
+\"L 工具箱\" 是個人使用的一些小東西合集，主要對程式，大部分功能都需要 Xposed 的支援。\n
 \n
-在修改設定後，你需要重啟程式或系統來使其生效.\n
+在修改設定後，你需要重啟程式或系統來使其生效。\n
 \n
 Open source on github: \n
 <a href="https://github.com/bluesky139/LTweaks">https://github.com/bluesky139/LTweaks</a>
     </string>
-    <string name="app_send_log">發送日誌</string>
-    <string name="app_send_log_error">發送日誌出錯.</string>
-    <string name="app_retry_after_permission_granted">授權後重試.</string>
+    <string name="app_send_log">傳送日誌</string>
+    <string name="app_send_log_error">傳送日誌出錯。</string>
+    <string name="app_retry_after_permission_granted">授權後重試。</string>
     <string name="app_save_log">儲存</string>
     <string name="app_open_log">打開</string>
     <string name="app_save_log_ok">日誌被儲存到 %s</string>
-    <string name="app_save_log_error">儲存日誌出錯.</string>
+    <string name="app_save_log_error">儲存日誌出錯。</string>
     <string name="app_send_mail">發郵件</string>
-    <string name="app_send_mail_description">請描述一下你做了什麼，出了什麼錯.\n可能的話請附上一些截圖.</string>
+    <string name="app_send_mail_description">請描述一下你做了什麼，出了什麼錯。\n可能的話請附上一些截圖。</string>
     <string name="app_send_to">發送到...</string>
     <string name="app_ok">OK</string>
     <string name="app_cancel">取消</string>
     <string name="app_close">關閉</string>
     <string name="app_delete">刪除</string>
-    <string name="app_shortcut_is_created">捷徑已建立.</string>
-    <string name="app_submit_issue">提交問題</string>
-    <string name="app_error_check_mode_world_readable">從 Android 7.0 開始, 設置的儲存方式發生了一點改變, 你需要先在 Xposed Installer 中啟動此模組並重啟一次</string>
-    <string name="app_kill_hint">%s 已終止.</string>
+    <string name="app_shortcut_is_created">捷徑已建立。</string>
+    <string name="app_submit_issue">上傳問題</string>
+    <string name="app_error_check_mode_world_readable">從 Android 7.0 開始，設定的儲存方式發生了一點改變，你需要先在 Xposed Installer 中啟動此模組並重啟一次</string>
+    <string name="app_kill_hint">%s 已終止。</string>
 
     <!--Common-->
-    <string name="uninstall_message">檢測到已安裝 \"%s\", 它已經成為了 \"L Tweaks\" 的一部分, 最好刪除它.</string>
+    <string name="uninstall_message">檢測到已安裝 \"%s\"，它已經成為了 \"L Tweaks\" 的一部分，最好刪除它。</string>
     <string name="uninstall_confirm">移除</string>
-    <string name="not_supported">不支援.</string>
-    <string name="cant_read_file">無法讀取檔案.</string>
-    <string name="request_failed">請求失敗.</string>
-    <string name="upload_failed">上傳失敗.</string>
-    <string name="error">發生錯誤.</string>
+    <string name="not_supported">不支援。</string>
+    <string name="cant_read_file">無法讀取檔案。</string>
+    <string name="request_failed">請求失敗。</string>
+    <string name="upload_failed">上傳失敗。</string>
+    <string name="error">發生錯誤。</string>
     <string name="all">所有</string>
     <string name="disabled">已禁用</string>
     <string name="enabled">已啟用</string>
     <string name="list">列表</string>
     <string name="current">目前</string>
-    <string name="secure_lock_screen_not_setup">你還未給你的設備設定密碼.</string>
+    <string name="secure_lock_screen_not_setup">你還未給你的設備設定密碼。</string>
 
     <!-- Google -->
     <string name="pref_header_google">Google</string>
     <string name="pref_category_google_play_services">Google Play Services</string>
     <string name="pref_google_dismiss_location_checker">不提示\"打開位置服務\"</string>
-    <string name="pref_google_dismiss_location_checker_summary">不提示 \"要繼續,請允許設備使用 Google 的位置訊息服務開啟位置訊息功能.\"</string>
+    <string name="pref_google_dismiss_location_checker_summary">不提示 \"要繼續，請允許設備使用 Google 的位置訊息服務開啟位置訊息功能。\"</string>
     <string name="pref_google_block_system_update_notification">封鎖系統更新通知</string>
     <string name="pref_category_google">Google 搜尋</string>
     <string name="pref_google_remove_bottom_bar">去底欄</string>
     <string name="pref_google_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單</string>
     <string name="pref_google_com_domain">在 google.com 搜尋</string>
-    <string name="pref_google_com_domain_summary">而不是本地域, 比如: google.com.hk</string>
+    <string name="pref_google_com_domain_summary">而不是本地網域，比如: google.com.hk</string>
     <string name="pref_google_keyboard_suggestion">允許在搜尋框中使用鍵盤的建議字詞</string>
     <string name="pref_google_overlay_search_to_browser">疊加式搜尋跳轉瀏覽器</string>
-    <string name="pref_google_overlay_search_to_browser_summary">在 nova launcher 或其它 launcher 裡面, 有一個\"疊加式搜尋\"的選項, 勾選此選項時使用瀏覽器打開搜尋結果</string>
+    <string name="pref_google_overlay_search_to_browser_summary">在 nova launcher 或其它 launcher 裡面，有一個\"疊加式搜尋\"的選項，勾選此選項時使用瀏覽器打開搜尋結果</string>
     <string name="pref_category_google_plus">Google+</string>
     <string name="pref_google_plus_remove_bottom_bar">去底欄</string>
     <string name="pref_google_plus_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單</string>
@@ -69,13 +69,13 @@ Open source on github: \n
     <string name="pref_category_google_photos">Google 相冊</string>
     <string name="pref_google_photos_remove_bottom_bar">去底欄</string>
     <string name="pref_google_photos_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單</string>
-    <string name="pref_category_google_newsstand">Google 報亭</string>
+    <string name="pref_category_google_newsstand">Google 新聞</string>
     <string name="pref_google_newsstand_remove_bottom_bar">去底欄</string>
     <string name="pref_google_newsstand_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單</string>
-    <string name="pref_category_google_books">Google Play Books</string>
+    <string name="pref_category_google_books">Google Play 圖書</string>
     <string name="pref_google_books_remove_bottom_bar">去底欄</string>
     <string name="pref_google_books_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單</string>
-    <string name="pref_category_google_play">Google Play</string>
+    <string name="pref_category_google_play">Google Play 商店</string>
     <string name="pref_google_play_view_in_coolapk">新增選單\"去酷安 / ApkPure / Mobilism / 程式詳情 查看\"</string>
     <string name="pref_google_play_view_in_coolapk_summary">酷安有個\"去 Play 查看\"，這個恰好相反，也可以去 ApkPure，去 Mobilism 搜尋，去系統的程式詳情頁面</string>
     <string name="pref_category_google_messenger">Google Messenger</string>
@@ -128,7 +128,7 @@ Open source on github: \n
     <string name="chrome_open_with">使用其它程式打開...</string>
     <string name="chrome_ip_info">IP 訊息</string>
     <string name="chrome_ip_ip">IP</string>
-    <string name="chrome_ip_domain">域名</string>
+    <string name="chrome_ip_domain">網域</string>
     <string name="chrome_ip_geo">地理位置</string>
     <string name="chrome_ip_isp">ISP</string>
     <string name="chrome_ip_asn">ASN</string>
@@ -157,8 +157,8 @@ Open source on github: \n
     <!-- JD -->
     <string name="jd_app">京東</string>
     <string name="jd_history">歷史價格</string>
-    <string name="jd_history_can_not_find_item_id">找不到商品ID.</string>
-    <string name="jd_history_can_not_get_prices">無法獲取歷史價格.</string>
+    <string name="jd_history_can_not_find_item_id">找不到商品ID。</string>
+    <string name="jd_history_can_not_get_prices">無法取得歷史價格。</string>
     <string name="jd_history_highest">最高</string>
     <string name="jd_history_lowest">最低</string>
 
@@ -169,7 +169,7 @@ Open source on github: \n
     <string name="pref_wechat_use_incoming_ringtone_summary">在下面設定鈴聲</string>
     <string name="pref_wechat_set_incoming_ringtone">設定鈴聲</string>
     <string name="pref_wechat_remove_bottom_bar">去底欄</string>
-    <string name="pref_wechat_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單\n注意: 如果微信無法啟動, 嘗試刪掉 /data/data/com.tencent.mm/tinker 資料夾, 再手動建立這個資料夾並賦於 000 權限.</string>
+    <string name="pref_wechat_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單\n注意: 如果微信無法啟動，嘗試刪掉 /data/data/com.tencent.mm/tinker 資料夾，再手動建立這個資料夾並賦於 000 權限。</string>
     <string name="pref_wechat_no_drawer">去掉底欄後不新增抽屜選單</string>
     <string name="pref_wechat_no_drawer_summary">你仍然可以左右滑動來切換頁面</string>
     <string name="pref_category_qq">QQ (僅在輕聊版上測試過)</string>
@@ -180,20 +180,20 @@ Open source on github: \n
     <string name="pref_qq_collapse_chat_buttons">在聊天介面先隱藏底部按鈕欄</string>
     <string name="pref_qq_collapse_chat_buttons_summary">有個\"加號\"來顯示它們</string>
     <string name="pref_qq_clear_background">設定一張清晰不變形的聊天背景</string>
-    <string name="pref_qq_clear_background_summary">也許在解析度非常高的設備上不工作, 在 1080x1920 (Nexus 5) 上沒有問題\n在下面設定路徑</string>
+    <string name="pref_qq_clear_background_summary">也許在解析度非常高的設備上不工作，在 1080x1920 (Nexus 5) 上沒有問題\n在下面設定路徑</string>
     <string name="pref_qq_clear_background_path">設定聊天背景路徑</string>
     <string name="pref_qq_clear_background_path_summary">檔案被複製到了 %s</string>
     <string name="pref_qq_exit_directly_by_sharing">分享後直接退出</string>
-    <string name="pref_qq_exit_directly_by_sharing_summary">在使用分享後, 按返回鍵時不退到主介面</string>
+    <string name="pref_qq_exit_directly_by_sharing_summary">在使用分享後，按返回鍵時不退到主介面</string>
     <string name="pref_qq_fix_image_sharing">修復某些情況下的圖片分享</string>
     <string name="pref_qq_fix_image_sharing_summary">比如: 從 Google+ 分享</string>
     <string name="pref_qq_disable_discussion_notification">禁止討論組的消息通知</string>
-    <string name="pref_qq_disable_discussion_notification_summary">不管討論組設定裡是否鉤選\"新消息通知\"</string>
+    <string name="pref_qq_disable_discussion_notification_summary">不管討論組設定裡是否勾選\"新消息通知\"</string>
     <string name="pref_qq_prevent_audio_panel">阻止\"按住說話\"面板自動彈出</string>
     <string name="pref_qq_hide_weak_net_toast">隱藏弱網路提示</string>
     <string name="pref_category_push_bullet">Pushbullet</string>
     <string name="pref_push_bullet_share_to_all">預設推送內容到所有設備</string>
-    <string name="pref_push_bullet_share_to_all_summary">如果你只想每次一鍵推送內容到所有設備.\n同時也可以關掉 direct share</string>
+    <string name="pref_push_bullet_share_to_all_summary">如果你只想每次一鍵推送內容到所有設備。\n同時也可以關掉 direct share</string>
     <string name="pref_category_ttrss">Tiny Tiny RSS</string>
     <string name="pref_ttrss_disable_article_pager">禁止文章頁面左右滑動切換</string>
     <string name="pref_ttrss_open_link_in_browser_menu">向文章頁新增更多選單</string>
@@ -207,9 +207,9 @@ Open source on github: \n
 
     <!-- TTRss -->
     <string name="ttrss_open_in_browser">使用瀏覽器打開</string>
-    <string name="ttrss_refresh">刷新</string>
-    <string name="ttrss_go_top">跳轉頂部</string>
-    <string name="ttrss_go_bottom">跳轉底部</string>
+    <string name="ttrss_refresh">重新整理</string>
+    <string name="ttrss_go_top">跳至頂部</string>
+    <string name="ttrss_go_bottom">跳至底部</string>
 
     <!--Entertainment-->
     <string name="pref_header_entertainment">娛樂</string>
@@ -227,11 +227,11 @@ Open source on github: \n
     <string name="pref_bilibili_open_link_in_app_summary">比如 http://m.bilibili.com/video/av123.html</string>
     <string name="pref_bilibili_remove_bottom_bar">去底欄</string>
     <string name="pref_bilibili_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單</string>
-    <string name="pref_bilibili_get_cover">獲取封面</string>
-    <string name="pref_bilibili_get_cover_summary">新增一個選單項來獲取封面</string>
+    <string name="pref_bilibili_get_cover">取得封面</string>
+    <string name="pref_bilibili_get_cover_summary">新增一個選單項來取得封面</string>
     <string name="pref_bilibili_expand_desc">預設展開影片描述</string>
     <string name="pref_bilibili_darken">更完美的夜間模式</string>
-    <string name="pref_bilibili_darken_summary">1.夜間模式下進入文章頁面時，會先調為白天模式，然後瞬間再返回夜間模式. 嘗試修復此問題\n2.啟動此程式時，將程式尚未載入完成前的白屏調為黑屏</string>
+    <string name="pref_bilibili_darken_summary">1.夜間模式下進入文章頁面時，會先調為白天模式，然後瞬間再返回夜間模式。嘗試修復此問題\n2.啟動此程式時，將程式尚未載入完成前的白屏調為黑屏</string>
     <string name="pref_bilibili_hide_follow_at_full_screen">隱藏全螢幕狀態下的關注按鈕</string>
     <string name="pref_bilibili_dismiss_update">不檢查更新</string>
     <string name="pref_category_steam">Steam</string>
@@ -247,10 +247,10 @@ Open source on github: \n
     <string name="pref_steam_chinese_summary">如果你的系統語言是英文但又想要中文商店介面的話就勾這個</string>
     <string name="pref_category_comic_screen">Comic Screen</string>
     <string name="pref_comic_screen_better_sort">更好的資料夾排序</string>
-    <string name="pref_comic_screen_better_sort_summary">如果你有資料夾命名為 \"01.5\" 這種, 可以試試這個方法來獲得正確的排序.\n比如 \"01 -> 01.5 -> 02 -> 03\"</string>
+    <string name="pref_comic_screen_better_sort_summary">如果你有資料夾命名為 \"01.5\" 這種，可以試試這個方法來取得正確的排序。\n比如 \"01 -> 01.5 -> 02 -> 03\"</string>
 
     <!-- Bilibili -->
-    <string name="bilibili_get_cover">獲取封面</string>
+    <string name="bilibili_get_cover">取得封面</string>
 
     <!-- Douban Movie -->
     <string name="douban_movie_app">豆瓣電影</string>
@@ -261,12 +261,12 @@ Open source on github: \n
     <string name="pref_text_aide_open_youdao">使用有道詞典</string>
     <string name="pref_category_text">文字</string>
     <string name="pref_text_double_click_for_selectable">雙擊讓文字變為可選狀態</string>
-    <string name="pref_text_double_click_for_selectable_summary">然後再像平常一樣長按進行操作.\n
+    <string name="pref_text_double_click_for_selectable_summary">然後再像平常一樣長按進行操作。\n
 也許在某些地方無法使用</string>
     <string name="pref_text_long_press_to_copy">長按複製</string>
     <string name="pref_text_long_press_to_copy_summary">忽略長按可進行選擇的文本</string>
     <string name="pref_text_selectable_text">查看文字</string>
-    <string name="pref_text_selectable_text_summary">在分享選單中新增一個選單, 用於查看目前分享的文字或對文字進行簡單的二次處理</string>
+    <string name="pref_text_selectable_text_summary">在分享選單中新增一個選單，用於查看目前分享的文字或對文字進行簡單的二次處理</string>
     <string name="pref_text_actions">管理浮動選單</string>
     <string name="pref_text_actions_summary">封鎖和排序\n僅 Android 6.0+</string>
     <string name="pref_text_actions_original">顯示所有浮動選單項</string>
@@ -281,43 +281,43 @@ Open source on github: \n
     <string name="pref_system_share_image_search_summary">你可以透過其它程式、本機檔案等分享圖片，搜尋引擎可選：Google，TinEye，IQDB</string>
     <string name="pref_system_share_filter">隱藏分享選單項</string>
     <string name="pref_system_share_copy_to_share">複製後分享</string>
-    <string name="pref_system_share_copy_to_share_summary">當你複製文字的時候, 會浮現一個按鈕讓你能直接分享文字.\n也許在某些程式中不工作</string>
+    <string name="pref_system_share_copy_to_share_summary">當你複製文字的時候，會浮現一個按鈕讓你能直接分享文字。\n也許在某些程式中不工作</string>
     <string name="pref_category_coolapk">酷市場</string>
     <string name="pref_coolapk_remove_bottom_bar">去底欄</string>
-    <string name="pref_coolapk_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單.\n你需要到設定裡面關閉\"禁用 Xposed 模組\"</string>
+    <string name="pref_coolapk_remove_bottom_bar_summary">底欄按鈕放到左側滑出的抽屜選單。\n你需要到設定裡面關閉\"禁用 Xposed 模組\"</string>
     <string name="pref_category_prevent_running">阻止執行</string>
     <string name="pref_prevent_running_prevent_foreground_service">阻止前台服務</string>
-    <string name="pref_prevent_running_prevent_foreground_service_summary">有些程式為避免被殺死會建立看不見的前台服務，阻止其變為前台服務.\n
-注意，這是一個簡單粗暴的方法，如果程式本身有可見的\"正在執行的通知\"，這個通知也將變得不可見.</string>
+    <string name="pref_prevent_running_prevent_foreground_service_summary">有些程式為避免被殺死會建立看不見的前台服務，阻止其變為前台服務。\n
+注意，這是一個簡單粗暴的方法，如果程式本身有可見的\"正在執行的通知\"，這個通知也將變得不可見。</string>
     <string name="pref_prevent_running_set_inactive">休眠程式</string>
-    <string name="pref_prevent_running_set_inactive_summary">嘗試休眠程式而不是殺掉它.\n僅 Android 6.0+\n
-注意，這個方法可能使得某些程式在使用一段時間後變得不能正常聯網，那些破程式根本不會針對 6.0 系統進行長時間測試.</string>
+    <string name="pref_prevent_running_set_inactive_summary">嘗試休眠程式而不是殺掉它。\n僅 Android 6.0+\n
+注意，這個方法可能使得某些程式在使用一段時間後變得不能正常聯網，那些破程式根本不會針對 6.0 系統進行長時間測試。</string>
     <string name="pref_prevent_running_prevent_exact_alarm">延遲精確的喚醒</string>
     <string name="pref_prevent_running_prevent_exact_alarm_summary">系統為最佳化電池使用而延遲一些任務\n僅 Android 6.0+</string>
     <string name="pref_prevent_running_prevent_wake_lock">阻止喚醒鎖</string>
     <string name="pref_prevent_running_prevent_wake_lock_summary">沒有喚醒鎖，在螢幕關閉的情況下，程式將難以在後台保持長時間執行</string>
     <string name="pref_prevent_running_prevent_receiver">阻止一些廣播</string>
     <string name="pref_prevent_running_set_list">設定阻止列表</string>
-    <string name="pref_prevent_running_set_list_summary">你可以為每個程式單獨設定需要阻止的內容.\n
-注意, 你最好清楚每個方法是拿來做什麼的, 以避免不可預料的錯誤</string>
+    <string name="pref_prevent_running_set_list_summary">你可以為每個程式單獨設定需要阻止的內容。\n
+注意，你最好清楚每個方法是拿來做什麼的，以避免不可預料的錯誤</string>
     <string name="pref_category_shadowsocks">Shadowsocks</string>
     <string name="pref_shadowsocks_primary_dns">主 DNS</string>
-    <string name="pref_shadowsocks_primary_dns_summary">ip:port, 多個用逗號隔開</string>
+    <string name="pref_shadowsocks_primary_dns_summary">ip:port，多個用逗號隔開</string>
     <string name="pref_shadowsocks_transproxy">透明代理</string>
-    <string name="pref_shadowsocks_transproxy_summary">配合 Shadowsocks 的透明代理模式使用, 需要設定路由為\"繞過區域網路和中國大陸\".\nss-local acl 將被禁用, IP 列表將使用 iptables 來新增.\n每次啟用 Shadowsocks 時需要幾分鐘的時間.\n需要 root</string>
+    <string name="pref_shadowsocks_transproxy_summary">配合 Shadowsocks 的透明代理模式使用，需要設定路由為\"繞過區域網路和中國大陸\"。\nss-local acl 將被禁用，IP 列表將使用 iptables 來新增。\n每次啟用 Shadowsocks 時需要幾分鐘的時間。\n需要 root</string>
     <string name="pref_category_quick_settings">通知欄快捷選單</string>
     <string name="pref_quick_settings_tile_adb_wireless">新增選單 \"Adb Wireless\"</string>
-    <string name="pref_quick_settings_tile_adb_wireless_summary">使用 \"adb connect x:x:x:x:5555\" 來連接\n僅 Android 5.0+, 需要 root</string>
+    <string name="pref_quick_settings_tile_adb_wireless_summary">使用 \"adb connect x:x:x:x:5555\" 來連接\n僅 Android 5.0+，需要 root</string>
     <string name="pref_quick_settings_tile_4g3g">新增選單 \"4G/3G 切換\"</string>
     <string name="pref_quick_settings_tile_4g3g_summary">這等同於在 *#*#4636#*#* 中設定優先使用的網路\n在下面設定 4G/3G 網路類型</string>
     <string name="pref_quick_settings_tile_4g">4G</string>
     <string name="pref_quick_settings_tile_3g">3G</string>
     <string name="pref_quick_settings_tile_set_preconfigured_brightness">新增選單 \"設定 xxx 亮度\"</string>
-    <string name="pref_quick_settings_tile_set_preconfigured_brightness_summary">輕觸設定事先設定的亮度, 長按設為自動亮度.\n在下面設定亮度</string>
+    <string name="pref_quick_settings_tile_set_preconfigured_brightness_summary">輕觸設定事先設定的亮度，長按設為自動亮度。\n在下面設定亮度</string>
     <string name="pref_quick_settings_tile_preconfigured_brightness">設定亮度</string>
     <string name="pref_quick_settings_tile_preconfigured_brightness_dialog_title">有效範圍 1-254</string>
     <string name="pref_quick_settings_brightness_by_volume_buttons">透過音量鍵調整螢幕亮度</string>
-    <string name="pref_quick_settings_brightness_by_volume_buttons_summary">在快捷選單完全展開的時候.\n這個適合精細的調整</string>
+    <string name="pref_quick_settings_brightness_by_volume_buttons_summary">在快捷選單完全展開的時候。\n這個適合精細的調整</string>
     <string name="pref_category_nav_bar">導航欄</string>
     <string name="pref_nav_bar_input_cursor_control">控制輸入游標</string>
     <string name="pref_nav_bar_input_cursor_control_summary">在輸入文字的時候在導航欄上新增左右兩個按鈕來控制游標\n僅 Android 7.0+</string>
@@ -326,23 +326,23 @@ Open source on github: \n
     <string name="pref_native_clipboard_fix_chrome_summary">如果 \"原生剪貼簿\" 在 Chrome 上不工作，你可以嘗試這個</string>
     <string name="pref_category_trust_agent">信任的環境</string>
     <string name="pref_trust_agent_wifi">在指定 WiFi 下自動解鎖螢幕</string>
-    <string name="pref_trust_agent_wifi_summary">在連接到指定 WiFi 後自動解鎖螢幕, 類似 Google 提供的 Smart Lock.\n同時使用 SSID 和 BSSID 來確定 WiFi 是否可信.\n你需要到 \"設定 -> 安全 -> 信任的代理\" 啟用此代理.\n點此設定可信的 WiFi 列表, 僅目前連上的 WiFi 才能加入到列表.\n僅 Android 5.0+\n請在 Android 8.1+ 上手動給予位置權限, 否則 SSID 和 BSSID 都無法獲得.</string>
+    <string name="pref_trust_agent_wifi_summary">在連接到指定 WiFi 後自動解鎖螢幕，類似 Google 提供的 Smart Lock。\n同時使用 SSID 和 BSSID 來確定 WiFi 是否可信。\n你需要到 \"設定 -> 安全 -> 信任的代理\" 啟用此代理。\n點此設定可信的 WiFi 列表，僅目前連上的 WiFi 才能加入到列表。\n僅 Android 5.0+\n請在 Android 8.1+ 上手動給予位置權限，否則 SSID 和 BSSID 都無法獲得。</string>
     <string name="pref_category_solid_explorer">Solid Explorer (非經典版本)</string>
     <string name="pref_solid_explorer_replace_url">取代影片軌地址</string>
-    <string name="pref_solid_explorer_replace_url_summary">當透過網路播放影片時, Solid Explorer 會中轉影片軌到本機 (比如: \"http://127.0.0.1:12345/public/a.mp4\"), 這會引起性能損失.\n把 \"127.0.0.1:12345\" 取代為伺服器的地址，讓播放器直連伺服器 (如果伺服器支援).\n支援 smb, dav, ftp, sftp.</string>
+    <string name="pref_solid_explorer_replace_url_summary">當透過網路播放影片時，Solid Explorer 會中轉影片軌到本機 (比如: \"http://127.0.0.1:12345/public/a.mp4\")，這會引起性能損失。\n把 \"127.0.0.1:12345\" 取代為伺服器的地址，讓播放器直連伺服器 (如果伺服器支援)。\n支援 smb、dav、ftp、sftp。</string>
     <string name="pref_category_app_info">程式訊息</string>
     <string name="pref_app_info_open_app_data_folder">打開程式資料/APK資料夾</string>
-    <string name="pref_app_info_open_app_data_folder_summary">通常情況下會打開 \"/data/data/[package_name]\", \"/sdcard/Android/data/[package_name]\", \"/data/user_de/0/[package_name]\" 或 \"/data/app/[package_name]\", 你需要一個支援 root 的檔案管理器, 配合 Solid Explorer 測試過\n以選單的形式新增</string>
+    <string name="pref_app_info_open_app_data_folder_summary">通常情況下會打開 \"/data/data/[package_name]\"、\"/sdcard/Android/data/[package_name]\"、\"/data/user_de/0/[package_name]\" 或 \"/data/app/[package_name]\"，你需要一個支援 root 的檔案管理器，配合 Solid Explorer 測試過\n以選單的形式新增</string>
     <string name="pref_app_info_go_market">跳轉到市場</string>
-    <string name="pref_app_info_go_market_summary">跳轉到 Google Play, 酷市場, ApkPure, Mobilism\n以選單的形式新增</string>
+    <string name="pref_app_info_go_market_summary">跳轉到 Google Play、酷市場、ApkPure、Mobilism\n以選單的形式新增</string>
     <string name="pref_app_info_allow_disable">允許禁用系統核心程式</string>
-    <string name="pref_app_info_allow_disable_summary">這將讓\"禁用\"按鈕在系統核心程式上也可被點擊, 小心, 你也許會讓你的手機變磚\n
+    <string name="pref_app_info_allow_disable_summary">這將讓\"禁用\"按鈕在系統核心程式上也可被點擊，小心，你也許會讓你的手機變磚\n
 \"禁用\"按鈕會變為紅色來給以警告</string>
     <string name="pref_app_info_app_ops">轉到 App Ops</string>
     <string name="pref_app_info_app_ops_summary">在 Lineage OS 上有效</string>
     <string name="pref_category_lineage_os">Lineage OS (Android 7.0+)</string>
     <string name="pref_lineage_os_live_display_time">自訂 Live Display 時間</string>
-    <string name="pref_lineage_os_live_display_time_summary">手動設定 Live Display 時間, 而不是透過位置來計算日出/日落</string>
+    <string name="pref_lineage_os_live_display_time_summary">手動設定 Live Display 時間，而不是透過位置來計算日出/日落</string>
     <string name="pref_lineage_os_live_display_time_sunrise">設定 Live Display 日出時間</string>
     <string name="pref_lineage_os_live_display_time_sunset">設定 Live Display 日落時間</string>
     <string name="pref_lineage_os_gallery_remove_bottom_bar">去除圖庫底欄</string>
@@ -355,14 +355,14 @@ Open source on github: \n
     <string name="pref_recent_task_swipe_to_kill_summary">對系統程式無效</string>
     <string name="pref_category_phone">電話</string>
     <string name="pref_phone_deny_access_phone_number">拒絕讀取 SIM 卡中的手機號碼</string>
-    <string name="pref_phone_deny_access_phone_number_summary">有些 SIM 卡儲存了此卡所對應的手機號碼, 禁止非系統程式讀取</string>
+    <string name="pref_phone_deny_access_phone_number_summary">有些 SIM 卡儲存了此卡所對應的手機號碼，禁止非系統程式讀取</string>
     <string name="pref_category_display">顯示</string>
     <string name="pref_display_light_amber_in_daylight">白天使用輕微的琥珀色</string>
     <string name="pref_display_light_amber_in_daylight_summary">色溫大概為 5500K\n僅 Android 7.1+</string>
     <string name="pref_display_min_brightness">設定最低亮度</string>
-    <string name="pref_display_min_brightness_dialog_title">預設為 %d, 有效範圍 1-254</string>
+    <string name="pref_display_min_brightness_dialog_title">預設為 %d，有效範圍 1-254</string>
     <string name="pref_display_dark_wallpaper_color">黑色的壁紙顏色</string>
-    <string name="pref_display_dark_wallpaper_color_summary">欺騙系統認為我們正在使用一張黑色的壁紙, 因此可以使系統固定在深色主題.\n比如: 快速下拉設定會使用黑色背景.\n僅 Android 8.1+</string>
+    <string name="pref_display_dark_wallpaper_color_summary">欺騙系統認為我們正在使用一張黑色的壁紙，因此可以使系統固定在深色主題。\n比如: 快速下拉設定會使用黑色背景。\n僅 Android 8.1+</string>
     <string name="pref_category_web">網路</string>
     <string name="pref_display_hspap_signal">H+ 網路</string>
     <string name="pref_display_hspap_signal_summary">讓 HSPA+ 網路顯示 H+ 而不是 H\n僅 Android 6.0+</string>
@@ -370,11 +370,11 @@ Open source on github: \n
     <string name="pref_web_search_to_browser_summary">而不是\"Google 搜尋\"程式</string>
     <string name="pref_category_debug">調試 / 其它</string>
     <string name="pref_debug_app_crash_info">在應用崩潰的時候顯示調試信息</string>
-    <string name="pref_debug_app_crash_info_summary">作用在崩潰時系統彈出的對話框上.\n用戶安裝的應用內所有捕獲異常的功能都將被禁掉.\n僅 Android 7.0+</string>
+    <string name="pref_debug_app_crash_info_summary">作用在崩潰時系統彈出的對話框上。\n用戶安裝的應用內所有捕獲異常的功能都將被禁掉。\n僅 Android 7.0+</string>
     <string name="pref_debug_mtp_always">總是啟用 MTP</string>
-    <string name="pref_debug_mtp_always_summary">當連接到電腦時總是啟用 MTP.\n即使你選擇僅充電, MTP 仍將被啟用.\n僅 Android 8.0+</string>
-    <string name="pref_debug_debuggable">設置所有應用為可調試</string>
-    <string name="pref_debug_debuggable_summary">相當於在 AndroidManifest.xml 中設置 debuggable</string>
+    <string name="pref_debug_mtp_always_summary">當連接到電腦時總是啟用 MTP。\n即使你選擇僅充電，MTP 仍將被啟用。\n僅 Android 8.0+</string>
+    <string name="pref_debug_debuggable">設定所有應用為可調試</string>
+    <string name="pref_debug_debuggable_summary">相當於在 AndroidManifest.xml 中設定 debuggable</string>
 
     <!-- Text -->
     <string name="text_selectable">查看文字</string>
@@ -391,18 +391,18 @@ Open source on github: \n
     <string name="text_actions_custom_title">選單名</string>
     <string name="text_actions_menu_usage">使用說明</string>
     <string name="text_actions_usage">使用說明:\n
-        ⋅ 勾選表示封鎖.\n
-        ⋅ 長按並上下拖動進行排序，左右滑動進行刪除.\n
-        ⋅ 程式可額外新增一些選單項, 這些選單項不會預設列在此列表內, 你可以手動新增.\n
-        ⋅ 此功能直接透過選單文字進行比較, 如果你改了系統語言，你需要重新設定.\n
-        ⋅ 在排序和重新命名之後相同選單名的選單項會被去掉.\n
+        ⋅ 勾選表示封鎖。\n
+        ⋅ 長按並上下拖動進行排序，左右滑動進行刪除。\n
+        ⋅ 程式可額外新增一些選單項，這些選單項不會預設列在此列表內，你可以手動新增。\n
+        ⋅ 此功能直接透過選單文字進行比較，如果你改了系統語言，你需要重新設定。\n
+        ⋅ 在排序和重新命名之後相同選單名的選單項會被去掉。\n
     </string>
     <string name="text_actions_rename">重新命名</string>
-    <string name="text_actions_remove_custom_only">僅可刪除自訂項.</string>
+    <string name="text_actions_remove_custom_only">僅可刪除自訂項。</string>
 
     <!--Share-->
     <string name="share_qrcode_scan">識別圖中二維碼</string>
-    <string name="share_qrcode_cant_decode">無法識別.</string>
+    <string name="share_qrcode_cant_decode">無法識別。</string>
     <string name="share_qrcode_wechat_scan">使用微信掃描</string>
     <string name="share_image_search">以圖搜圖</string>
     <string name="share_image_google_search">Google</string>
@@ -420,16 +420,16 @@ Open source on github: \n
     <string name="process_text_incognito_search">隱身搜尋</string>
 
     <!-- Url Replacer -->
-    <string name="solid_explorer_db_query_error">無法連接到 Solid Explorer.</string>
-    <string name="solid_explorer_db_empty">Solid Explorer 裡沒有支援的網路儲存設備.</string>
+    <string name="solid_explorer_db_query_error">無法連接到 Solid Explorer。</string>
+    <string name="solid_explorer_db_empty">Solid Explorer 裡沒有支援的網路儲存設備。</string>
     <string name="solid_explorer_url_replacer_dialog_title">編輯地址取代</string>
     <string name="solid_explorer_url_replacer_dialog_instruction"></string>
-    <string name="solid_explorer_url_replacer_dialog_instruction_from">伺服器:</string>
-    <string name="solid_explorer_url_replacer_dialog_instruction_to">取代為 (比如: http://10.0.0.4/download):</string>
+    <string name="solid_explorer_url_replacer_dialog_instruction_from">伺服器：</string>
+    <string name="solid_explorer_url_replacer_dialog_instruction_to">取代為 (比如: http://10.0.0.4/download)：</string>
 
     <!-- Adb Wireless -->
-    <string name="adb_wireless_notification_title">ADB over network enabled</string>
-    <string name="adb_wireless_notification_text">Touch to disable debugging</string>
+    <string name="adb_wireless_notification_title">網路 ADB 偵錯中</string>
+    <string name="adb_wireless_notification_text">按此停止偵錯</string>
 
     <!-- Donate -->
     <string name="pref_header_doate">捐贈</string>
@@ -437,11 +437,11 @@ Open source on github: \n
     <string name="pref_donate_alipay">支付寶</string>
     <string name="pref_donate_alipay_summary">推薦\n點擊此選單打開支付寶</string>
     <string name="pref_donate_wechat">微信</string>
-    <string name="pref_donate_wechat_summary">點擊此選單打開微信掃一掃, 會自動掃描捐贈二維碼.\n若掃描未被觸發, 請從相冊選取二維碼, 通常情況下會是第一張圖, 你可以從縮圖看到程式名</string>
+    <string name="pref_donate_wechat_summary">點擊此選單打開微信掃一掃，會自動掃描捐贈二維碼。\n若掃描未被觸發，請從相冊選取二維碼，通常情況下會是第一張圖，你可以從縮圖看到程式名</string>
 
     <!-- Alipay -->
-    <string name="alipay_not_installed">未安裝支付寶.</string>
+    <string name="alipay_not_installed">未安裝支付寶。</string>
 
     <!-- WeChat -->
-    <string name="wechat_not_installed">未安裝微信.</string>
+    <string name="wechat_not_installed">未安裝微信。</string>
 </resources>
